@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 19:22:30 by apartowi          #+#    #+#             */
-/*   Updated: 2024/10/22 19:36:09 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:45:06 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ char	*get_next_line(int fd)
 	{
 		ft_free_remainder (&remainder[fd]);
 		free (line);
-		errno = 99;
+		ft_errno(true);
 		return (0);
 	}
 	return (ft_real_gnl(fd, buffer, &line, &remainder[fd]));

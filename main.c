@@ -59,14 +59,15 @@ void	fill_image_buffer(t_data *data, int y, int x, int color)
 //for testing
 int		map_height = 10;
 int		map_width = 10;
+
 char	map[10][10] = 
 {
 	"1111111111",
 	"1000000001",
 	"1000000001",
-	"1001001001",
-	"1000000001",
-	"1000000001",
+	"1101001001",
+	"2100000001",
+	"1100000001",
 	"1001001001",
 	"1000000001",
 	"1000000001",
@@ -122,8 +123,10 @@ void	print_map(t_data *data)
 		{
 			if (map[i][j] == '1')
 				color = 0x0001F4;
-			else
+			else if (map[i][j] == '0')
 				color = 0x000064;
+			else
+				color = 0x000000;
 			a = 0;
 			while (a < TILE_SIZE)
 			{

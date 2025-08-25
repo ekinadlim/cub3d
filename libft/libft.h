@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 13:24:44 by apartowi          #+#    #+#             */
-/*   Updated: 2024/09/09 19:59:18 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:46:21 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define LIBFT_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 100
 # endif
 
 //#include <stdio.h> comment this out, please
@@ -24,7 +24,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h> //for ft_printf
-# include <errno.h>
+# include <stdbool.h>
 
 typedef struct s_list
 {
@@ -94,5 +94,8 @@ char	*ft_eof_or_error(int a_r, char *buffer, char **line, char **remainder);
 void	ft_free_remainder(char **remainder);
 char	*gnl_ft_strjoin(char const *s1, char const *s2, size_t n);
 size_t	gnl_ft_strlen(const char *s);
+
+//custom
+bool	ft_errno(bool is_error);
 
 #endif

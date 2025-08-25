@@ -26,6 +26,8 @@ SRC_PRINTF = ft_printf.c ft_printchar.c ft_printstr.c\
 
 SRC_GNL = get_next_line_bonus.c get_next_line_utils_bonus.c\
 
+SRC_CUSTOM = ft_errno.c\
+
 OBJ = $(SRC:.c=.o)
 
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
@@ -34,13 +36,15 @@ OBJ_PRINTF = $(SRC_PRINTF:.c=.o)
 
 OBJ_GNL = $(SRC_GNL:.c=.o)
 
+OBJ_CUSTOM = $(SRC_CUSTOM:.c=.o)
+
 all: $(NAME)
 
-$(NAME): $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL)
-	ar rcs $(NAME) $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL)
+$(NAME): $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
+	ar rcs $(NAME) $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
 
 clean:
-	rm -f $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL)
+	rm -f $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
 
 fclean: clean
 	rm -f $(NAME)
