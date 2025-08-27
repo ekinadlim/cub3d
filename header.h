@@ -18,7 +18,7 @@
 # define MINIMAP_WIDTH	100
 # define MINIMAP_POS_Y	(WINDOW_HEIGHT - MINIMAP_HEIGHT)
 # define MINIMAP_POY_X	(WINDOW_WIDTH - MINIMAP_WIDTH) */
-# define TILE_SIZE	10
+# define TILE_SIZE 10
 
 # define FPS	60
 # define FOV	90

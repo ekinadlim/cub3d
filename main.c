@@ -112,6 +112,7 @@ char	map[10][10] =
 void	calculate_and_assign_ray_values(t_data *data, double ray, int *y, int *x)
 {
 	data->ray.direction = data->player.direction + ((2.0 * ray / WINDOW_WIDTH - 1.0) * (FOV / 2));
+	printf("RAY_DIRECTION: %f\n", data->ray.direction);
 	data->ray.radian = data->ray.direction * (M_PI / 180);
 	data->ray.y_vector = sin(data->ray.radian);
 	data->ray.x_vector = cos(data->ray.radian);
@@ -134,7 +135,7 @@ void	calculate_next_grid_distance(t_data *data, int y, int x)
 		{
 			data->ray.next_y_grid_distance = 9999;
 			//data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
-			printf("Y NUMBER: %f\n", data->ray.next_y_grid_distance);
+			//printf("Y NUMBER: %f\n", data->ray.next_y_grid_distance);
 		}
 		else
 			data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
@@ -149,7 +150,7 @@ void	calculate_next_grid_distance(t_data *data, int y, int x)
 		{
 			data->ray.next_x_grid_distance = 9999;
 			//data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
-			printf("X NUMBER: %f\n", data->ray.next_x_grid_distance);
+			//printf("X NUMBER: %f\n", data->ray.next_x_grid_distance);
 		}
 		else
 			data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
@@ -199,6 +200,22 @@ void	print_3d_ray(t_data *data, int ray)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
+
+	double ray_angle = data->player.direction + data->ray.direction;
+	if (ray_angle < 0)
+		ray_angle += 360;
+	else if (ray_angle > 360)
+		ray_angle -= 360;
+	/* if (ray_angle < 0)
+		ray_angle *= -1; */
+	
+	double camera_plane = total_distance * sin(ray_angle);
+	total_distance = sqrt(((camera_plane * -1) * (camera_plane * -1)) + (total_distance * total_distance));
+
+	if (ray == WINDOW_WIDTH / 2)
+		printf("MIDDLE DISTANCE: %f\n", total_distance);
+	if (ray == WINDOW_WIDTH - 1)
+		printf("RIGHT DISTANCE: %f\n", total_distance);
 	double wall_height = WINDOW_HEIGHT / total_distance;  // Perspective!
 	// Clamp wall height to reasonable bounds
         if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
@@ -234,9 +251,13 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			//fill_image_buffer(data, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
+			fill_image_buffer(data, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
-		print_2d_ray(data);
+		if (ray == WINDOW_WIDTH / 2)
+			printf("LEFT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
+		if (ray == WINDOW_WIDTH - 1)
+			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
+			//print_2d_ray(data);
 		print_3d_ray(data, ray);
 		ray += 1;
 	}
