@@ -14,6 +14,7 @@ PARSER
 	Map:
 		valid chars
 		closed/surrounded by walls
+		maybe replace spaces with walls so the player cant go through
 
 EXECUTION
 
@@ -23,5 +24,3 @@ EXECUTION
 		dda?
 
 	Display:
-
-//ARMIN BRANCH

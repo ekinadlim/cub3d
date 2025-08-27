@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP #-gcomment out
+CFLAGS = -Wall -Werror -Wextra -MMD -MP -g#comment out
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 

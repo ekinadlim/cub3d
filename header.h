@@ -12,12 +12,17 @@
 #include <stdio.h> //remove
 
 # define WINDOW_HEIGHT	500 //480
-# define WINDOW_WIDTH	500 //640
+# define WINDOW_WIDTH	1000 //640
+
+/* # define MINIMAP_HEIGHT	100
+# define MINIMAP_WIDTH	100
+# define MINIMAP_POS_Y	(WINDOW_HEIGHT - MINIMAP_HEIGHT)
+# define MINIMAP_POY_X	(WINDOW_WIDTH - MINIMAP_WIDTH) */
+# define TILE_SIZE	10
 
 # define FPS	60
 # define FOV	90
 
-# define TILE_SIZE	50
 
 # define KEY_ESC	65307
 # define KEY_UP		65362
@@ -51,6 +56,8 @@ typedef struct s_ray
 	double	x;
 	//double	step;
 	//bool	hit_wall;
+	double	next_y_grid_distance;
+	double	next_x_grid_distance;
 }	t_ray;
 
 typedef struct s_texture
@@ -76,6 +83,7 @@ typedef struct s_data
 	int			win_width;
 	t_player	player;
 	t_image		image;
+	//t_image		minimap;
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;
