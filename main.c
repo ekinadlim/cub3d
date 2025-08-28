@@ -462,9 +462,11 @@ int main(int argc, char **argv)
 
 	(void)argc;
 	(void)argv;
+	
 	init_data();
 	data = get_data();
 	//do small map
+	parsing(data);
 	data->player.y = 2;
 	data->player.x = 2.5;
 	data->time_reference = get_current_time();

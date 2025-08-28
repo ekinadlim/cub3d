@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   functions.h                                        :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:52:13 by eadlim           ###   ########.fr       */
+/*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
+/*   Updated: 2025/08/28 15:54:23 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FUNCTIONS_H
-# define FUNCTIONS_H
+#include "header.h"
 
-/* Execution */
-
-int		exit_cub3d(void);
-
-
-/* Parsing */
-
-void	parsing(t_data *data);
-
-#endif // FUNCTIONS_H
+void	parsing(t_data *data)
+{
+	(void)data;
+}
