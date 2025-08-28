@@ -6,13 +6,14 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:54:23 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/08/28 16:01:05 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	parsing(t_data *data)
+void	parsing(int argc, char **argv, t_data *data)
 {
 	(void)data;
+	
 }

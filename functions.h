@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:52:13 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/08/28 16:01:17 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ int		exit_cub3d(void);
 
 /* Parsing */
 
-void	parsing(t_data *data);
+void	parsing(int argc, char **argv, t_data *data);
 
 #endif // FUNCTIONS_H

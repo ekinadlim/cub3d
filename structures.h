@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:43:43 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/08/28 16:01:48 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,11 @@ typedef struct s_color
 	int	floor;
 	int	ceiling;
 }	t_color;
+
+typedef struct s_input
+{
+	
+}
 
 typedef struct s_data
 {
