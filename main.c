@@ -466,7 +466,7 @@ int main(int argc, char **argv)
 	init_data();
 	data = get_data();
 	//do small map
-	parsing(data);
+	parsing(argc, argv, data);
 	data->player.y = 2;
 	data->player.x = 2.5;
 	data->time_reference = get_current_time();
