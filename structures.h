@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:17:12 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/08/28 15:43:43 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_ray
 	double	x;
 	//double	step;
 	//bool	hit_wall;
+	double	next_y_grid_distance;
+	double	next_x_grid_distance;
 }	t_ray;
 
 typedef struct s_texture
@@ -64,6 +66,7 @@ typedef struct s_data
 	int			win_width;
 	t_player	player;
 	t_image		image;
+	//t_image	minimap;
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;

@@ -10,7 +10,7 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = main.c
+SRC = main.c parsing.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

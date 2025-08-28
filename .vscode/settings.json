@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"stdbool.h": "c",
+		"macros.h": "c",
+		"structures.h": "c",
+		"defines.h": "c",
+		"functions.h": "c"
+	}
+}
