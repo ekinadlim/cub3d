@@ -23,14 +23,6 @@ long	get_current_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	init_test_stuff(t_data *data)
-{
-	data->win_height = 480;
-	data->win_width = 640;
-	data->player.y = 0;
-	data->player.x = 0;
-}
-
 int	exit_cub3d(void)
 {
 	t_data	*data;
@@ -39,6 +31,8 @@ int	exit_cub3d(void)
 	//call function to free everything
 	if (data->image.buffer)
 		mlx_destroy_image(data->mlx, data->image.buffer);
+	if (data->minimap.buffer)
+		mlx_destroy_image(data->mlx, data->minimap.buffer);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
@@ -48,13 +42,13 @@ int	exit_cub3d(void)
 	exit (0);
 }
 
-void	fill_image_buffer(t_data *data, int y, int x, int color)
+void	fill_image_buffer(t_image image, int y, int x, int color)
 {
 	char *pixel_index;
 
-	if (x >= 0 && y >= 0 && x < WINDOW_WIDTH && y < WINDOW_HEIGHT)
+	if (x >= 0 && y >= 0 && x < image.width && y < image.height) //protection not needed?
 	{
-		pixel_index = data->image.address + (y * data->image.size_line) + (x * (data->image.bits_per_pixel / 8));
+		pixel_index = image.address + (y * image.size_line) + (x * (image.bits_per_pixel / 8));
 		*(int *)pixel_index = color;
 	}
 }
@@ -109,7 +103,7 @@ char	map[10][10] =
 	}
 } */
 
-void	calculate_and_assign_ray_values(t_data *data, double ray, int *y, int *x)
+void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
 	data->ray.direction = data->player.direction + ((2.0 * ray / WINDOW_WIDTH - 1.0) * (FOV / 2));
 	/* if (data->ray.direction < 0)
@@ -194,12 +188,12 @@ void	print_2d_ray(t_data *data)
 		double draw_x = data->player.x + t * (data->ray.x - data->player.x);
 		double draw_y = data->player.y + t * (data->ray.y - data->player.y);
 
-		fill_image_buffer(data, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
+		fill_image_buffer(data->image, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
 	}
 }
 
 //COPILOT
-void	print_3d_ray(t_data *data, int ray)
+void	print_3d_ray(t_data *data, int ray, double ray_length)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
@@ -226,14 +220,16 @@ void	print_3d_ray(t_data *data, int ray)
 	if (ray == WINDOW_WIDTH / 2)
 	{
 		printf("MIDDLE DISTANCE: %f\n", total_distance);
-		printf("LEFT TRUE DISTANCE: %f\n", true_distance);
+		printf("MIDDLE TRUE DISTANCE: %f\n", true_distance);
+		printf("MIDDLE RAY_LENGTH: %f\n", ray_length);
 	}
-	if (ray == WINDOW_WIDTH)
+	if (ray == WINDOW_WIDTH - 1)
 	{
 		printf("RIGHT DISTANCE: %f\n", total_distance);
-		printf("COS: %f\n", cos(ray_angle * M_PI / 180.0));
 		printf("RIGHT TRUE DISTANCE: %f\n", true_distance);
+		printf("RIGHT RAY_LENGTH: %f\n", ray_length);
 	}
+	//true_distance = ray_length;
 	double wall_height = WINDOW_HEIGHT / true_distance;  // Perspective!
 	// Clamp wall height to reasonable bounds
 	if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
@@ -247,52 +243,81 @@ void	print_3d_ray(t_data *data, int ray)
 	// Clamp drawing bounds to screen
 	if (wall_start < 0)
 		wall_start = 0;
-	if (wall_end > WINDOW_HEIGHT)
+	if (wall_end >= WINDOW_HEIGHT)
 		wall_end = WINDOW_HEIGHT;
 
 	for (int y = wall_start; y < wall_end; y++) {
-		fill_image_buffer(data, y, ray, 0xFFFFFF);  // White wall
+		fill_image_buffer(data->image, y, ray, 0xFFFFFF);  // White wall
 	}
 }
 
 void	raycasting(t_data *data)
 {
-	double	ray;
+	int	ray;
 	int		y;
 	int		x;
 
 	ray = 0;
-	while (ray <= WINDOW_WIDTH)
+	while (ray < WINDOW_WIDTH)
 	{
+		double ray_length = 0;
 		calculate_and_assign_ray_values(data, ray, &y, &x);
 		while (map[y][x] != '1') //!hit_wall
 		{
 			calculate_next_grid_distance(data, y, x);
+			double step_distance;
+			if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
+				step_distance = data->ray.next_y_grid_distance;
+			else
+				step_distance = data->ray.next_x_grid_distance;
+			ray_length += step_distance;
 			move_ray(data, &y, &x);
-			fill_image_buffer(data, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
+			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
 		if (ray == WINDOW_WIDTH / 2)
 			printf("MIDDLE: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
 		if (ray == WINDOW_WIDTH - 1)
 			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
 			//print_2d_ray(data);
-		print_3d_ray(data, ray);
+		print_3d_ray(data, ray, ray_length);
 		ray += 1;
 	}
 }
 
-void	clear_screen(t_data *data) //maybe not needed since every pixel will be overwritten when implementing floor and ceiling
+void	clear_screen(t_image image) //maybe not needed since every pixel will be overwritten when implementing floor and ceiling
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while(i < WINDOW_HEIGHT)
+	while(i < image.height)
 	{
 		j = 0;
-		while (j < WINDOW_WIDTH)
+		while (j < image.width)
 		{
-			fill_image_buffer(data, i, j, 0x000000);
+			fill_image_buffer(image, i, j, 0x000000);
+			j++;
+		}
+		i++;
+	}
+}
+
+void copy_minimap_to_image(t_data *data)
+{
+	int		i;
+	int		j;
+	char	*pixel_index;
+	int		color;
+
+	i = 0;
+	while (i < data->minimap.height)
+	{
+		j = 0;
+		while (j < data->minimap.width)
+		{
+			pixel_index = data->minimap.address + (i * data->minimap.size_line) + (j * (data->minimap.bits_per_pixel / 8));
+			color = *(int *)pixel_index;
+			fill_image_buffer(data->image, MINIMAP_POS_Y + i, MINIMAP_POY_X + j, color);
 			j++;
 		}
 		i++;
@@ -307,7 +332,8 @@ void	print_map(t_data *data)
 	int b;
 	int color;
 
-	clear_screen(data);
+	clear_screen(data->image);
+	//clear_screen(data->minimap);
 	i = 0;
 	while (i < map_height)
 	{
@@ -326,7 +352,7 @@ void	print_map(t_data *data)
 				b = 0;
 				while (b < TILE_SIZE)
 				{
-					fill_image_buffer(data, (i * TILE_SIZE) + a, (j * TILE_SIZE) + b, color);
+					fill_image_buffer(data->minimap, (i * TILE_SIZE) + a, (j * TILE_SIZE) + b, color);
 					b++;
 				}
 				a++;
@@ -338,9 +364,11 @@ void	print_map(t_data *data)
 
 	raycasting(data);
 
-	fill_image_buffer(data, (int)(data->player.y * TILE_SIZE) , (int)(data->player.x * TILE_SIZE), 0xFF0000);
+	fill_image_buffer(data->minimap, (int)(data->player.y * TILE_SIZE) , (int)(data->player.x * TILE_SIZE), 0xFF0000);
 
+	copy_minimap_to_image(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
+	//mlx_put_image_to_window(data->mlx, data->win, data->minimap.buffer, 0, 0);
 }
 
 bool	check_if_wall(t_data *data, double y, double x)
@@ -487,11 +515,17 @@ void	start_mlx(t_data *data)
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
 		exit_cub3d();//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
-	data->image.buffer = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+	data->image.buffer = mlx_new_image(data->mlx, data->image.width, data->image.height);
 	if (data->image.buffer == NULL)
 		exit_cub3d();
 	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bits_per_pixel, &data->image.size_line, &data->image.endian);
 	if (data->image.address == NULL)
+		exit_cub3d();
+	data->minimap.buffer = mlx_new_image(data->mlx, data->minimap.width, data->minimap.height);
+	if (data->minimap.buffer == NULL)
+		exit_cub3d();
+	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bits_per_pixel, &data->minimap.size_line, &data->minimap.endian);
+	if (data->minimap.address == NULL)
 		exit_cub3d();
 }
 
@@ -509,6 +543,10 @@ int main(int argc, char **argv)
 	data->player.y = 2;
 	data->player.x = 2.5;
 	data->time_reference = get_current_time();
+	data->image.height = WINDOW_HEIGHT;
+	data->image.width = WINDOW_WIDTH;
+	data->minimap.height = MINIMAP_HEIGHT;
+	data->minimap.width = MINIMAP_WIDTH;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
