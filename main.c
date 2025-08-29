@@ -31,10 +31,17 @@ void	init_test_stuff(t_data *data)
 	data->player.x = 0;
 }
 
-int	exit_cub3d(void)
+// Error Message format: "Error\n<error_msg>\n"
+// If there is no error_msg being passed nothing will be printed
+int	exit_cub3d(char **error_msg)
 {
 	t_data	*data;
 
+	if (error_msg)
+	{
+		ft_putendl_fd("Error", 2);
+		ft_putendl_fd(error_msg, 2);
+	}
 	data = get_data();
 	//call function to free everything
 	if (data->image.buffer)
@@ -458,7 +465,7 @@ int	key_press(int key, t_data *data)
 	else if (key == 'l')
 		data->keys['l'] = true;
 	else if (key == 'q' || key == KEY_ESC)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	return (0);
 }
 
@@ -483,16 +490,16 @@ void	start_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		exit_cub3d();//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
-		exit_cub3d();//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	data->image.buffer = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (data->image.buffer == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bits_per_pixel, &data->image.size_line, &data->image.endian);
 	if (data->image.address == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 }
 
 int main(int argc, char **argv)
