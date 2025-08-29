@@ -74,8 +74,10 @@ void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
 	data->ray.direction = data->player.direction + ((2.0 * ray / WINDOW_WIDTH - 1.0) * (FOV / 2));
 	data->ray.radian = data->ray.direction * (M_PI / 180);
-	data->ray.y_vector = sin(data->ray.radian);
-	data->ray.x_vector = cos(data->ray.radian);
+	//data->ray.y_vector = sin(data->ray.radian);
+	//data->ray.x_vector = cos(data->ray.radian);
+	data->ray.y_vector = sin(data->player.direction * M_PI / 180.0) + (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * sin((data->player.direction + 90) * M_PI / 180.0);
+	data->ray.x_vector = cos(data->player.direction * M_PI / 180.0) + (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * cos((data->player.direction + 90) * M_PI / 180.0);
 	data->ray.y = data->player.y;
 	data->ray.x = data->player.x;
 	*y = (int)data->ray.y;
@@ -98,7 +100,7 @@ void	calculate_next_grid_distance(t_data *data, int y, int x)
 		data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
 }
 
-void	move_ray(t_data *data, int *y, int *x)
+void	move_ray(t_data *data, int *y, int *x, int *side)
 {
 	if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
 	{
@@ -108,6 +110,7 @@ void	move_ray(t_data *data, int *y, int *x)
 			(*y)++;
 		else
 			(*y)--;
+		*side = 1;
 	}
 	else
 	{
@@ -117,6 +120,7 @@ void	move_ray(t_data *data, int *y, int *x)
 			(*x)++;
 		else
 			(*x)--;
+		*side = 0;
 	}
 }
 
@@ -135,7 +139,7 @@ void	print_2d_ray(t_data *data)
 	}
 }
 
-void	print_3d_ray(t_data *data, int ray)
+void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
 
@@ -145,17 +149,34 @@ void	print_3d_ray(t_data *data, int ray)
 
 	if (ray == WINDOW_WIDTH / 2)
 	{
+		printf("MIDDLE Y_VECTOR: %f, x_VECTOR: %f\n", data->ray.y_vector, data->ray.x_vector);
 		printf("MIDDLE_RAY_ANGLE: %f\n", ray_angle);
 		printf("MIDDLE DISTANCE: %f\n", total_distance);
 		printf("MIDDLE TRUE DISTANCE: %f\n", true_distance);
+		printf("MIDDLE PERP DISTANCE: %f\n", perp_wall_dist);
 	}
 	if (ray == WINDOW_WIDTH - 1)
 	{
+		printf("RIGHT Y_VECTOR: %f, x_VECTOR: %f\n", data->ray.y_vector, data->ray.x_vector);
 		printf("RIGHT_RAY_ANGLE: %f\n", ray_angle);
 		printf("RIGHT DISTANCE: %f\n", total_distance);
 		printf("RIGHT TRUE DISTANCE: %f\n", true_distance);
+		printf("RIGHT PERP DISTANCE: %f\n", perp_wall_dist);
 	}
-	double wall_height = WINDOW_HEIGHT / true_distance;
+
+	//double wall_height = WINDOW_HEIGHT / true_distance;
+	double wall_height = WINDOW_HEIGHT / perp_wall_dist;
+
+	if (ray == WINDOW_WIDTH / 2)
+	{
+		printf("MIDDLE TRUE WALL_HEIGHT: %f\n", WINDOW_HEIGHT / true_distance);
+		printf("MIDDLE PERP WALL_HEIGHT: %f\n", WINDOW_HEIGHT / perp_wall_dist);
+	}
+	if (ray == WINDOW_WIDTH - 1)
+	{
+		printf("RIGHT TRUE WALL_HEIGHT: %f\n", WINDOW_HEIGHT / true_distance);
+		printf("RIGHT PERP WALL_HEIGHT: %f\n", WINDOW_HEIGHT / perp_wall_dist);
+	}
 
 	// Clamp wall height to reasonable bounds
 	if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
@@ -186,6 +207,7 @@ void	raycasting(t_data *data)
 	int	ray;
 	int		y;
 	int		x;
+	int	side;
 
 	ray = 0;
 	while (ray < WINDOW_WIDTH)
@@ -194,7 +216,7 @@ void	raycasting(t_data *data)
 		while (map[y][x] != '1') //!hit_wall (maybe && != ['2'/' '])
 		{
 			calculate_next_grid_distance(data, y, x);
-			move_ray(data, &y, &x);
+			move_ray(data, &y, &x, &side);
 			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
 		if (ray == WINDOW_WIDTH / 2)
@@ -202,7 +224,12 @@ void	raycasting(t_data *data)
 		if (ray == WINDOW_WIDTH - 1)
 			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y_vector, data->ray.x_vector);
 		//print_2d_ray(data);
-		print_3d_ray(data, ray);
+		double perp_wall_dist;
+		if (side == 0)
+			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
+		else
+			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector);
+		print_3d_ray(data, ray, perp_wall_dist);
 		ray += 1;
 	}
 }
