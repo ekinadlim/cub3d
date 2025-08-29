@@ -70,46 +70,9 @@ char	map[10][10] =
 	"1111111111",
 };
 
-/* void	raycasting2(t_data *data)
-{
-	double	ray;
-
-	ray = -1;
-	while (ray <= 1)
-	{
-		data->ray.direction = data->player.direction + (ray * (FOV / 2));
-		data->ray.radian = data->ray.direction * (M_PI / 180);
-		data->ray.y_vector = sin(data->ray.radian);
-		data->ray.x_vector = cos(data->ray.radian);
-		data->ray.y = data->player.y;
-		data->ray.x = data->player.x;
-		//printf("ray.y_vector: %.50f ray.x_vector: %.50f\n", data->ray.y_vector, data->ray.x_vector);
-		//int distance = 0; //just for printing
-		//print_cardinal_dir(data->ray.y_vector, data->ray.x_vector);
-		while (1) //!hit_wall
-		{
-			data->ray.y += data->ray.y_vector * 0.1;
-			data->ray.x += data->ray.x_vector * 0.1;
-			//boundaries check?
-			if (map[(int)data->ray.y][(int)(data->ray.x)] == '1')
-			{
-				//printf("ray: %f distance: %d\n", ray, distance);
-				break ; //hit_wall = true;
-			}
-			fill_image_buffer(data, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
-			//distance++;
-		}
-		ray += 0.01;
-	}
-} */
-
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
 	data->ray.direction = data->player.direction + ((2.0 * ray / WINDOW_WIDTH - 1.0) * (FOV / 2));
-	/* if (data->ray.direction < 0)
-		data->ray.direction += 360;
-	else if (data->ray.direction > 360)
-		data->ray.direction -= 360; */
 	data->ray.radian = data->ray.direction * (M_PI / 180);
 	data->ray.y_vector = sin(data->ray.radian);
 	data->ray.x_vector = cos(data->ray.radian);
@@ -121,38 +84,18 @@ void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 
 void	calculate_next_grid_distance(t_data *data, int y, int x)
 {
-	if(data->ray.y_vector > 0)
-	{
+	if (data->ray.y_vector == 0)
+		data->ray.next_y_grid_distance = 9999;
+	else if(data->ray.y_vector > 0)
 		data->ray.next_y_grid_distance = (y + 1 - data->ray.y) / data->ray.y_vector;
-	}
 	else
-	{
-		//data->ray.y_vector = 0;
-		if (data->ray.y_vector == 0)
-		{
-			data->ray.next_y_grid_distance = 9999;
-			//data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
-			//printf("Y NUMBER: %f\n", data->ray.next_y_grid_distance);
-		}
-		else
-			data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
-	}
-	if(data->ray.x_vector > 0)
-	{
+		data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
+	if (data->ray.x_vector == 0)
+		data->ray.next_x_grid_distance = 9999;
+	else if(data->ray.x_vector > 0)
 		data->ray.next_x_grid_distance = (x + 1 - data->ray.x) / data->ray.x_vector;
-	}
 	else
-	{
-		if (data->ray.x_vector == 0)
-		{
-			data->ray.next_x_grid_distance = 9999;
-			//data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
-			//printf("X NUMBER: %f\n", data->ray.next_x_grid_distance);
-		}
-		else
-			data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
-	}
-	//printf("X : %f Y : %f\n", data->ray.next_x_grid_distance, data->ray.next_y_grid_distance);
+		data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
 }
 
 void	move_ray(t_data *data, int *y, int *x)
@@ -188,49 +131,32 @@ void	print_2d_ray(t_data *data)
 		double draw_x = data->player.x + t * (data->ray.x - data->player.x);
 		double draw_y = data->player.y + t * (data->ray.y - data->player.y);
 
-		fill_image_buffer(data->image, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
+		fill_image_buffer(data->minimap, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
 	}
 }
 
-//COPILOT
-void	print_3d_ray(t_data *data, int ray, double ray_length)
+void	print_3d_ray(t_data *data, int ray)
 {
-	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
-									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-
+	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
 
 	double ray_angle = data->ray.direction - data->player.direction;
-	//double perp_angle = FOV - ray_angle;
 
-	if (ray == WINDOW_WIDTH / 2)
-		printf("MIDDLE_RAY_ANGLE: %f\n", ray_angle);
-	if (ray == WINDOW_WIDTH)
-		printf("RIGHT_RAY_ANGLE: %f\n", ray_angle);
-	
-	/* double camera_plane = (total_distance * sin(ray_angle)) / sin(FOV);
-	if (ray == WINDOW_WIDTH / 2)
-		printf("MIDDLE CAMERA: %f\n", camera_plane);
-	if (ray == WINDOW_WIDTH)
-		printf("RIGHT CAMERA: %f\n", camera_plane);
-	double true_distance = sqrt((total_distance * total_distance) - (2 * total_distance) * camera_plane * cos(FOV - ray_angle) + (camera_plane * camera_plane)); */
-
-	//double true_distance = (total_distance * sin(perp_angle * M_PI / 180.0)) / sin(FOV);
 	double true_distance = total_distance * cos(ray_angle * M_PI / 180.0);
 
 	if (ray == WINDOW_WIDTH / 2)
 	{
+		printf("MIDDLE_RAY_ANGLE: %f\n", ray_angle);
 		printf("MIDDLE DISTANCE: %f\n", total_distance);
 		printf("MIDDLE TRUE DISTANCE: %f\n", true_distance);
-		printf("MIDDLE RAY_LENGTH: %f\n", ray_length);
 	}
 	if (ray == WINDOW_WIDTH - 1)
 	{
+		printf("RIGHT_RAY_ANGLE: %f\n", ray_angle);
 		printf("RIGHT DISTANCE: %f\n", total_distance);
 		printf("RIGHT TRUE DISTANCE: %f\n", true_distance);
-		printf("RIGHT RAY_LENGTH: %f\n", ray_length);
 	}
-	//true_distance = ray_length;
-	double wall_height = WINDOW_HEIGHT / true_distance;  // Perspective!
+	double wall_height = WINDOW_HEIGHT / true_distance;
+
 	// Clamp wall height to reasonable bounds
 	if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
 		wall_height = WINDOW_HEIGHT * 2;
@@ -246,8 +172,12 @@ void	print_3d_ray(t_data *data, int ray, double ray_length)
 	if (wall_end >= WINDOW_HEIGHT)
 		wall_end = WINDOW_HEIGHT;
 
-	for (int y = wall_start; y < wall_end; y++) {
+	int y;
+	for (y = wall_start; y < wall_end; y++) {
 		fill_image_buffer(data->image, y, ray, 0xFFFFFF);  // White wall
+	}
+	for (; y < WINDOW_HEIGHT; y++) {
+		fill_image_buffer(data->image, y, ray, 0x808080);  // Grey floor
 	}
 }
 
@@ -260,26 +190,19 @@ void	raycasting(t_data *data)
 	ray = 0;
 	while (ray < WINDOW_WIDTH)
 	{
-		double ray_length = 0;
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (map[y][x] != '1') //!hit_wall
+		while (map[y][x] != '1') //!hit_wall (maybe && != ['2'/' '])
 		{
 			calculate_next_grid_distance(data, y, x);
-			double step_distance;
-			if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
-				step_distance = data->ray.next_y_grid_distance;
-			else
-				step_distance = data->ray.next_x_grid_distance;
-			ray_length += step_distance;
 			move_ray(data, &y, &x);
 			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
 		if (ray == WINDOW_WIDTH / 2)
-			printf("MIDDLE: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
+			printf("MIDDLE: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y_vector, data->ray.x_vector);
 		if (ray == WINDOW_WIDTH - 1)
-			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y, data->ray.x);
-			//print_2d_ray(data);
-		print_3d_ray(data, ray, ray_length);
+			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y_vector, data->ray.x_vector);
+		//print_2d_ray(data);
+		print_3d_ray(data, ray);
 		ray += 1;
 	}
 }
@@ -309,6 +232,7 @@ void copy_minimap_to_image(t_data *data)
 	char	*pixel_index;
 	int		color;
 
+	fill_image_buffer(data->minimap, (int)(data->player.y * TILE_SIZE) , (int)(data->player.x * TILE_SIZE), 0xFF0000); //Player
 	i = 0;
 	while (i < data->minimap.height)
 	{
@@ -324,7 +248,7 @@ void copy_minimap_to_image(t_data *data)
 	}
 }
 
-void	print_map(t_data *data)
+void	print_minimap_grid(t_data *data)
 {
 	int	i;
 	int	j;
@@ -332,8 +256,6 @@ void	print_map(t_data *data)
 	int b;
 	int color;
 
-	clear_screen(data->image);
-	//clear_screen(data->minimap);
 	i = 0;
 	while (i < map_height)
 	{
@@ -361,14 +283,18 @@ void	print_map(t_data *data)
 		}
 		i++;
 	}
+}
+
+void	print_map(t_data *data)
+{
+	clear_screen(data->image);
+
+	print_minimap_grid(data);
 
 	raycasting(data);
 
-	fill_image_buffer(data->minimap, (int)(data->player.y * TILE_SIZE) , (int)(data->player.x * TILE_SIZE), 0xFF0000);
-
 	copy_minimap_to_image(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
-	//mlx_put_image_to_window(data->mlx, data->win, data->minimap.buffer, 0, 0);
 }
 
 bool	check_if_wall(t_data *data, double y, double x)
@@ -435,6 +361,22 @@ void	move_right(t_data *data, bool *change)
 	}
 }
 
+void	turn_left(t_data *data, bool *change)
+{
+	data->player.direction -= 2.5,
+	*change = true;
+	if (data->player.direction < 0)
+		data->player.direction += 360;
+}
+
+void	turn_right(t_data *data, bool *change)
+{
+	data->player.direction += 2.5,
+	*change = true;
+	if (data->player.direction > 360)
+		data->player.direction -= 360;
+}
+
 int	game_loop(t_data *data)
 {
 	bool	change; //to not always draw if no movement happend
@@ -442,27 +384,17 @@ int	game_loop(t_data *data)
 	if (get_current_time() - data->time_reference > 1000 / FPS)
 	{
 		change = false;
-		if (data->keys['j']) //turn left
-		{
-			data->player.direction -= 5, change = true;
-			if (data->player.direction < 0)
-				data->player.direction += 360;
-			printf("Direction: %f\n", data->player.direction);
-		}
-		if (data->keys['l']) //turn right
-		{
-			data->player.direction += 5, change = true;
-			if (data->player.direction > 360)
-				data->player.direction -= 360;
-			printf("Direction: %f\n", data->player.direction);
-		}
-		if (data->keys['a'])
+		if (data->keys['j'] && !data->keys['l'])
+			turn_left(data, &change);
+		if (data->keys['l'] && !data->keys['j'])
+			turn_right(data, &change);
+		if (data->keys['a'] && !data->keys['d'])
 			move_left(data, &change);
-		if (data->keys['d'])
+		if (data->keys['d'] && !data->keys['a'])
 			move_right(data, &change);
-		if (data->keys['w'])
+		if (data->keys['w'] && !data->keys['s'])
 			move_forward(data, &change);
-		if (data->keys['s'])
+		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data, &change);
 		if (change)
 			print_map(data);
@@ -473,17 +405,17 @@ int	game_loop(t_data *data)
 
 int	key_press(int key, t_data *data)
 {
-	if (key == 'w' || key == KEY_UP)
+	if (key == 'w')
 		data->keys['w'] = true;
-	else if (key == 'd' || key == KEY_RIGHT)
+	else if (key == 'd')
 		data->keys['d'] = true;
-	else if (key == 's' || key == KEY_DOWN)
+	else if (key == 's')
 		data->keys['s'] = true;
-	else if (key == 'a' || key == KEY_LEFT)
+	else if (key == 'a')
 		data->keys['a'] = true;
-	else if (key == 'j')
+	else if (key == KEY_LEFT)
 		data->keys['j'] = true;
-	else if (key == 'l')
+	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
 	else if (key == 'q' || key == KEY_ESC)
 		exit_cub3d();
@@ -492,17 +424,17 @@ int	key_press(int key, t_data *data)
 
 int	key_release(int key, t_data *data)
 {
-	if (key == 'w' || key == KEY_UP)
+	if (key == 'w')
 		data->keys['w'] = false;
-	else if (key == 'd' || key == KEY_RIGHT)
+	else if (key == 'd')
 		data->keys['d'] = false;
-	else if (key == 's' || key == KEY_DOWN)
+	else if (key == 's')
 		data->keys['s'] = false;
-	else if (key == 'a' || key == KEY_LEFT)
+	else if (key == 'a')
 		data->keys['a'] = false;
-	else if (key == 'j')
+	else if (key == KEY_LEFT)
 		data->keys['j'] = false;
-	else if (key == 'l')
+	else if (key == KEY_RIGHT)
 		data->keys['l'] = false;
 	return (0);
 }
@@ -552,5 +484,6 @@ int main(int argc, char **argv)
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
 	mlx_loop_hook(data->mlx, game_loop, data);
+	print_map(data);
 	mlx_loop(data->mlx);
 }
