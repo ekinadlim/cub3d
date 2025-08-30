@@ -316,11 +316,13 @@ void	print_map(t_data *data)
 {
 	clear_screen(data->image);
 
-	print_minimap_grid(data);
+	if (data->minimap_toggle)
+		print_minimap_grid(data);
 
 	raycasting(data);
 
-	copy_minimap_to_image(data);
+	if (data->minimap_toggle)
+		copy_minimap_to_image(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
 }
 
@@ -444,6 +446,11 @@ int	key_press(int key, t_data *data)
 		data->keys['j'] = true;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
+	else if (key == 'm' && !data->keys['m']) //while holding m both key press and release gets triggerd (no idea if its fixable)
+	{
+		data->keys['m'] = true;
+		data->minimap_toggle = !data->minimap_toggle;
+	}
 	else if (key == 'q' || key == KEY_ESC)
 		exit_cub3d();
 	return (0);
@@ -463,6 +470,8 @@ int	key_release(int key, t_data *data)
 		data->keys['j'] = false;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = false;
+	else if (key == 'm')
+		data->keys['m'] = false;
 	return (0);
 }
 
@@ -506,6 +515,7 @@ int main(int argc, char **argv)
 	data->image.width = WINDOW_WIDTH;
 	data->minimap.height = MINIMAP_HEIGHT;
 	data->minimap.width = MINIMAP_WIDTH;
+	data->minimap_toggle = true;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
