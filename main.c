@@ -425,7 +425,7 @@ int	game_loop(t_data *data)
 			move_forward(data, &change);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data, &change);
-		if (change)
+		if (change || data->keys['m'])
 			print_map(data);
 		data->time_reference = get_current_time();
 	}
