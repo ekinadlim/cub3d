@@ -139,6 +139,15 @@ void	print_2d_ray(t_data *data)
 	}
 }
 
+double perp_wall_distt(t_data *data)
+{
+	double delta_x = data->ray.x - data->player.x;
+	double delta_y = data->ray.y - data->player.y;
+	double ray_angle = atan2(delta_y, delta_x) - (data->player.direction * M_PI / 180.0);
+	double true_distance = sqrt(delta_x * delta_x + delta_y * delta_y) * cos(ray_angle);
+	return true_distance;
+}
+
 void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
@@ -165,7 +174,7 @@ void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
 	}
 
 	//double wall_height = WINDOW_HEIGHT / true_distance;
-	double wall_height = WINDOW_HEIGHT / perp_wall_dist;
+	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
 
 	if (ray == WINDOW_WIDTH / 2)
 	{
