@@ -36,6 +36,8 @@ int	exit_cub3d(void)
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
+		mlx_do_key_autorepeaton(data->mlx);
+	if (data->mlx)
 		mlx_destroy_display(data->mlx);
 	if (data->mlx)
 		free (data->mlx);
@@ -155,37 +157,11 @@ void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
 	double ray_angle = data->ray.direction - data->player.direction;
 
 	double true_distance = total_distance * cos(ray_angle * M_PI / 180.0);
-
-	if (ray == WINDOW_WIDTH / 2)
-	{
-		printf("MIDDLE Y_VECTOR: %f, x_VECTOR: %f\n", data->ray.y_vector, data->ray.x_vector);
-		printf("MIDDLE_RAY_ANGLE: %f\n", ray_angle);
-		printf("MIDDLE DISTANCE: %f\n", total_distance);
-		printf("MIDDLE TRUE DISTANCE: %f\n", true_distance);
-		printf("MIDDLE PERP DISTANCE: %f\n", perp_wall_dist);
-	}
-	if (ray == WINDOW_WIDTH - 1)
-	{
-		printf("RIGHT Y_VECTOR: %f, x_VECTOR: %f\n", data->ray.y_vector, data->ray.x_vector);
-		printf("RIGHT_RAY_ANGLE: %f\n", ray_angle);
-		printf("RIGHT DISTANCE: %f\n", total_distance);
-		printf("RIGHT TRUE DISTANCE: %f\n", true_distance);
-		printf("RIGHT PERP DISTANCE: %f\n", perp_wall_dist);
-	}
+	(void)perp_wall_dist;
+	(void)true_distance;
 
 	//double wall_height = WINDOW_HEIGHT / true_distance;
 	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
-
-	if (ray == WINDOW_WIDTH / 2)
-	{
-		printf("MIDDLE TRUE WALL_HEIGHT: %f\n", WINDOW_HEIGHT / true_distance);
-		printf("MIDDLE PERP WALL_HEIGHT: %f\n", WINDOW_HEIGHT / perp_wall_dist);
-	}
-	if (ray == WINDOW_WIDTH - 1)
-	{
-		printf("RIGHT TRUE WALL_HEIGHT: %f\n", WINDOW_HEIGHT / true_distance);
-		printf("RIGHT PERP WALL_HEIGHT: %f\n", WINDOW_HEIGHT / perp_wall_dist);
-	}
 
 	// Clamp wall height to reasonable bounds
 	if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
@@ -228,11 +204,6 @@ void	raycasting(t_data *data)
 			move_ray(data, &y, &x, &side);
 			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
-		if (ray == WINDOW_WIDTH / 2)
-			printf("MIDDLE: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y_vector, data->ray.x_vector);
-		if (ray == WINDOW_WIDTH - 1)
-			printf("RIGHT: PLAYER_Y: %f, PLAYER_X: %f, RAY_Y: %f, RAY_X: %f\n", data->player.y, data->player.x, data->ray.y_vector, data->ray.x_vector);
-		//print_2d_ray(data);
 		double perp_wall_dist;
 		if (side == 0)
 			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
@@ -333,110 +304,128 @@ void	print_map(t_data *data)
 	if (data->minimap_toggle)
 		copy_minimap_to_image(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
+	data->movement_happend = false;
 }
 
 bool	check_if_wall(t_data *data, double y, double x)
 {
 	(void)data;
-	if (map[(int)y][(int)x] == '1'|| map[(int)y][(int)x] == '2')
+	if (map[(int)y][(int)x] == '1'|| map[(int)y][(int)x] == '2') //change to ' '
 		return (false);
 	return (true);
 }
 
-void	move_forward(t_data *data, bool *change)
+void	move_forward(t_data *data)
 {
 	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * 0.1;
-	double y = sin(radian) * 0.1;
+	double x = cos(radian) * (4 * data->delta_time);
+	double y = sin(radian) * (4 * data->delta_time);
 
-	if (check_if_wall(data, data->player.y + y, data->player.x + x))
+	if (check_if_wall(data, data->player.y + y, data->player.x))
+	{
+		data->player.y += y;
+		data->movement_happend = true;
+	}
+	if (check_if_wall(data, data->player.y, data->player.x + x))
 	{
 		data->player.x += x;
-		data->player.y += y;
-		*change = true;
+		data->movement_happend = true;
 	}
 }
 
-void	move_backwards(t_data *data, bool *change)
+void	move_backwards(t_data *data)
 {
 	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * -0.1;
-	double y = sin(radian) * -0.1;
+	double x = cos(radian) * (-4 * data->delta_time);
+	double y = sin(radian) * (-4 * data->delta_time);
 
-	if (check_if_wall(data, data->player.y + y, data->player.x + x))
+	if (check_if_wall(data, data->player.y + y, data->player.x))
+	{
+		data->player.y += y;
+		data->movement_happend = true;
+	}
+	if (check_if_wall(data, data->player.y, data->player.x + x))
 	{
 		data->player.x += x;
-		data->player.y += y;
-		*change = true;
+		data->movement_happend = true;
 	}
 }
 
-void	move_left(t_data *data, bool *change)
+void	move_left(t_data *data)
 {
 	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian - (M_PI / 2)) * 0.1;
-	double y = sin(radian - (M_PI / 2)) * 0.1;
+	double x = cos(radian - (M_PI / 2)) * (4 * data->delta_time);
+	double y = sin(radian - (M_PI / 2)) * (4 * data->delta_time);
 
-	if (check_if_wall(data, data->player.y + y, data->player.x + x))
+	if (check_if_wall(data, data->player.y + y, data->player.x))
+	{
+		data->player.y += y;
+		data->movement_happend = true;
+	}
+	if (check_if_wall(data, data->player.y, data->player.x + x))
 	{
 		data->player.x += x;
-		data->player.y += y;
-		*change = true;
+		data->movement_happend = true;
 	}
 }
 
-void	move_right(t_data *data, bool *change)
+void	move_right(t_data *data)
 {
 	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian + (M_PI / 2)) * 0.1;
-	double y = sin(radian + (M_PI / 2)) * 0.1;
+	double x = cos(radian + (M_PI / 2)) * (4 * data->delta_time);
+	double y = sin(radian + (M_PI / 2)) * (4 * data->delta_time);
 
-	if (check_if_wall(data, data->player.y + y, data->player.x + x))
+	if (check_if_wall(data, data->player.y + y, data->player.x))
+	{
+		data->player.y += y;
+		data->movement_happend = true;
+	}
+	if (check_if_wall(data, data->player.y, data->player.x + x))
 	{
 		data->player.x += x;
-		data->player.y += y;
-		*change = true;
+		data->movement_happend = true;
 	}
 }
 
-void	turn_left(t_data *data, bool *change)
+void	turn_left(t_data *data, int speed)
 {
-	data->player.direction -= 2.5,
-	*change = true;
+	data->player.direction -= speed * data->delta_time,
+	data->movement_happend = true;
 	if (data->player.direction < 0)
 		data->player.direction += 360;
 }
 
-void	turn_right(t_data *data, bool *change)
+void	turn_right(t_data *data, int speed)
 {
-	data->player.direction += 2.5,
-	*change = true;
+	data->player.direction += speed * data->delta_time,
+	data->movement_happend = true;
 	if (data->player.direction > 360)
 		data->player.direction -= 360;
 }
 
 int	game_loop(t_data *data)
 {
-	bool	change; //to not always draw if no movement happend
+	long	current_time;
 
 	if (get_current_time() - data->time_reference > 1000 / FPS)
 	{
-		change = false;
+		current_time = get_current_time();
+		data->delta_time = (current_time - data->time_reference) / 1000.0;
+		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
-			turn_left(data, &change);
+			turn_left(data, 150);
 		if (data->keys['l'] && !data->keys['j'])
-			turn_right(data, &change);
+			turn_right(data, 150);
 		if (data->keys['a'] && !data->keys['d'])
-			move_left(data, &change);
+			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])
-			move_right(data, &change);
+			move_right(data);
 		if (data->keys['w'] && !data->keys['s'])
-			move_forward(data, &change);
+			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
-			move_backwards(data, &change);
-		if (change || data->keys['m'])
+			move_backwards(data);
+		if (data->movement_happend || data->keys['m'])
 			print_map(data);
-		data->time_reference = get_current_time();
 	}
 	return (0);
 }
@@ -455,7 +444,7 @@ int	key_press(int key, t_data *data)
 		data->keys['j'] = true;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
-	else if (key == 'm' && !data->keys['m']) //while holding m both key press and release gets triggerd (no idea if its fixable)
+	else if (key == 'm' && !data->keys['m'])
 	{
 		data->keys['m'] = true;
 		data->minimap_toggle = !data->minimap_toggle;
@@ -484,6 +473,19 @@ int	key_release(int key, t_data *data)
 	return (0);
 }
 
+int mouse_move(int x, int y, t_data *data)
+{
+	int delta_x = x - WINDOW_WIDTH / 2;
+
+	(void)y;
+	if (delta_x < 0)
+		turn_left(data, -(delta_x * 5));
+	else if (delta_x > 0)
+		turn_right(data, delta_x * 5);
+	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	return (0);
+}
+
 void	start_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
@@ -504,6 +506,9 @@ void	start_mlx(t_data *data)
 	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bits_per_pixel, &data->minimap.size_line, &data->minimap.endian);
 	if (data->minimap.address == NULL)
 		exit_cub3d();
+	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
+	mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
+	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 }
 
 int main(int argc, char **argv)
@@ -528,6 +533,7 @@ int main(int argc, char **argv)
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
+	mlx_hook(data->win, 6, 1L << 6, mouse_move, data);
 	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
 	mlx_loop_hook(data->mlx, game_loop, data);
 	print_map(data);
