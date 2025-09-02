@@ -474,15 +474,12 @@ void	start_mlx(t_data *data)
 int main(int argc, char **argv)
 {
 	t_data	*data;
-
-	(void)argc;
-	(void)argv;
 	
 	init_data();
 	data = get_data();
 	//do small map
 	parsing(argc, argv, data);
-	data->player.y = 2;
+/* 	data->player.y = 2;
 	data->player.x = 2.5;
 	data->time_reference = get_current_time();
 	start_mlx(data);
@@ -490,5 +487,5 @@ int main(int argc, char **argv)
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
 	mlx_loop_hook(data->mlx, game_loop, data);
-	mlx_loop(data->mlx);
+	mlx_loop(data->mlx); */
 }

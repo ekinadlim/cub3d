@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/01 16:10:50 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/02 14:24:00 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	exit_cub3d(char *error_msg)
 
 	if (error_msg)
 	{
-		ft_putendl_fd("Error", 2);
-		ft_putendl_fd(error_msg, 2);
+		ft_putendl_fd("Error", STDERR_FILENO);
+		ft_putendl_fd(error_msg, STDERR_FILENO);
 	}
 	data = get_data();
 	//call function to free everything
@@ -40,5 +40,7 @@ int	exit_cub3d(char *error_msg)
 		mlx_destroy_display(data->mlx);
 	if (data->mlx)
 		free (data->mlx);
-	exit (0);
+	if (error_msg)
+		exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }

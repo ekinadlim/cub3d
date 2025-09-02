@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 17:53:27 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/02 14:27:32 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ typedef struct s_color
 	int	ceiling;
 }	t_color;
 
-typedef struct s_input
+typedef struct s_map
 {
 	char	**map;
-}			t_input;
+	int		height;
+	int		width;
+}			t_map;
 
 typedef struct s_data
 {
@@ -76,6 +78,7 @@ typedef struct s_data
 	bool		keys[256];
 	long		time_reference;
 	char		**map;
+	t_texture	texture;
 }	t_data;
 
 #endif // STRUCTURES_H

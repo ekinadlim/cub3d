@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:49:50 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/02 15:09:54 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MACROS_H
 
 # define _GNU_SOURCE //for M_PI
+
+# define BUFFER_SIZE 100
 
 # define WINDOW_HEIGHT	500 //480
 # define WINDOW_WIDTH	1000 //640
