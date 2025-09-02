@@ -383,7 +383,6 @@ int	game_loop(t_data *data)
 	{
 		current_time = get_current_time();
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
-		printf("DELTA TIME: %f\n", data->delta_time);
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
 			turn_left(data, 150);
@@ -455,7 +454,8 @@ int mouse_move(int x, int y, t_data *data)
 		turn_left(data, -(delta_x * 5));
 	else if (delta_x > 0)
 		turn_right(data, delta_x * 5);
-	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	if (x != WINDOW_WIDTH / 2 || y != WINDOW_HEIGHT / 2)
+		mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	return (0);
 }
 
