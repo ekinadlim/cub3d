@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/01 17:53:27 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/02 15:34:53 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ typedef struct s_color
 	int	ceiling;
 }	t_color;
 
+typedef struct s_map
+{
+	char	**map;
+	int		height;
+	int		width;
+}			t_map;
+
 typedef struct s_data
 {
 	void		*mlx;
@@ -74,6 +81,7 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	char		**map;
+	t_texture	texture;
 }	t_data;
 
 #endif // STRUCTURES_H

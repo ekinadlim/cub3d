@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 21:13:55 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/02 15:34:29 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 # define WINDOW_HEIGHT	720 //480
 # define WINDOW_WIDTH	1280 //640
+
+# define BUFFER_SIZE 100
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100

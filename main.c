@@ -1,12 +1,5 @@
 #include "header.h"
 
-t_data	*get_data(void)
-{
-	static t_data	data;
-
-	return (&data);
-}
-
 void	init_data(void)
 {
 	t_data	*data;
@@ -21,27 +14,6 @@ long	get_current_time(void)
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-int	exit_cub3d(void)
-{
-	t_data	*data;
-
-	data = get_data();
-	//call function to free everything
-	if (data->image.buffer)
-		mlx_destroy_image(data->mlx, data->image.buffer);
-	if (data->minimap.buffer)
-		mlx_destroy_image(data->mlx, data->minimap.buffer);
-	if (data->win)
-		mlx_destroy_window(data->mlx, data->win);
-	if (data->mlx)
-		mlx_do_key_autorepeaton(data->mlx);
-	if (data->mlx)
-		mlx_destroy_display(data->mlx);
-	if (data->mlx)
-		free (data->mlx);
-	exit (0);
 }
 
 void	fill_image_buffer(t_image image, int y, int x, int color)
@@ -411,6 +383,7 @@ int	game_loop(t_data *data)
 	{
 		current_time = get_current_time();
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
+		printf("DELTA TIME: %f\n", data->delta_time);
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
 			turn_left(data, 150);
@@ -450,7 +423,7 @@ int	key_press(int key, t_data *data)
 		data->minimap_toggle = !data->minimap_toggle;
 	}
 	else if (key == 'q' || key == KEY_ESC)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	return (0);
 }
 
@@ -490,39 +463,36 @@ void	start_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		exit_cub3d();//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
-		exit_cub3d();//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	data->image.buffer = mlx_new_image(data->mlx, data->image.width, data->image.height);
 	if (data->image.buffer == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bits_per_pixel, &data->image.size_line, &data->image.endian);
 	if (data->image.address == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	data->minimap.buffer = mlx_new_image(data->mlx, data->minimap.width, data->minimap.height);
 	if (data->minimap.buffer == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bits_per_pixel, &data->minimap.size_line, &data->minimap.endian);
 	if (data->minimap.address == NULL)
-		exit_cub3d();
+		exit_cub3d(NULL);
 	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
-	mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
+	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
 	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 }
 
 int main(int argc, char **argv)
 {
 	t_data	*data;
-
-	(void)argc;
-	(void)argv;
 	
 	init_data();
 	data = get_data();
 	//do small map
-	parsing(data);
-	data->player.y = 2;
+	parsing(argc, argv, data);
+ 	data->player.y = 2;
 	data->player.x = 2.5;
 	data->time_reference = get_current_time();
 	data->image.height = WINDOW_HEIGHT;

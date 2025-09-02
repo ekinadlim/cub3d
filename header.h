@@ -11,6 +11,7 @@
 # include "macros.h"
 # include "structures.h"
 # include "functions.h"
+# include <fcntl.h>
 
 # include <stdio.h> //remove
 

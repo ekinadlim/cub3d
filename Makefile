@@ -10,14 +10,14 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = main.c parsing.c
+SRC = main.c parsing.c helper.c arg_validation.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
-	./$(NAME)
+	./$(NAME) example.cub
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
@@ -42,6 +42,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) example.cub
 
 .PHONY: all clean fclean re val
