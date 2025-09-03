@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 15:36:40 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/03 14:37:44 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,19 @@ int	exit_cub3d(char *error_msg)
 	if (error_msg)
 		exit(EXIT_FAILURE);
 	exit(EXIT_SUCCESS);
+}
+
+void	free_2d_array(char **array)
+{
+	size_t	i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }
