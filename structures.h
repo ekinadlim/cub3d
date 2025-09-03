@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/03 16:19:48 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/03 16:37:30 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_ray
 	int		wall_hit;
 }	t_ray;
 
-typedef struct s_texture
+/* typedef struct s_texture
 {
 	t_image	north; //adress needed so maybe just use t_image
 	t_image	south;
@@ -65,7 +65,7 @@ typedef struct s_texture
 	t_image	east;
 
 }	t_texture;
-
+ */
 typedef struct s_color
 {
 	int	floor;
