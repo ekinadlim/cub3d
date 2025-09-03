@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 19:22:30 by apartowi          #+#    #+#             */
-/*   Updated: 2025/09/02 15:14:17 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/03 14:46:24 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int	ft_check_remainder(char **line, char **remainder)
 {
 	int		i;
 	char	*temp;
+	int		check_return;
 
-	int check_return ;
 	i = 0;
 	while ((*remainder)[i] && (*remainder)[i] != '\n')
 		i++;
@@ -68,8 +68,8 @@ static int	ft_find_new_line(char *buffer, char **line, char **remainder)
 {
 	int		i;
 	char	*temp;
+	int		check_return;
 
-	int check_return ;
 	if (*remainder)
 	{
 		i = ft_check_remainder(line, remainder);
