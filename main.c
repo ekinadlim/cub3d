@@ -132,7 +132,7 @@ double perp_wall_distt(t_data *data)
 	return true_distance;
 }
 
-void	print_3d_ray(t_data *data, int ray/* , double perp_wall_dist */)
+void	print_3d_ray(t_data *data, int ray)
 {
 	/* double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
 	double ray_angle = data->ray.direction - data->player.direction;
@@ -143,12 +143,6 @@ void	print_3d_ray(t_data *data, int ray/* , double perp_wall_dist */)
 	//double wall_height = WINDOW_HEIGHT / true_distance;
 	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
 
-	// Clamp wall height to reasonable bounds
-	if (wall_height > WINDOW_HEIGHT * 2)  // If wall is too tall
-		wall_height = WINDOW_HEIGHT * 2;
-	if (wall_height < 1)  // If wall is too small
-		wall_height = 1;
-
 	int wall_start = (WINDOW_HEIGHT - wall_height) / 2;
 	int wall_end = wall_start + wall_height;
 
@@ -158,27 +152,58 @@ void	print_3d_ray(t_data *data, int ray/* , double perp_wall_dist */)
 	if (wall_end >= WINDOW_HEIGHT)
 		wall_end = WINDOW_HEIGHT;
 
-	/* double wall_x;
-	if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
+	// --- TEX_X calculation ---
+	double wall_x;
+	if (data->ray.wall_hit == EAST || data->ray.wall_hit == WEST)
 		wall_x = data->player.y + perp_wall_distt(data) * data->ray.y_vector;
 	else
 		wall_x = data->player.x + perp_wall_distt(data) * data->ray.x_vector;
-	wall_x -= floor(wall_x); // fractional part
-	int tex_x = (int)(wall_x * data->texture[NORTH].width); */
 
-	int y;
-	for (y = 0; y < wall_start; y++) {
+	double my_wall_x = wall_x;
+	if (my_wall_x < 0)
+		my_wall_x *= -1;
+	my_wall_x = my_wall_x - (int)my_wall_x;
+	wall_x -= floor(wall_x); // fractional part
+	/* if (ray == WINDOW_WIDTH / 2)
+		printf("MY_WALL_X: %f, OTHER_WALL_X: %f\n", my_wall_x, wall_x); */
+
+	int tex_x = (int)(wall_x * data->texture[data->ray.wall_hit].width);
+	/* if (tex_x < 0) tex_x = 0;
+	if (tex_x >= tex_width) tex_x = tex_width - 1; */
+	/* if (ray == WINDOW_WIDTH / 2)
+		printf("TEX_X: %d\n", tex_x); */
+
+	// --- Drawing ---
+	for (int y = 0; y < wall_start; y++)
 		fill_image_buffer(data->image, y, ray, 0x202020);  // Ceiling
-	}
-	for (; y < wall_end; y++) {
-		char *pixel_index = data->texture[NORTH].address + ((y - (int)y) * data->texture[NORTH].size_line) + (ray * (data->texture[NORTH].bits_per_pixel / 8));
+
+	double step = (double)data->texture[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
+	double tex_pos = (wall_start - WINDOW_HEIGHT / 2.0 + wall_height / 2.0) * step;
+	for (int y = wall_start; y < wall_end; y++)
+	{
+		// --- TEX_Y calculation ---
+		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
+		int tex_y = ((d * data->texture[data->ray.wall_hit].height) / wall_height) / 256;
+
+		int new_tex_y = (int)tex_pos;
+		if (new_tex_y < 0) new_tex_y = 0;
+		if (new_tex_y >= data->texture[data->ray.wall_hit].height) new_tex_y = data->texture[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
+		tex_pos += step;
+		/* if (tex_y < 0) tex_y = 0;
+		if (tex_y >= data->texture[data->ray.wall_hit].height) tex_y = data->texture[data->ray.wall_hit].height - 1; */
+
+		/* if ((y == wall_start || y == wall_end - 1) && (ray == 0 || ray == WINDOW_WIDTH / 2 || ray == WINDOW_WIDTH -1))
+			printf("RAY: %d: HEIGHT: %f, TEX_Y: %d, NEW_TEX_Y: %d\n", ray, wall_height, tex_y, new_tex_y); */
+
+		char *pixel_index = data->texture[data->ray.wall_hit].address +
+			(tex_y * data->texture[data->ray.wall_hit].size_line) +
+			(tex_x * (data->texture[data->ray.wall_hit].bits_per_pixel / 8));
 		int color = *(int *)pixel_index;
 		fill_image_buffer(data->image, y, ray, color);
-		//fill_image_buffer(data->image, y, ray, 0xFFFFFF);  // White wall, replace with texture
 	}
-	for (; y < WINDOW_HEIGHT; y++) {
-		fill_image_buffer(data->image, y, ray, 0x707070);  // floor
-	}
+
+	for (int y = wall_end; y < WINDOW_HEIGHT; y++)
+		fill_image_buffer(data->image, y, ray, 0x707070);  // Floor
 }
 
 void	raycasting(t_data *data)
@@ -202,7 +227,7 @@ void	raycasting(t_data *data)
 			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
 		else
 			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector); */
-		print_3d_ray(data, ray/* , perp_wall_dist */);
+		print_3d_ray(data, ray);
 		ray += 1;
 	}
 }
@@ -313,13 +338,22 @@ void	move_forward(t_data *data)
 	double radian = data->player.direction * M_PI / 180.0;
 	double x = cos(radian) * (4 * data->delta_time);
 	double y = sin(radian) * (4 * data->delta_time);
+	double offset;
 
-	if (check_if_wall(data, data->player.y + y, data->player.x))
+	if (y < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y + y + offset, data->player.x))
 	{
 		data->player.y += y;
 		data->movement_happend = true;
 	}
-	if (check_if_wall(data, data->player.y, data->player.x + x))
+	if (x < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y, data->player.x + x + offset))
 	{
 		data->player.x += x;
 		data->movement_happend = true;
@@ -331,13 +365,22 @@ void	move_backwards(t_data *data)
 	double radian = data->player.direction * M_PI / 180.0;
 	double x = cos(radian) * (-4 * data->delta_time);
 	double y = sin(radian) * (-4 * data->delta_time);
+	double offset;
 
-	if (check_if_wall(data, data->player.y + y, data->player.x))
+	if (y < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y + y + offset, data->player.x))
 	{
 		data->player.y += y;
 		data->movement_happend = true;
 	}
-	if (check_if_wall(data, data->player.y, data->player.x + x))
+	if (x < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y, data->player.x + x + offset))
 	{
 		data->player.x += x;
 		data->movement_happend = true;
@@ -349,13 +392,22 @@ void	move_left(t_data *data)
 	double radian = data->player.direction * M_PI / 180.0;
 	double x = cos(radian - (M_PI / 2)) * (4 * data->delta_time);
 	double y = sin(radian - (M_PI / 2)) * (4 * data->delta_time);
+	double offset;
 
-	if (check_if_wall(data, data->player.y + y, data->player.x))
+	if (y < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y + y + offset, data->player.x))
 	{
 		data->player.y += y;
 		data->movement_happend = true;
 	}
-	if (check_if_wall(data, data->player.y, data->player.x + x))
+	if (x < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y, data->player.x + x + offset))
 	{
 		data->player.x += x;
 		data->movement_happend = true;
@@ -367,13 +419,22 @@ void	move_right(t_data *data)
 	double radian = data->player.direction * M_PI / 180.0;
 	double x = cos(radian + (M_PI / 2)) * (4 * data->delta_time);
 	double y = sin(radian + (M_PI / 2)) * (4 * data->delta_time);
+	double offset;
 
-	if (check_if_wall(data, data->player.y + y, data->player.x))
+	if (y < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y + y + offset, data->player.x))
 	{
 		data->player.y += y;
 		data->movement_happend = true;
 	}
-	if (check_if_wall(data, data->player.y, data->player.x + x))
+	if (x < 0)
+		offset = -0.2;
+	else
+		offset = 0.2;
+	if (check_if_wall(data, data->player.y, data->player.x + x + offset))
 	{
 		data->player.x += x;
 		data->movement_happend = true;
@@ -505,14 +566,32 @@ void	start_mlx(t_data *data)
 	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 	//should not be here, its just for testing
-	int w;
-	int h;
-
-	data->texture[NORTH].buffer= mlx_xpm_file_to_image(data->mlx, "texture/rainbow.xpm", &w, &h);
+	data->texture[NORTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_box.xpm", &data->texture[NORTH].width, &data->texture[NORTH].height);
 	if (!data->texture[NORTH].buffer)
 		exit_cub3d(NULL); //should destroy image;
 	data->texture[NORTH].address = mlx_get_data_addr(data->texture[NORTH].buffer, &data->texture[NORTH].bits_per_pixel, &data->texture[NORTH].size_line, &data->texture[NORTH].endian);
 	if (data->texture[NORTH].address == NULL)
+		exit_cub3d(NULL);
+
+	data->texture[SOUTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal.xpm", &data->texture[SOUTH].width, &data->texture[SOUTH].height);
+	if (!data->texture[SOUTH].buffer)
+		exit_cub3d(NULL); //should destroy image;
+	data->texture[SOUTH].address = mlx_get_data_addr(data->texture[SOUTH].buffer, &data->texture[SOUTH].bits_per_pixel, &data->texture[SOUTH].size_line, &data->texture[SOUTH].endian);
+	if (data->texture[SOUTH].address == NULL)
+		exit_cub3d(NULL);
+
+	data->texture[EAST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_sign.xpm", &data->texture[EAST].width, &data->texture[EAST].height);
+	if (!data->texture[EAST].buffer)
+		exit_cub3d(NULL); //should destroy image;
+	data->texture[EAST].address = mlx_get_data_addr(data->texture[EAST].buffer, &data->texture[EAST].bits_per_pixel, &data->texture[EAST].size_line, &data->texture[EAST].endian);
+	if (data->texture[EAST].address == NULL)
+		exit_cub3d(NULL);
+
+	data->texture[WEST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_imac.xpm", &data->texture[WEST].width, &data->texture[WEST].height);
+	if (!data->texture[WEST].buffer)
+		exit_cub3d(NULL); //should destroy image;
+	data->texture[WEST].address = mlx_get_data_addr(data->texture[WEST].buffer, &data->texture[WEST].bits_per_pixel, &data->texture[WEST].size_line, &data->texture[WEST].endian);
+	if (data->texture[WEST].address == NULL)
 		exit_cub3d(NULL);
 
 }
