@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/03 14:06:54 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/03 16:19:48 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,15 @@ typedef struct s_ray
 	//bool	hit_wall;
 	double	next_y_grid_distance;
 	double	next_x_grid_distance;
+	int		wall_hit;
 }	t_ray;
 
 typedef struct s_texture
 {
-	char	*north;
-	char	*south;
-	char	*west;
-	char	*east;
+	t_image	north; //adress needed so maybe just use t_image
+	t_image	south;
+	t_image	west;
+	t_image	east;
 
 }	t_texture;
 
@@ -92,8 +93,8 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	char		**map;
-	t_texture	texture;
 	t_color		color;
+	t_image		texture[4];
 }	t_data;
 
 #endif // STRUCTURES_H

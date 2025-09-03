@@ -35,9 +35,9 @@ char	map[10][10] =
 	"1111111111",
 	"1000000001",
 	"1000000001",
-	"2101001001",
-	"2100000001",
-	"2100000001",
+	" 101001001",
+	" 100000001",
+	" 100000001",
 	"1001001001",
 	"1000000001",
 	"1000000001",
@@ -74,31 +74,41 @@ void	calculate_next_grid_distance(t_data *data, int y, int x)
 		data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
 }
 
-void	move_ray(t_data *data, int *y, int *x, int *side)
+void	move_ray(t_data *data, int *y, int *x)
 {
 	if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
 	{
 		data->ray.y += data->ray.next_y_grid_distance * data->ray.y_vector;
 		data->ray.x += data->ray.next_y_grid_distance * data->ray.x_vector;
 		if (data->ray.y_vector > 0)
+		{
 			(*y)++;
+			data->ray.wall_hit = SOUTH;
+		}
 		else
+		{
 			(*y)--;
-		*side = 1;
+			data->ray.wall_hit = NORTH;
+		}
 	}
 	else
 	{
 		data->ray.y += data->ray.next_x_grid_distance * data->ray.y_vector;
 		data->ray.x += data->ray.next_x_grid_distance * data->ray.x_vector;
 		if (data->ray.x_vector > 0)
+		{
 			(*x)++;
+			data->ray.wall_hit = EAST;
+		}
 		else
+		{
 			(*x)--;
-		*side = 0;
+			data->ray.wall_hit = WEST;
+		}
 	}
 }
 
-void	print_2d_ray(t_data *data)
+/* void	print_2d_ray(t_data *data)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
@@ -111,7 +121,7 @@ void	print_2d_ray(t_data *data)
 
 		fill_image_buffer(data->minimap, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
 	}
-}
+} */
 
 double perp_wall_distt(t_data *data)
 {
@@ -122,15 +132,13 @@ double perp_wall_distt(t_data *data)
 	return true_distance;
 }
 
-void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
+void	print_3d_ray(t_data *data, int ray/* , double perp_wall_dist */)
 {
-	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-
+	/* double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
 	double ray_angle = data->ray.direction - data->player.direction;
-
 	double true_distance = total_distance * cos(ray_angle * M_PI / 180.0);
 	(void)perp_wall_dist;
-	(void)true_distance;
+	(void)true_distance; */
 
 	//double wall_height = WINDOW_HEIGHT / true_distance;
 	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
@@ -150,12 +158,26 @@ void	print_3d_ray(t_data *data, int ray, double perp_wall_dist)
 	if (wall_end >= WINDOW_HEIGHT)
 		wall_end = WINDOW_HEIGHT;
 
+	/* double wall_x;
+	if (data->ray.next_y_grid_distance < data->ray.next_x_grid_distance)
+		wall_x = data->player.y + perp_wall_distt(data) * data->ray.y_vector;
+	else
+		wall_x = data->player.x + perp_wall_distt(data) * data->ray.x_vector;
+	wall_x -= floor(wall_x); // fractional part
+	int tex_x = (int)(wall_x * data->texture[NORTH].width); */
+
 	int y;
-	for (y = wall_start; y < wall_end; y++) {
-		fill_image_buffer(data->image, y, ray, 0xFFFFFF);  // White wall
+	for (y = 0; y < wall_start; y++) {
+		fill_image_buffer(data->image, y, ray, 0x202020);  // Ceiling
+	}
+	for (; y < wall_end; y++) {
+		char *pixel_index = data->texture[NORTH].address + ((y - (int)y) * data->texture[NORTH].size_line) + (ray * (data->texture[NORTH].bits_per_pixel / 8));
+		int color = *(int *)pixel_index;
+		fill_image_buffer(data->image, y, ray, color);
+		//fill_image_buffer(data->image, y, ray, 0xFFFFFF);  // White wall, replace with texture
 	}
 	for (; y < WINDOW_HEIGHT; y++) {
-		fill_image_buffer(data->image, y, ray, 0x808080);  // Grey floor
+		fill_image_buffer(data->image, y, ray, 0x707070);  // floor
 	}
 }
 
@@ -164,7 +186,6 @@ void	raycasting(t_data *data)
 	int	ray;
 	int		y;
 	int		x;
-	int	side;
 
 	ray = 0;
 	while (ray < WINDOW_WIDTH)
@@ -173,15 +194,15 @@ void	raycasting(t_data *data)
 		while (map[y][x] != '1') //!hit_wall (maybe && != ['2'/' '])
 		{
 			calculate_next_grid_distance(data, y, x);
-			move_ray(data, &y, &x, &side);
+			move_ray(data, &y, &x);
 			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
 		}
-		double perp_wall_dist;
+		/* double perp_wall_dist;
 		if (side == 0)
 			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
 		else
-			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector);
-		print_3d_ray(data, ray, perp_wall_dist);
+			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector); */
+		print_3d_ray(data, ray/* , perp_wall_dist */);
 		ray += 1;
 	}
 }
@@ -383,7 +404,6 @@ int	game_loop(t_data *data)
 	{
 		current_time = get_current_time();
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
-		printf("DELTA TIME: %f\n", data->delta_time);
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
 			turn_left(data, 150);
@@ -455,7 +475,8 @@ int mouse_move(int x, int y, t_data *data)
 		turn_left(data, -(delta_x * 5));
 	else if (delta_x > 0)
 		turn_right(data, delta_x * 5);
-	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	if (x != WINDOW_WIDTH / 2 || y != WINDOW_HEIGHT / 2)
+		mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	return (0);
 }
 
@@ -482,6 +503,18 @@ void	start_mlx(t_data *data)
 	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
 	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
 	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+	//should not be here, its just for testing
+	int w;
+	int h;
+
+	data->texture[NORTH].buffer= mlx_xpm_file_to_image(data->mlx, "texture/rainbow.xpm", &w, &h);
+	if (!data->texture[NORTH].buffer)
+		exit_cub3d(NULL); //should destroy image;
+	data->texture[NORTH].address = mlx_get_data_addr(data->texture[NORTH].buffer, &data->texture[NORTH].bits_per_pixel, &data->texture[NORTH].size_line, &data->texture[NORTH].endian);
+	if (data->texture[NORTH].address == NULL)
+		exit_cub3d(NULL);
+
 }
 
 int main(int argc, char **argv)

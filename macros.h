@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 15:34:29 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/02 19:00:56 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,12 @@
 # define KEY_DOWN	65364
 # define KEY_LEFT	65361
 
-#endif // MACROS_H
+typedef enum e_cardinal_direction //enums in this file?
+{
+	NORTH,
+	SOUTH,
+	WEST,
+	EAST,
+}	t_cardinal_direction;
+
+#endif// MACROS_H
