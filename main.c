@@ -27,21 +27,45 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 	}
 }
 //for testing
-int		map_height = 10;
-int		map_width = 10;
+int		map_height = 16;
+int		map_width = 25;
 
-char	map[10][10] = 
+/* char	map[16][25] = 
 {
-	"1111111111",
-	"1000000001",
-	"1000000001",
-	" 101001001",
-	" 100000001",
-	" 100000001",
-	"1001001001",
-	"1000000001",
-	"1000000001",
-	"1111111111",
+	"1111111111111111111111111",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	" 101001000000000000000001",
+	" 100000000000000000000001",
+	" 100000000000000000000001",
+	"1001001000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1000000000000000000000001",
+	"1111111111111111111111111",
+}; */
+
+char	map[16][25] = 
+{
+	"1111111111111111111111111",
+	"1000000000110000000000001",
+	"1000100001110000000000001",
+	"1001000000000000000000001",
+	"1111111110110000011100001",
+	"1000000000110000011101111",
+	"1111011111111101110000001",
+	"1111011111111101110101001",
+	"1100000011010101110000001",
+	"1000000000000000110000001",
+	"1000000000000000110101001",
+	"1100000111010101111101111",
+	"11110111 1110101 10111101",
+	"11111111 1111111 11111111",
 };
 
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
@@ -168,10 +192,10 @@ void	print_3d_ray(t_data *data, int ray)
 		printf("MY_WALL_X: %f, OTHER_WALL_X: %f\n", my_wall_x, wall_x); */
 
 	int tex_x = (int)(wall_x * data->texture[data->ray.wall_hit].width);
-	/* if (tex_x < 0) tex_x = 0;
-	if (tex_x >= tex_width) tex_x = tex_width - 1; */
-	/* if (ray == WINDOW_WIDTH / 2)
-		printf("TEX_X: %d\n", tex_x); */
+	if (tex_x < 0) tex_x = 0;
+	if (tex_x >= data->texture[data->ray.wall_hit].width) tex_x = data->texture[data->ray.wall_hit].width - 1;
+	//if (ray == WINDOW_WIDTH / 2)
+		//printf("TEX_X: %d\n", tex_x);
 
 	// --- Drawing ---
 	for (int y = 0; y < wall_start; y++)
@@ -189,8 +213,8 @@ void	print_3d_ray(t_data *data, int ray)
 		if (new_tex_y < 0) new_tex_y = 0;
 		if (new_tex_y >= data->texture[data->ray.wall_hit].height) new_tex_y = data->texture[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
 		tex_pos += step;
-		/* if (tex_y < 0) tex_y = 0;
-		if (tex_y >= data->texture[data->ray.wall_hit].height) tex_y = data->texture[data->ray.wall_hit].height - 1; */
+		if (tex_y < 0) tex_y = 0;
+		if (tex_y >= data->texture[data->ray.wall_hit].height) tex_y = data->texture[data->ray.wall_hit].height - 1;
 
 		/* if ((y == wall_start || y == wall_end - 1) && (ray == 0 || ray == WINDOW_WIDTH / 2 || ray == WINDOW_WIDTH -1))
 			printf("RAY: %d: HEIGHT: %f, TEX_Y: %d, NEW_TEX_Y: %d\n", ray, wall_height, tex_y, new_tex_y); */
