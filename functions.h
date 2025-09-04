@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 14:15:54 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/04 16:32:43 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	arg_validation(int argc, char *argv);
 
 int		exit_cub3d(char *error_msg);
 t_data	*get_data(void);
+void	free_2d_array(char **array);
 
 
 #endif // FUNCTIONS_H

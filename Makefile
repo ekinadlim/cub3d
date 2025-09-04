@@ -17,7 +17,7 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
-	./$(NAME) example.cub
+	./$(NAME) maps/example.cub
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
@@ -42,6 +42,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) example.cub
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) maps/example.cub
 
 .PHONY: all clean fclean re val

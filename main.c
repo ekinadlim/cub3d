@@ -482,9 +482,6 @@ int mouse_move(int x, int y, t_data *data)
 
 void	start_mlx(t_data *data)
 {
-	data->mlx = mlx_init();
-	if (data->mlx == NULL)
-		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
 		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
@@ -524,6 +521,9 @@ int main(int argc, char **argv)
 	init_data();
 	data = get_data();
 	//do small map
+	data->mlx = mlx_init();
+	if (data->mlx == NULL)
+		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
 	parsing(argc, argv, data);
  	data->player.y = 2;
 	data->player.x = 2.5;
