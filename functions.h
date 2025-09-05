@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/04 16:32:43 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/05 15:02:49 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 /* Execution */
 
-int	exit_cub3d(char *error_msg);
 
 
 /* Parsing */
@@ -25,7 +24,7 @@ void	arg_validation(int argc, char *argv);
 
 /* Helper */
 
-int		exit_cub3d(char *error_msg);
+int		exit_cub3d(char *error_msg); // maybe have this only for execution and have an own function for the rest
 t_data	*get_data(void);
 void	free_2d_array(char **array);
 

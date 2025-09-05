@@ -6,39 +6,55 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/04 18:43:21 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:09:19 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-// Exits if there are whitespaces expcept normal spaces
-void	allow_only_normal_spaces(char *str)
+// Removes all spaces in the beginning of str
+// but exits if there are other whitespaces through out the rest of str 
+char	*allow_only_normal_spaces(char *str)
 {
 	size_t	i;
+	char	*new_str;
 
 	i = 0;
-	while (str[i])
+	while (str[i] && str[i] == ' ')
+		i++;
+	new_str = ft_substr(str, i, ft_strlen(str) - i - 1);
+	free(str);
+	if (!new_str)
+		exit_cub3d("Malloc Error!");
+	i = 0;
+	while (new_str[i])
 	{
-		if (str[i] == '\t')
-			exit_cub3d("Horizonal Tab not allowed!");
-		else if (str[i] == '\v')
-			exit_cub3d("Vertical Tab not allowed!");
-		else if (str[i] == '\f')
-			exit_cub3d("Form feed not allowed!");
-		else if (str[i] == '\r')
-			exit_cub3d("Carriage return (not allowed!");
+		if (new_str[i] == '\t')
+			return (free(new_str), exit_cub3d("Horizonal Tab not allowed!"), NULL);
+		if (new_str[i] == '\v')
+			return (free(new_str), exit_cub3d("Vertical Tab not allowed!"), NULL);
+		if (new_str[i] == '\f')
+			return (free(new_str), exit_cub3d("Form feed not allowed!"), NULL);
+		if (new_str[i] == '\r')
+			return (free(new_str), exit_cub3d("Carriage return not allowed!"), NULL);
 		i++;
 	}
+	return (new_str);
 }
 
-void	get_image(t_image *img, t_data *data, char *file)
+// Retrieves the image from the xpm file and returns a mask depending on the direction
+int	get_image(t_data *data, char *line, int direction)
 {
-	size_t	len;
-
-	len = ft_strlen(file) - 1;
-	file[len] = '\0';
-	img->buffer = mlx_xpm_file_to_image(data->mlx, file, &img->width,
+	t_image	*img;
+	char	*path;
+	
+	path = ft_substr(line, 3, ft_strlen(line) - 1);
+	free(line);
+	if (!path)
+		exit_cub3d("Substr: Malloc Error!");
+	ft_printf("%s\n", path);
+	img = &data->texture[direction];
+	img->buffer = mlx_xpm_file_to_image(data->mlx, path, &img->width,
 			&img->height);
 	if (!img->buffer)
 		exit_cub3d("MLX: Failed to convert xpm to img!");
@@ -46,47 +62,60 @@ void	get_image(t_image *img, t_data *data, char *file)
 			&img->size_line, &img->endian);
 	if (!img->address)
 		exit_cub3d("MLX: Failed to get data address!");
+	return (1 << direction);
 }
 
-size_t	get_color(t_data *data, char **element)
+size_t	get_color(t_data *data, char *element, int surface)
 {
-	int		color;
 	size_t	i;
+	size_t	j;
 
-	i = 1;
+	i = 3;
+	j = 0;
+	(void)data;
 	while (element[i])
 	{
-		
+		while (element[i])
+		{
+			if (element[i] < '0' || element[i] > '9' || element[i] != ',')
+				exit_cub3d("Invlaid Floor or Ceiling data!");
+			j++;
+		}
+		j = 0;
+		i++;
 	}
-	
+	return (1 << surface);
 }
 
 // Converts and distributes element depending on what it is;
-// Do this with bitwise operators if there is time later on
-// using the e_cardinal_directions and << operator like "return (1 << NORTH)"
-size_t	distribute_element(char **element, t_data *data)
+size_t	distribute_element(char *line, t_data *data, size_t filemask)
 {
-	if (!ft_strncmp(element[0], "NO", 3))
-		return (get_image(&data->texture[NORTH], data, element[1]), free_2d_array(element), fm_north);
-	if (!ft_strncmp(element[0], "EA", 3))
-		return (get_image(&data->texture[EAST], data, element[1]), free_2d_array(element), fm_east);
-	if (!ft_strncmp(element[0], "SO", 3))
-		return (get_image(&data->texture[SOUTH], data, element[1]), free_2d_array(element), fm_south);
-	if (!ft_strncmp(element[0], "WE", 3))
-		return (get_image(&data->texture[WEST], data, element[1]), free_2d_array(element), fm_west);
-	if (!ft_strncmp(element[0], "F", 2))
-		return (get_color(data, element));
-	if (!ft_strncmp(element[0], "C", 3))
-		return (get_color(data, element));
-	free_2d_array(element);
-	return (0);
+	size_t	flag;
+	
+	flag = 0;
+	if (!ft_strncmp(line, "NO ", 3))
+		flag = get_image(data, line, NORTH);
+	else if (!ft_strncmp(line, "EA ", 3))
+		flag = get_image(data, line, EAST);
+	else if (!ft_strncmp(line, "SO ", 3))
+		flag = get_image(data, line, SOUTH);
+	else if (!ft_strncmp(line, "WE ", 3))
+		flag = get_image(data, line, WEST);
+	else if (!ft_strncmp(line, "F ", 2))
+		flag = get_color(data, line, FLOOR);
+	else if (!ft_strncmp(line, "C ", 2))
+		flag = get_color(data, line, CEILING);
+	else if (line[0])
+		exit_cub3d("Garbage elements in the file!");
+	if (flag & filemask)
+		exit_cub3d("Multiple occurance of the same element!");
+	return (flag);
 }
 
 // Handles the textures and colors from the .cub file
 void	get_elements(int fd, t_data *data)
 {
 	char	*line;
-	char	**split;
 	size_t	filemask;
 
 	filemask = 0;
@@ -97,14 +126,10 @@ void	get_elements(int fd, t_data *data)
 			exit_cub3d("GNL: Malloc Error!");
 		if (!line)
 			break ;
-		allow_only_normal_spaces(line);
-		split = ft_split(line, ' ');
-		free(line);
-		if (!split)
-			exit_cub3d("Split: Malloc Error!");
-		filemask += distribute_element(split, data);
+		line = allow_only_normal_spaces(line);
+		filemask += distribute_element(line, data, filemask);
 	}
-	if (filemask < fm_complete)
+	if (filemask < (1 << ELEMENT_COUNT) - 1)
 		exit_cub3d("Missing elements!");
 }
 

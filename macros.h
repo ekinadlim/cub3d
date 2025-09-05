@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 19:00:56 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:24:01 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # define WINDOW_WIDTH	1280 //640
 
 # define BUFFER_SIZE 100
+
+# define ELEMENT_COUNT 6
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
@@ -42,5 +44,11 @@ typedef enum e_cardinal_direction //enums in this file?
 	WEST,
 	EAST,
 }	t_cardinal_direction;
+
+typedef enum e_color
+{
+	FLOOR,
+	CEILING
+}	t_color;
 
 #endif// MACROS_H

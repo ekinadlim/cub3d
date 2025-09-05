@@ -6,23 +6,12 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/03 16:37:30 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/05 16:20:42 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTURES_H
 # define STRUCTURES_H
-
-typedef enum e_filemask
-{
-	fm_north = 1,
-	fm_east = 2,
-	fm_south = 4,
-	fm_west = 8,
-	fm_ceiling = 16,
-	fm_floor = 32,
-	fm_complete = 63
-}	t_filemask;
 
 typedef struct s_player
 {
@@ -66,11 +55,6 @@ typedef struct s_ray
 
 }	t_texture;
  */
-typedef struct s_color
-{
-	int	floor;
-	int	ceiling;
-}	t_color;
 
 typedef struct s_map
 {
@@ -93,7 +77,7 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	char		**map;
-	t_color		color;
+	t_color		color[2];
 	t_image		texture[4];
 }	t_data;
 
