@@ -54,7 +54,7 @@ char	map[16][25] =
 {
 	"1111111111111111111111111",
 	"1000000000110000000000001",
-	"1000100001110000000000001",
+	"1000000001110000000000001",
 	"1001000000000000000000001",
 	"1111111110110000011100001",
 	"1000000000110000011101111",
@@ -244,7 +244,7 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			fill_image_buffer(data->minimap, (int)(data->ray.y * TILE_SIZE), (int)(data->ray.x * TILE_SIZE), 0xFFFF00);
+			fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * TILE_SIZE), data->minimap.height / 2 + (int)((data->ray.x - data->player.x) * TILE_SIZE), 0xFFFF00);
 		}
 		/* double perp_wall_dist;
 		if (side == 0)
@@ -281,7 +281,7 @@ void copy_minimap_to_image(t_data *data)
 	char	*pixel_index;
 	int		color;
 
-	fill_image_buffer(data->minimap, (int)(data->player.y * TILE_SIZE) , (int)(data->player.x * TILE_SIZE), 0xFF0000); //Player
+	fill_image_buffer(data->minimap, data->minimap.height / 2, data->minimap.width / 2, 0xFF0000); //Player
 	i = 0;
 	while (i < data->minimap.height)
 	{
@@ -297,7 +297,7 @@ void copy_minimap_to_image(t_data *data)
 	}
 }
 
-void	print_minimap_grid(t_data *data)
+/* void	print_minimap_grid(t_data *data)
 {
 	int	i;
 	int	j;
@@ -334,7 +334,7 @@ void	print_minimap_grid(t_data *data)
 	}
 }
 
-/* void	new_minimap_grid_print(t_data *data)
+void	new_minimap_grid_print(t_data *data)
 {
 	int offset = TILE_SIZE / 2;
 	int color;
@@ -376,13 +376,64 @@ void	print_minimap_grid(t_data *data)
 	}
 } */
 
+void	print_minimap_grid(t_data *data)
+{
+	/* double origin_offset_y = (data->player.y - (int)data->player.y) * 10;
+	double origin_offset_x = (data->player.x - (int)data->player.x) * 10; */
+
+	double current_offset_y = 0.1;
+	double current_offset_x = 0.1;
+
+	double starting_y = data->player.y - 5; //top left
+	double starting_x = data->player.x - 5; //top left
+
+	double current_y = starting_y;
+	double current_x = starting_x;
+
+	for (int map_y = 0; map_y < 10; map_y++)
+	{
+		current_x = starting_x; //lets say 4.8
+		for (int map_x = 0; map_x < 10; map_x++)
+		{
+			current_offset_y = 0;
+			for (int pixel_y = 0; pixel_y < 10; pixel_y++)
+			{
+				current_offset_x = 0;
+				for (int pixel_x = 0; pixel_x < 10; pixel_x++)
+				{
+					int color;
+					int real_y = (current_y + current_offset_y);
+					int real_x = (current_x + current_offset_x);
+					if (real_y < 0 || real_x < 0 || real_y > map_height || real_x > map_width)
+						color = 0x000000;
+					else if (map[(int)real_y][(int)real_x] == '1')
+						color = 0x0001F4;
+					else if (map[(int)real_y][(int)real_x] == '0')
+						color = 0x000064;
+					else
+						color = 0x000000;
+
+					fill_image_buffer(data->minimap, pixel_y + (map_y * TILE_SIZE), pixel_x + (map_x * TILE_SIZE), color);
+
+					//if (map_y == 0 && map_x == 0)
+						//printf("real_y: %d, real_x: %d, pixel_y add: %d, pixel_x add %d, current_y + current_offset_y: %f, current_x + current_offset_x: %f\n", real_y, real_x, pixel_y + (map_y * TILE_SIZE), pixel_x + (map_x * TILE_SIZE), current_y + current_offset_y, current_x + current_offset_x);
+
+					current_offset_x += 0.1;
+				}
+				current_offset_y += 0.1;
+			}
+			current_x++;
+		}
+		current_y++;
+	}
+}
+
 void	print_map(t_data *data)
 {
 	clear_screen(data->image);
 
 	if (data->minimap_toggle)
 		print_minimap_grid(data);
-		//new_minimap_grid_print(data);
 
 	raycasting(data);
 
