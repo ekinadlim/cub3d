@@ -334,12 +334,55 @@ void	print_minimap_grid(t_data *data)
 	}
 }
 
+/* void	new_minimap_grid_print(t_data *data)
+{
+	int offset = TILE_SIZE / 2;
+	int color;
+	double start_y = data->player.y - offset;
+	double start_x = data->player.x - offset;
+	double end_y = start_y + TILE_SIZE;
+	double end_x = start_x + TILE_SIZE;
+	int i;
+	int j;
+
+
+	while (start_y < end_y)
+	{
+		start_x = end_x - TILE_SIZE;
+		while (start_x < end_x)
+		{
+			if (start_y < 0 || start_x < 0 || end_y > map_height || end_x > map_width)
+				color = 0x000000;
+			else if (map[(int)start_y][(int)start_x] == '1')
+				color = 0x0001F4;
+			else if (map[(int)start_y][(int)start_x] == '0')
+				color = 0x000064;
+			else
+				color = 0x000000;
+			i = 0;
+			while (i < TILE_SIZE)
+			{
+				j = 0;
+				while (j < TILE_SIZE)
+				{
+					fill_image_buffer(data->minimap, (((start_y) * TILE_SIZE) + offset) + i, (((start_x) * TILE_SIZE) + offset) + j, color);
+					j++;
+				}
+				i++;
+			}
+			start_x++;
+		}
+		start_y++;
+	}
+} */
+
 void	print_map(t_data *data)
 {
 	clear_screen(data->image);
 
 	if (data->minimap_toggle)
 		print_minimap_grid(data);
+		//new_minimap_grid_print(data);
 
 	raycasting(data);
 
