@@ -136,14 +136,14 @@ void	move_ray(t_data *data, int *y, int *x)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-	int steps = (int)(total_distance * TILE_SIZE);
+	int steps = (int)(total_distance * GRID_SIZE * SCALING);
 
 	for (int i = 0; i <= steps; i += 5) {
 		double t = (double)i / steps;
 		double draw_x = data->player.x + t * (data->ray.x - data->player.x);
 		double draw_y = data->player.y + t * (data->ray.y - data->player.y);
 
-		fill_image_buffer(data->minimap, (int)(draw_y * TILE_SIZE), (int)(draw_x * TILE_SIZE), 0xFFFF00);
+		fill_image_buffer(data->minimap, (int)(draw_y * GRID_SIZE * SCALING), (int)(draw_x * GRID_SIZE * SCALING), 0xFFFF00);
 	}
 } */
 
@@ -244,7 +244,7 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * TILE_SIZE), data->minimap.height / 2 + (int)((data->ray.x - data->player.x) * TILE_SIZE), 0xFFFF00);
+			fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.height / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), 0xFFFF00);
 		}
 		/* double perp_wall_dist;
 		if (side == 0)
@@ -318,12 +318,12 @@ void copy_minimap_to_image(t_data *data)
 			else
 				color = 0x000000;
 			a = 0;
-			while (a < TILE_SIZE)
+			while (a < GRID_SIZE * SCALING)
 			{
 				b = 0;
-				while (b < TILE_SIZE)
+				while (b < GRID_SIZE * SCALING)
 				{
-					fill_image_buffer(data->minimap, (i * TILE_SIZE) + a, (j * TILE_SIZE) + b, color);
+					fill_image_buffer(data->minimap, (i * GRID_SIZE * SCALING) + a, (j * GRID_SIZE * SCALING) + b, color);
 					b++;
 				}
 				a++;
@@ -336,19 +336,19 @@ void copy_minimap_to_image(t_data *data)
 
 void	new_minimap_grid_print(t_data *data)
 {
-	int offset = TILE_SIZE / 2;
+	int offset = GRID_SIZE * SCALING / 2;
 	int color;
 	double start_y = data->player.y - offset;
 	double start_x = data->player.x - offset;
-	double end_y = start_y + TILE_SIZE;
-	double end_x = start_x + TILE_SIZE;
+	double end_y = start_y + GRID_SIZE * SCALING;
+	double end_x = start_x + GRID_SIZE * SCALING;
 	int i;
 	int j;
 
 
 	while (start_y < end_y)
 	{
-		start_x = end_x - TILE_SIZE;
+		start_x = end_x - GRID_SIZE * SCALING;
 		while (start_x < end_x)
 		{
 			if (start_y < 0 || start_x < 0 || end_y > map_height || end_x > map_width)
@@ -360,12 +360,12 @@ void	new_minimap_grid_print(t_data *data)
 			else
 				color = 0x000000;
 			i = 0;
-			while (i < TILE_SIZE)
+			while (i < GRID_SIZE * SCALING)
 			{
 				j = 0;
-				while (j < TILE_SIZE)
+				while (j < GRID_SIZE * SCALING)
 				{
-					fill_image_buffer(data->minimap, (((start_y) * TILE_SIZE) + offset) + i, (((start_x) * TILE_SIZE) + offset) + j, color);
+					fill_image_buffer(data->minimap, (((start_y) * GRID_SIZE * SCALING) + offset) + i, (((start_x) * GRID_SIZE * SCALING) + offset) + j, color);
 					j++;
 				}
 				i++;
@@ -381,25 +381,25 @@ void	print_minimap_grid(t_data *data)
 	/* double origin_offset_y = (data->player.y - (int)data->player.y) * 10;
 	double origin_offset_x = (data->player.x - (int)data->player.x) * 10; */
 
-	double current_offset_y = 0.1;
-	double current_offset_x = 0.1;
+	double current_offset_y = 0;
+	double current_offset_x = 0;
 
-	double starting_y = data->player.y - 5; //top left
-	double starting_x = data->player.x - 5; //top left
+	double starting_y = data->player.y - GRID_COUNT / 2; //top left
+	double starting_x = data->player.x - GRID_COUNT / 2; //top left
 
 	double current_y = starting_y;
 	double current_x = starting_x;
 
-	for (int map_y = 0; map_y < 10; map_y++)
+	for (int map_y = 0; map_y < GRID_COUNT; map_y++)
 	{
 		current_x = starting_x; //lets say 4.8
-		for (int map_x = 0; map_x < 10; map_x++)
+		for (int map_x = 0; map_x < GRID_COUNT; map_x++)
 		{
 			current_offset_y = 0;
-			for (int pixel_y = 0; pixel_y < 10; pixel_y++)
+			for (int pixel_y = 0; pixel_y < GRID_SIZE * SCALING; pixel_y++)
 			{
 				current_offset_x = 0;
-				for (int pixel_x = 0; pixel_x < 10; pixel_x++)
+				for (int pixel_x = 0; pixel_x < GRID_SIZE * SCALING; pixel_x++)
 				{
 					int color;
 					int real_y = (current_y + current_offset_y);
@@ -413,14 +413,14 @@ void	print_minimap_grid(t_data *data)
 					else
 						color = 0x000000;
 
-					fill_image_buffer(data->minimap, pixel_y + (map_y * TILE_SIZE), pixel_x + (map_x * TILE_SIZE), color);
+					fill_image_buffer(data->minimap, pixel_y + (map_y * GRID_SIZE * SCALING), pixel_x + (map_x * GRID_SIZE * SCALING), color);
 
 					//if (map_y == 0 && map_x == 0)
-						//printf("real_y: %d, real_x: %d, pixel_y add: %d, pixel_x add %d, current_y + current_offset_y: %f, current_x + current_offset_x: %f\n", real_y, real_x, pixel_y + (map_y * TILE_SIZE), pixel_x + (map_x * TILE_SIZE), current_y + current_offset_y, current_x + current_offset_x);
+						//printf("real_y: %d, real_x: %d, pixel_y add: %d, pixel_x add %d, current_y + current_offset_y: %f, current_x + current_offset_x: %f\n", real_y, real_x, pixel_y + (map_y * GRID_SIZE), pixel_x + (map_x * GRID_SIZE), current_y + current_offset_y, current_x + current_offset_x);
 
-					current_offset_x += 0.1;
+					current_offset_x += 0.1 / SCALING;
 				}
-				current_offset_y += 0.1;
+				current_offset_y += 0.1 / SCALING;
 			}
 			current_x++;
 		}
@@ -741,8 +741,8 @@ int main(int argc, char **argv)
 	data->time_reference = get_current_time();
 	data->image.height = WINDOW_HEIGHT;
 	data->image.width = WINDOW_WIDTH;
-	data->minimap.height = MINIMAP_HEIGHT;
-	data->minimap.width = MINIMAP_WIDTH;
+	data->minimap.height = MINIMAP_HEIGHT * SCALING;
+	data->minimap.width = MINIMAP_WIDTH * SCALING;
 	data->minimap_toggle = true;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
