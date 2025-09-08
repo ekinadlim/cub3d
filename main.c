@@ -659,6 +659,20 @@ int mouse_move(int x, int y, t_data *data)
 	return (0);
 }
 
+int	mouse_click(int button, int x, int y, t_data *data)
+{
+	(void)button;
+	mouse_move(x, y, data);
+	return (0);
+}
+
+int	mouse_release(int button, int x, int y, t_data *data)
+{
+	(void)button;
+	mouse_move(x, y, data);
+	return (0);
+}
+
 void	start_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
@@ -734,6 +748,8 @@ int main(int argc, char **argv)
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->win, 6, 1L << 6, mouse_move, data);
+	mlx_hook(data->win, 4, 1L << 2, mouse_click, data);
+	mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
 	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
 	mlx_loop_hook(data->mlx, game_loop, data);
 	print_map(data);
