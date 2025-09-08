@@ -167,7 +167,7 @@ void	print_3d_ray(t_data *data, int ray)
 	//double wall_height = WINDOW_HEIGHT / true_distance;
 	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
 
-	int wall_start = (WINDOW_HEIGHT - wall_height) / 2;
+	int wall_start = (WINDOW_HEIGHT - wall_height) / 2 + data->player.vertical_direction;
 	int wall_end = wall_start + wall_height;
 
 	// Clamp drawing bounds to screen
@@ -575,6 +575,22 @@ void	turn_right(t_data *data, int speed)
 		data->player.direction -= 360;
 }
 
+void	look_up(t_data *data, int speed)
+{
+	data->player.vertical_direction += speed * data->delta_time,
+	data->movement_happend = true;
+	if (data->player.vertical_direction > 360)
+		data->player.vertical_direction = 360;
+}
+
+void	look_down(t_data *data, int speed)
+{
+	data->player.vertical_direction -= speed * data->delta_time,
+	data->movement_happend = true;
+	if (data->player.vertical_direction < -360)
+		data->player.vertical_direction = -360;
+}
+
 int	game_loop(t_data *data)
 {
 	long	current_time;
@@ -588,6 +604,10 @@ int	game_loop(t_data *data)
 			turn_left(data, 150);
 		if (data->keys['l'] && !data->keys['j'])
 			turn_right(data, 150);
+		if (data->keys['i'] && !data->keys['k'])
+			look_up(data, 150);
+		if (data->keys['k'] && !data->keys['i'])
+			look_down(data, 150);
 		if (data->keys['a'] && !data->keys['d'])
 			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])
@@ -616,6 +636,10 @@ int	key_press(int key, t_data *data)
 		data->keys['j'] = true;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
+	else if (key == KEY_UP)
+		data->keys['i'] = true;
+	else if (key == KEY_DOWN)
+		data->keys['k'] = true;
 	else if (key == 'm' && !data->keys['m'])
 	{
 		data->keys['m'] = true;
@@ -640,6 +664,10 @@ int	key_release(int key, t_data *data)
 		data->keys['j'] = false;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = false;
+	else if (key == KEY_UP)
+		data->keys['i'] = false;
+	else if (key == KEY_DOWN)
+		data->keys['k'] = false;
 	else if (key == 'm')
 		data->keys['m'] = false;
 	return (0);
@@ -648,12 +676,17 @@ int	key_release(int key, t_data *data)
 int mouse_move(int x, int y, t_data *data)
 {
 	int delta_x = x - WINDOW_WIDTH / 2;
+	int delta_y = y - WINDOW_HEIGHT / 2;
 
-	(void)y;
+	//(void)y;
 	if (delta_x < 0)
 		turn_left(data, -(delta_x * 5));
 	else if (delta_x > 0)
 		turn_right(data, delta_x * 5);
+	if (delta_y < 0)
+		look_up(data, -(delta_y * 5));
+	else if (delta_y > 0)
+		look_down(data, delta_y * 5);
 	if (x != WINDOW_WIDTH / 2 || y != WINDOW_HEIGHT / 2)
 		mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	return (0);
@@ -730,6 +763,7 @@ int main(int argc, char **argv)
 	data->minimap.height = MINIMAP_HEIGHT;
 	data->minimap.width = MINIMAP_WIDTH;
 	data->minimap_toggle = true;
+	//data->player.vertical_direction = 90;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);

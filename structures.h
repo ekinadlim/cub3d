@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 19:19:24 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:16:47 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ typedef struct s_player
 {
 	double	y;
 	double	x;
-	double	direction;
+	double	direction; //horizontal rename later
+	double	vertical_direction;
 }	t_player;
 
 typedef struct s_image
