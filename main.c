@@ -132,7 +132,7 @@ void	move_ray(t_data *data, int *y, int *x)
 	}
 }
 
-/* void	print_2d_ray(t_data *data)
+void	print_2d_ray(t_data *data)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
@@ -140,12 +140,12 @@ void	move_ray(t_data *data, int *y, int *x)
 
 	for (int i = 0; i <= steps; i += 5) {
 		double t = (double)i / steps;
-		double draw_x = data->player.x + t * (data->ray.x - data->player.x);
-		double draw_y = data->player.y + t * (data->ray.y - data->player.y);
+		double draw_x = t * (data->ray.x - data->player.x);
+		double draw_y = t * (data->ray.y - data->player.y);
 
-		fill_image_buffer(data->minimap, (int)(draw_y * GRID_SIZE * SCALING), (int)(draw_x * GRID_SIZE * SCALING), 0xFFFF00);
+		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), 0xFFFF00);
 	}
-} */
+}
 
 double perp_wall_distt(t_data *data)
 {
@@ -244,13 +244,14 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.height / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), 0xFFFF00);
+			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), 0xFFFF00);
 		}
 		/* double perp_wall_dist;
 		if (side == 0)
 			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
 		else
 			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector); */
+		print_2d_ray(data);
 		print_3d_ray(data, ray);
 		ray += 1;
 	}
