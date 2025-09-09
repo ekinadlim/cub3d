@@ -27,8 +27,8 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 	}
 }
 //for testing
-int		map_height = 14;
-int		map_width = 25;
+int		map_height = 10;
+int		map_width = 10;
 
 /* char	map[14][25] = 
 {
@@ -50,7 +50,7 @@ int		map_width = 25;
 	"1111111111111111111111111",
 }; */
 
-char	map[14][25] = 
+/* char	map[14][25] = 
 {
 	"1111111111111111111111111",
 	"1000000000110000000000001",
@@ -66,6 +66,20 @@ char	map[14][25] =
 	"1100000111010101111101111",
 	"11110111 1110101 10111101",
 	"11111111 1111111 11111111",
+}; */
+
+char	map[10][10] = 
+{
+	"1111111111",
+	"1000000001",
+	"1000000001",
+	"1001001001",
+	"1000000001",
+	"1000000001",
+	"1001001001",
+	"1000000001",
+	"1000000001",
+	"1111111111",
 };
 
 /* char	map[5][5] = 
@@ -663,7 +677,6 @@ int mouse_move(int x, int y, t_data *data)
 {
 	int delta_x = x - WINDOW_WIDTH / 2;
 
-	(void)y;
 	if (delta_x < 0)
 		turn_left(data, -(delta_x * 5));
 	else if (delta_x > 0)
