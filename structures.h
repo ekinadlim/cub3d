@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/09 15:24:34 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/09 17:07:07 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,14 @@ typedef struct s_ray
 	t_image	west;
 	t_image	east;
 
-}	t_texture;
- */
+}	t_texture;*/
 
 typedef struct s_map
 {
 	char	**map;
 	int		height;
 	int		width;
-}			t_map;
+}	t_map;
 
 typedef struct s_data
 {
@@ -78,7 +77,7 @@ typedef struct s_data
 	double		delta_time;
 	char		**map;
 	int			surface[2];
-	t_image		texture[4];
+	t_image		textures[4];
 }	t_data;
 
 #endif // STRUCTURES_H

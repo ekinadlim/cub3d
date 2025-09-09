@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/09 17:03:16 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/09 17:08:10 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int	get_image(t_data *data, char *line, int direction)
 	free(line);
 	if (!path)
 		exit_cub3d("Substr: Malloc Error!");
-	data->texture[direction].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->texture[direction].width, &data->texture[direction].height);
-	if (!data->texture[direction].buffer)
+	data->textures[direction].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->textures[direction].width, &data->textures[direction].height);
+	if (!data->textures[direction].buffer)
 		exit_cub3d("MLX: Failed to convert xpm to img!");
-	data->texture[direction].address = mlx_get_data_addr(data->texture[direction].buffer, &data->texture[direction].bits_per_pixel,
-			&data->texture[direction].size_line, &data->texture[direction].endian);
-	if (!data->texture[direction].address)
+	data->textures[direction].address = mlx_get_data_addr(data->textures[direction].buffer, &data->textures[direction].bits_per_pixel,
+			&data->textures[direction].size_line, &data->textures[direction].endian);
+	if (!data->textures[direction].address)
 		exit_cub3d("MLX: Failed to get data address!");
 	return (1 << direction);
 }
@@ -171,7 +171,7 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (fd < 0)
 		exit_cub3d("Failed to open file!");
 	get_elements(fd, data);
-	ft_printf("NO: %i\nEA: %i\nSO: %i\nWE: %i\n", data->texture[NORTH].height,
-		data->texture[EAST].height, data->texture[SOUTH].height, data->texture[WEST].height);
+	ft_printf("NO: %i\nEA: %i\nSO: %i\nWE: %i\n", data->textures[NORTH].height,
+		data->textures[EAST].height, data->textures[SOUTH].height, data->textures[WEST].height);
 	ft_printf("F: %X\nC: %X\n", data->surface[FLOOR], data->surface[CEILING]);
 }
