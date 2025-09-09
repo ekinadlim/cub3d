@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/05 16:20:42 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/09 15:24:34 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	char		**map;
-	t_color		color[2];
+	int			surface[2];
 	t_image		texture[4];
 }	t_data;
 

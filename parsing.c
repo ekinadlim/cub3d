@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/05 18:09:19 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/09 17:03:16 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,46 +45,75 @@ char	*allow_only_normal_spaces(char *str)
 // Retrieves the image from the xpm file and returns a mask depending on the direction
 int	get_image(t_data *data, char *line, int direction)
 {
-	t_image	*img;
 	char	*path;
 	
 	path = ft_substr(line, 3, ft_strlen(line) - 1);
 	free(line);
 	if (!path)
 		exit_cub3d("Substr: Malloc Error!");
-	ft_printf("%s\n", path);
-	img = &data->texture[direction];
-	img->buffer = mlx_xpm_file_to_image(data->mlx, path, &img->width,
-			&img->height);
-	if (!img->buffer)
+	data->texture[direction].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->texture[direction].width, &data->texture[direction].height);
+	if (!data->texture[direction].buffer)
 		exit_cub3d("MLX: Failed to convert xpm to img!");
-	img->address = mlx_get_data_addr(img->buffer, &img->bits_per_pixel,
-			&img->size_line, &img->endian);
-	if (!img->address)
+	data->texture[direction].address = mlx_get_data_addr(data->texture[direction].buffer, &data->texture[direction].bits_per_pixel,
+			&data->texture[direction].size_line, &data->texture[direction].endian);
+	if (!data->texture[direction].address)
 		exit_cub3d("MLX: Failed to get data address!");
 	return (1 << direction);
 }
 
+int	get_color_number(char *element, size_t *i)
+{
+	char	str_num[5];
+	size_t	digit;
+
+	digit = 0;
+	ft_bzero(str_num, 5);
+	while (element[*i])
+	{
+		if (element[*i] >= '0' && element[*i] <= '9')
+		{
+			if (str_num[0] && element[*i] == ' ')
+				exit_cub3d("Invalid Color Code!");
+			str_num[digit++] = element[*i];
+		}
+		else if (element[*i] == ',')
+		{
+			if (!str_num[0])
+				exit_cub3d("Missing number for color code!");
+			(*i)++;
+			return (ft_atoi(str_num));
+		}
+		else if (element[*i] != ' ')
+			exit_cub3d("Garbage in Surface element!");
+		(*i)++;
+	}
+	return (ft_atoi(str_num));
+}
+
 size_t	get_color(t_data *data, char *element, int surface)
 {
+	int		color_code;
+	int		one_color;
+	int		color_shift;
 	size_t	i;
-	size_t	j;
-
-	i = 3;
-	j = 0;
-	(void)data;
+	
+	color_shift = 2;
+	color_code = 0;
+	i = 2;
 	while (element[i])
 	{
-		while (element[i])
+		one_color = get_color_number(&(*element), &i);
+		if (one_color == -1)
 		{
-			if (element[i] < '0' || element[i] > '9' || element[i] != ',')
-				exit_cub3d("Invlaid Floor or Ceiling data!");
-			j++;
+			if (color_shift != 0)
+				exit_cub3d("Not right amount of colors!");
 		}
-		j = 0;
-		i++;
+		color_code += one_color << (8 * color_shift);
+		color_shift--;
+		
 	}
-	return (1 << surface);
+	data->surface[surface] = color_code;
+	return (1 << (surface + 4));
 }
 
 // Converts and distributes element depending on what it is;
@@ -105,8 +134,8 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 		flag = get_color(data, line, FLOOR);
 	else if (!ft_strncmp(line, "C ", 2))
 		flag = get_color(data, line, CEILING);
-	else if (line[0])
-		exit_cub3d("Garbage elements in the file!");
+/* 	else if (line[0])
+		exit_cub3d("Garbage elements in the file!"); */
 	if (flag & filemask)
 		exit_cub3d("Multiple occurance of the same element!");
 	return (flag);
@@ -142,6 +171,7 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (fd < 0)
 		exit_cub3d("Failed to open file!");
 	get_elements(fd, data);
-	ft_printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", data->texture[NORTH],
-		data->texture[EAST], data->texture[SOUTH], data->texture[WEST]);
+	ft_printf("NO: %i\nEA: %i\nSO: %i\nWE: %i\n", data->texture[NORTH].height,
+		data->texture[EAST].height, data->texture[SOUTH].height, data->texture[WEST].height);
+	ft_printf("F: %X\nC: %X\n", data->surface[FLOOR], data->surface[CEILING]);
 }
