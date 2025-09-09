@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/08 17:33:39 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:46:54 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@
 # define KEY_RIGHT	65363
 # define KEY_DOWN	65364
 # define KEY_LEFT	65361
+
+// Minimap Colors
+# define COLOR_PLAYER	0xFF0000
+# define COLOR_RAY		0xFFFF00
+# define COLOR_VOID		0x000000
+# define COLOR_WALL		0x0001F4
+# define COLOR_FLOOR	0x000064
 
 typedef enum e_cardinal_direction //enums in this file?
 {

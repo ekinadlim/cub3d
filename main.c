@@ -27,10 +27,10 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 	}
 }
 //for testing
-int		map_height = 16;
+int		map_height = 14;
 int		map_width = 25;
 
-/* char	map[16][25] = 
+/* char	map[14][25] = 
 {
 	"1111111111111111111111111",
 	"1000000000000000000000001",
@@ -50,7 +50,7 @@ int		map_width = 25;
 	"1111111111111111111111111",
 }; */
 
-char	map[16][25] = 
+char	map[14][25] = 
 {
 	"1111111111111111111111111",
 	"1000000000110000000000001",
@@ -67,6 +67,15 @@ char	map[16][25] =
 	"11110111 1110101 10111101",
 	"11111111 1111111 11111111",
 };
+
+/* char	map[5][5] = 
+{
+	"11111",
+	"10001",
+	"10101",
+	"10001",
+	"11111",
+}; */
 
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
@@ -143,7 +152,7 @@ void	print_2d_ray(t_data *data)
 		double draw_x = t * (data->ray.x - data->player.x);
 		double draw_y = t * (data->ray.y - data->player.y);
 
-		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), 0xFFFF00);
+		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), COLOR_RAY);
 	}
 }
 
@@ -191,43 +200,43 @@ void	print_3d_ray(t_data *data, int ray)
 	/* if (ray == WINDOW_WIDTH / 2)
 		printf("MY_WALL_X: %f, OTHER_WALL_X: %f\n", my_wall_x, wall_x); */
 
-	int tex_x = (int)(wall_x * data->texture[data->ray.wall_hit].width);
+	int tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
 	if (tex_x < 0) tex_x = 0;
-	if (tex_x >= data->texture[data->ray.wall_hit].width) tex_x = data->texture[data->ray.wall_hit].width - 1;
+	if (tex_x >= data->textures[data->ray.wall_hit].width) tex_x = data->textures[data->ray.wall_hit].width - 1;
 	//if (ray == WINDOW_WIDTH / 2)
 		//printf("TEX_X: %d\n", tex_x);
 
 	// --- Drawing ---
 	for (int y = 0; y < wall_start; y++)
-		fill_image_buffer(data->image, y, ray, 0x202020);  // Ceiling
+		fill_image_buffer(data->image, y, ray, data->surface.ceiling);  // Ceiling
 
-	double step = (double)data->texture[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
+	double step = (double)data->textures[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
 	double tex_pos = (wall_start - WINDOW_HEIGHT / 2.0 + wall_height / 2.0) * step;
 	for (int y = wall_start; y < wall_end; y++)
 	{
 		// --- TEX_Y calculation ---
 		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
-		int tex_y = ((d * data->texture[data->ray.wall_hit].height) / wall_height) / 256;
+		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256;
 
 		int new_tex_y = (int)tex_pos;
 		if (new_tex_y < 0) new_tex_y = 0;
-		if (new_tex_y >= data->texture[data->ray.wall_hit].height) new_tex_y = data->texture[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
+		if (new_tex_y >= data->textures[data->ray.wall_hit].height) new_tex_y = data->textures[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
 		tex_pos += step;
 		if (tex_y < 0) tex_y = 0;
-		if (tex_y >= data->texture[data->ray.wall_hit].height) tex_y = data->texture[data->ray.wall_hit].height - 1;
+		if (tex_y >= data->textures[data->ray.wall_hit].height) tex_y = data->textures[data->ray.wall_hit].height - 1;
 
 		/* if ((y == wall_start || y == wall_end - 1) && (ray == 0 || ray == WINDOW_WIDTH / 2 || ray == WINDOW_WIDTH -1))
 			printf("RAY: %d: HEIGHT: %f, TEX_Y: %d, NEW_TEX_Y: %d\n", ray, wall_height, tex_y, new_tex_y); */
 
-		char *pixel_index = data->texture[data->ray.wall_hit].address +
-			(tex_y * data->texture[data->ray.wall_hit].size_line) +
-			(tex_x * (data->texture[data->ray.wall_hit].bits_per_pixel / 8));
+		char *pixel_index = data->textures[data->ray.wall_hit].address +
+			(tex_y * data->textures[data->ray.wall_hit].size_line) +
+			(tex_x * (data->textures[data->ray.wall_hit].bits_per_pixel / 8));
 		int color = *(int *)pixel_index;
 		fill_image_buffer(data->image, y, ray, color);
 	}
 
 	for (int y = wall_end; y < WINDOW_HEIGHT; y++)
-		fill_image_buffer(data->image, y, ray, 0x707070);  // Floor
+		fill_image_buffer(data->image, y, ray, data->surface.floor);  // Floor
 }
 
 void	raycasting(t_data *data)
@@ -244,7 +253,7 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), 0xFFFF00);
+			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
 		}
 		/* double perp_wall_dist;
 		if (side == 0)
@@ -257,7 +266,7 @@ void	raycasting(t_data *data)
 	}
 }
 
-void	clear_screen(t_image image) //maybe not needed since every pixel will be overwritten when implementing floor and ceiling
+/* void	clear_screen(t_image image) //maybe not needed since every pixel will be overwritten when implementing floor and ceiling
 {
 	int	i;
 	int	j;
@@ -268,12 +277,12 @@ void	clear_screen(t_image image) //maybe not needed since every pixel will be ov
 		j = 0;
 		while (j < image.width)
 		{
-			fill_image_buffer(image, i, j, 0x000000);
+			fill_image_buffer(image, i, j, COLOR_VOID);
 			j++;
 		}
 		i++;
 	}
-}
+} */
 
 void copy_minimap_to_image(t_data *data)
 {
@@ -282,7 +291,7 @@ void copy_minimap_to_image(t_data *data)
 	char	*pixel_index;
 	int		color;
 
-	fill_image_buffer(data->minimap, data->minimap.height / 2, data->minimap.width / 2, 0xFF0000); //Player
+	fill_image_buffer(data->minimap, data->minimap.height / 2, data->minimap.width / 2, COLOR_PLAYER); //Player
 	i = 0;
 	while (i < data->minimap.height)
 	{
@@ -313,11 +322,11 @@ void copy_minimap_to_image(t_data *data)
 		while (j < map_width)
 		{
 			if (map[i][j] == '1')
-				color = 0x0001F4;
+				color = COLOR_WALL;
 			else if (map[i][j] == '0')
-				color = 0x000064;
+				color = COLOR_FLOOR;
 			else
-				color = 0x000000;
+				color = COLOR_VOID;
 			a = 0;
 			while (a < GRID_SIZE * SCALING)
 			{
@@ -353,13 +362,13 @@ void	new_minimap_grid_print(t_data *data)
 		while (start_x < end_x)
 		{
 			if (start_y < 0 || start_x < 0 || end_y > map_height || end_x > map_width)
-				color = 0x000000;
+				color = COLOR_VOID;
 			else if (map[(int)start_y][(int)start_x] == '1')
-				color = 0x0001F4;
+				color = COLOR_WALL;
 			else if (map[(int)start_y][(int)start_x] == '0')
-				color = 0x000064;
+				color = COLOR_FLOOR;
 			else
-				color = 0x000000;
+				color = COLOR_VOID;
 			i = 0;
 			while (i < GRID_SIZE * SCALING)
 			{
@@ -403,16 +412,20 @@ void	print_minimap_grid(t_data *data)
 				for (int pixel_x = 0; pixel_x < GRID_SIZE * SCALING; pixel_x++)
 				{
 					int color;
-					int real_y = (current_y + current_offset_y);
-					int real_x = (current_x + current_offset_x);
-					if (real_y < 0 || real_x < 0 || real_y > map_height || real_x > map_width)
-						color = 0x000000;
+					double real_y = (current_y + current_offset_y);
+					double real_x = (current_x + current_offset_x);
+					if (real_y > -1 && real_y < 0)
+						real_y = -1;
+					if (real_x > -1 && real_x < 0)
+						real_x = -1;
+					if (real_y < 0 || real_x < 0 || real_y >= map_height || real_x >= map_width)
+						color = COLOR_VOID;
 					else if (map[(int)real_y][(int)real_x] == '1')
-						color = 0x0001F4;
+						color = COLOR_WALL;
 					else if (map[(int)real_y][(int)real_x] == '0')
-						color = 0x000064;
+						color = COLOR_FLOOR;
 					else
-						color = 0x000000;
+						color = COLOR_VOID;
 
 					fill_image_buffer(data->minimap, pixel_y + (map_y * GRID_SIZE * SCALING), pixel_x + (map_x * GRID_SIZE * SCALING), color);
 
@@ -431,7 +444,7 @@ void	print_minimap_grid(t_data *data)
 
 void	print_map(t_data *data)
 {
-	clear_screen(data->image);
+	//clear_screen(data->image);
 
 	if (data->minimap_toggle)
 		print_minimap_grid(data);
@@ -699,32 +712,32 @@ void	start_mlx(t_data *data)
 	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 	//should not be here, its just for testing
-	data->texture[NORTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_box.xpm", &data->texture[NORTH].width, &data->texture[NORTH].height);
-	if (!data->texture[NORTH].buffer)
+	data->textures[NORTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_box.xpm", &data->textures[NORTH].width, &data->textures[NORTH].height);
+	if (!data->textures[NORTH].buffer)
 		exit_cub3d(NULL); //should destroy image;
-	data->texture[NORTH].address = mlx_get_data_addr(data->texture[NORTH].buffer, &data->texture[NORTH].bits_per_pixel, &data->texture[NORTH].size_line, &data->texture[NORTH].endian);
-	if (data->texture[NORTH].address == NULL)
+	data->textures[NORTH].address = mlx_get_data_addr(data->textures[NORTH].buffer, &data->textures[NORTH].bits_per_pixel, &data->textures[NORTH].size_line, &data->textures[NORTH].endian);
+	if (data->textures[NORTH].address == NULL)
 		exit_cub3d(NULL);
 
-	data->texture[SOUTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal.xpm", &data->texture[SOUTH].width, &data->texture[SOUTH].height);
-	if (!data->texture[SOUTH].buffer)
+	data->textures[SOUTH].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal.xpm", &data->textures[SOUTH].width, &data->textures[SOUTH].height);
+	if (!data->textures[SOUTH].buffer)
 		exit_cub3d(NULL); //should destroy image;
-	data->texture[SOUTH].address = mlx_get_data_addr(data->texture[SOUTH].buffer, &data->texture[SOUTH].bits_per_pixel, &data->texture[SOUTH].size_line, &data->texture[SOUTH].endian);
-	if (data->texture[SOUTH].address == NULL)
+	data->textures[SOUTH].address = mlx_get_data_addr(data->textures[SOUTH].buffer, &data->textures[SOUTH].bits_per_pixel, &data->textures[SOUTH].size_line, &data->textures[SOUTH].endian);
+	if (data->textures[SOUTH].address == NULL)
 		exit_cub3d(NULL);
 
-	data->texture[EAST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_sign.xpm", &data->texture[EAST].width, &data->texture[EAST].height);
-	if (!data->texture[EAST].buffer)
+	data->textures[EAST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_sign.xpm", &data->textures[EAST].width, &data->textures[EAST].height);
+	if (!data->textures[EAST].buffer)
 		exit_cub3d(NULL); //should destroy image;
-	data->texture[EAST].address = mlx_get_data_addr(data->texture[EAST].buffer, &data->texture[EAST].bits_per_pixel, &data->texture[EAST].size_line, &data->texture[EAST].endian);
-	if (data->texture[EAST].address == NULL)
+	data->textures[EAST].address = mlx_get_data_addr(data->textures[EAST].buffer, &data->textures[EAST].bits_per_pixel, &data->textures[EAST].size_line, &data->textures[EAST].endian);
+	if (data->textures[EAST].address == NULL)
 		exit_cub3d(NULL);
 
-	data->texture[WEST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_imac.xpm", &data->texture[WEST].width, &data->texture[WEST].height);
-	if (!data->texture[WEST].buffer)
+	data->textures[WEST].buffer= mlx_xpm_file_to_image(data->mlx, "portal_texture/crystal_imac.xpm", &data->textures[WEST].width, &data->textures[WEST].height);
+	if (!data->textures[WEST].buffer)
 		exit_cub3d(NULL); //should destroy image;
-	data->texture[WEST].address = mlx_get_data_addr(data->texture[WEST].buffer, &data->texture[WEST].bits_per_pixel, &data->texture[WEST].size_line, &data->texture[WEST].endian);
-	if (data->texture[WEST].address == NULL)
+	data->textures[WEST].address = mlx_get_data_addr(data->textures[WEST].buffer, &data->textures[WEST].bits_per_pixel, &data->textures[WEST].size_line, &data->textures[WEST].endian);
+	if (data->textures[WEST].address == NULL)
 		exit_cub3d(NULL);
 
 }
@@ -737,14 +750,16 @@ int main(int argc, char **argv)
 	data = get_data();
 	//do small map
 	parsing(argc, argv, data);
- 	data->player.y = 2;
-	data->player.x = 2.5;
+ 	data->player.y = 1.5;
+	data->player.x = 1.5;
 	data->time_reference = get_current_time();
 	data->image.height = WINDOW_HEIGHT;
 	data->image.width = WINDOW_WIDTH;
 	data->minimap.height = MINIMAP_HEIGHT * SCALING;
 	data->minimap.width = MINIMAP_WIDTH * SCALING;
 	data->minimap_toggle = true;
+	data->surface.floor = 0x707070;
+	data->surface.ceiling = 0x202020;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);

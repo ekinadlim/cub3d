@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 19:19:24 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:12:18 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,18 @@ typedef struct s_ray
 
 }	t_texture;*/
 
-typedef struct s_color
+typedef struct s_surface
 {
 	int	floor;
 	int	ceiling;
-}	t_color;
+}	t_surface;
 
 typedef struct s_map
 {
 	char	**map;
 	int		height;
 	int		width;
-}			t_map;
+}	t_map;
 
 typedef struct s_data
 {
@@ -82,7 +82,8 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	char		**map;
-	t_image		texture[4];
+	t_image		textures[4];
+	t_surface	surface; //surface better name?
 }	t_data;
 
 #endif // STRUCTURES_H
