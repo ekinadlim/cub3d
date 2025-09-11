@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/05 15:02:49 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/11 17:16:16 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
+void	get_map(int fd, t_data *data);
 
 /* Helper */
 

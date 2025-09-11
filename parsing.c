@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/09 17:08:10 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/11 17:26:01 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,5 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (fd < 0)
 		exit_cub3d("Failed to open file!");
 	get_elements(fd, data);
-	ft_printf("NO: %i\nEA: %i\nSO: %i\nWE: %i\n", data->textures[NORTH].height,
-		data->textures[EAST].height, data->textures[SOUTH].height, data->textures[WEST].height);
-	ft_printf("F: %X\nC: %X\n", data->surface[FLOOR], data->surface[CEILING]);
+	get_map(fd, data);
 }
