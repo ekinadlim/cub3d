@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/09 17:06:12 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/12 16:46:39 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MACROS_H
 
 # define _GNU_SOURCE //for M_PI
+
+# define MAP_CHAR_SET "10 NOSW"
 
 # define WINDOW_HEIGHT	720 //480
 # define WINDOW_WIDTH	1280 //640

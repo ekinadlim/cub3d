@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/11 17:26:01 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/15 15:01:42 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,12 +142,14 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 }
 
 // Handles the textures and colors from the .cub file
-void	get_elements(int fd, t_data *data)
+size_t	get_elements(int fd, t_data *data)
 {
 	char	*line;
 	size_t	filemask;
+	size_t	line_count;
 
 	filemask = 0;
+	line_count = 0;
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -157,19 +159,24 @@ void	get_elements(int fd, t_data *data)
 			break ;
 		line = allow_only_normal_spaces(line);
 		filemask += distribute_element(line, data, filemask);
+		line_count++;
+		if (filemask == (1 << ELEMENT_COUNT) - 1)
+			return (line_count);
 	}
 	if (filemask < (1 << ELEMENT_COUNT) - 1)
 		exit_cub3d("Missing elements!");
+	return (line_count);
 }
 
 void	parsing(int argc, char **argv, t_data *data)
 {
-	int	fd;
+	int		fd;
+	size_t	line_count;
 
 	arg_validation(argc, argv[1]);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		exit_cub3d("Failed to open file!");
-	get_elements(fd, data);
-	get_map(fd, data);
+	line_count = get_elements(fd, data);
+	get_map(fd, line_count, data);
 }
