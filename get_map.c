@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:14:27 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/15 15:22:31 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/15 18:06:43 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,26 @@ size_t	get_map_size(int fd, t_data *data)
 void	get_map(int fd, size_t start, t_data *data)
 {
 	char	*line;
+	int		i;
 	
-	start += get_map_size(fd, data);
-	while (1)
+	i = 0;
+	while (start)
 	{
 		line = get_next_line(fd);
 		if (ft_errno(false))
 			exit_cub3d("GNL: Malloc Error!");
 		if (!line)
 			break ;
+		start--;
 	}
-	
+	while (data->map.height > i)
+	{
+		line = get_next_line(fd);
+		if (ft_errno(false))
+			exit_cub3d("GNL: Malloc Error!");
+		if (!line)
+			break ;
+		i++;
+		printf("%s", line);
+	}
 }

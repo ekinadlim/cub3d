@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/15 15:01:42 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/15 17:57:50 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,10 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (fd < 0)
 		exit_cub3d("Failed to open file!");
 	line_count = get_elements(fd, data);
+	line_count += get_map_size(fd, data);
+	close(fd);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		exit_cub3d("Failed to open file!");
 	get_map(fd, line_count, data);
 }
