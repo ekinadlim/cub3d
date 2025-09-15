@@ -196,7 +196,7 @@ void	print_3d_ray(t_data *data, int ray)
 	// Clamp drawing bounds to screen
 	if (wall_start < 0)
 		wall_start = 0;
-	if (wall_end >= WINDOW_HEIGHT)
+	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
 		wall_end = WINDOW_HEIGHT;
 
 	// --- TEX_X calculation ---
@@ -263,7 +263,7 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (map[y][x] != '1') //!hit_wall (maybe && != ['2'/' '])
+		while (y >= 0 && y < map_height && x >= 0 && x < map_width && map[y][x] != '1' && map[y][x] != ' ')
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
@@ -474,7 +474,7 @@ void	print_map(t_data *data)
 bool	check_if_wall(t_data *data, double y, double x)
 {
 	(void)data;
-	if (map[(int)y][(int)x] == '1'|| map[(int)y][(int)x] == '2') //change to ' '
+	if (y < 0 || y >= map_height || x < 0 || x >= map_width || map[(int)y][(int)x] == '1'|| map[(int)y][(int)x] == ' ')
 		return (false);
 	return (true);
 }
