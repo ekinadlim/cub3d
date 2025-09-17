@@ -10,7 +10,7 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = main.c parsing.c helper.c arg_validation.c get_map.c
+SRC = main.c parsing.c helper.c arg_validation.c get_map.c get_map_size.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
