@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/15 17:56:59 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/18 16:37:09 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ size_t	get_map_size(int fd, t_data *data);
 int		exit_cub3d(char *error_msg); // maybe have this only for execution and have an own function for the rest
 t_data	*get_data(void);
 void	free_2d_array(char **array);
+bool	is_whitespace(char c);
 
 
 #endif // FUNCTIONS_H

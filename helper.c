@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/05 15:01:12 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/18 16:36:02 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,11 @@ void	free_2d_array(char **array)
 	}
 	free(array);
 	array = NULL;
+}
+
+bool	is_whitespace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f')
+		return (true);
+	return (false);
 }
