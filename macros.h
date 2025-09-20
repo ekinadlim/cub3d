@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/12 16:46:39 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/20 16:01:18 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 # define COLOR_WALL		0x0001F4
 # define COLOR_FLOOR	0x000064
 
-typedef enum e_cardinal_direction //enums in this file?
+typedef enum e_cardinal_direction
 {
 	NORTH,
 	SOUTH,
@@ -62,4 +62,4 @@ typedef enum e_color
 	CEILING
 }	t_color;
 
-#endif// MACROS_H
+#endif // MACROS_H

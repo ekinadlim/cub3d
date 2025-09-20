@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/18 16:37:09 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/20 18:24:42 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,22 @@
 
 /* Execution */
 
-
-
 /* Parsing */
 
 void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
 void	get_map(int fd, size_t start, t_data *data);
 size_t	get_map_size(int fd, t_data *data);
+size_t	get_color(t_data *data, char *line, int surface);
+int		get_image(t_data *data, char *line, int direction);
+void	get_player(char **map, t_data *data);
+void	floodfill(size_t x, size_t y, char **map, t_data *data);
 
 /* Helper */
 
-int		exit_cub3d(char *error_msg); // maybe have this only for execution and have an own function for the rest
+int	exit_cub3d(char *error_msg); // maybe have this only for execution and have an own function for the rest
 t_data	*get_data(void);
 void	free_2d_array(char **array);
 bool	is_whitespace(char c);
-
 
 #endif // FUNCTIONS_H

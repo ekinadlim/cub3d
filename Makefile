@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP -g#comment out
+CFLAGS = -Wall -Werror -Wextra -MMD -MP -fsanitize=undefined -g#comment out
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
@@ -10,7 +10,16 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = main.c parsing.c helper.c arg_validation.c get_map.c get_map_size.c
+SRC = 	main.c\
+		parsing.c\
+		arg_validation.c\
+		get_map.c\
+		get_map_size.c\
+		get_color.c\
+		get_image.c\
+		get_player.c\
+		floodfill.c\
+		helper.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
