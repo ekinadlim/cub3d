@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/02 15:36:40 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/11 13:31:18 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ int	exit_cub3d(char *error_msg)
 		mlx_destroy_image(data->mlx, data->image.buffer);
 	if (data->minimap.buffer)
 		mlx_destroy_image(data->mlx, data->minimap.buffer);
+	int i = 0;
+	while (i < 4)
+	{
+		if (data->textures[i].buffer)
+			mlx_destroy_image(data->mlx, data->textures[i].buffer);
+		i++;
+	}
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)

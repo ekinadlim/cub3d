@@ -77,7 +77,7 @@ char	map[10][10] =
 	"1000000001",
 	"1000000001",
 	"1001001001",
-	"1000000001",
+	"1000100001",
 	"1000000001",
 	"1111111111",
 };
@@ -93,12 +93,8 @@ char	map[10][10] =
 
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
-	data->ray.direction = data->player.direction + ((2.0 * ray / WINDOW_WIDTH - 1.0) * (FOV / 2));
-	data->ray.radian = data->ray.direction * (M_PI / 180);
-	//data->ray.y_vector = sin(data->ray.radian);
-	//data->ray.x_vector = cos(data->ray.radian);
-	data->ray.y_vector = sin(data->player.direction * M_PI / 180.0) + (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * sin((data->player.direction + 90) * M_PI / 180.0);
-	data->ray.x_vector = cos(data->player.direction * M_PI / 180.0) + (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * cos((data->player.direction + 90) * M_PI / 180.0);
+	data->ray.y_vector = sin(data->player.direction * M_PI / 180.0) + ((2.0 * ray / (double)WINDOW_WIDTH - 1.0) * tan((FOV * M_PI / 180.0) / 2.0)) * sin((data->player.direction + 90) * M_PI / 180.0);
+	data->ray.x_vector = cos(data->player.direction * M_PI / 180.0) + ((2.0 * ray / (double)WINDOW_WIDTH - 1.0) * tan((FOV * M_PI / 180.0) / 2.0)) * cos((data->player.direction + 90) * M_PI / 180.0);
 	data->ray.y = data->player.y;
 	data->ray.x = data->player.x;
 	*y = (int)data->ray.y;
@@ -166,29 +162,46 @@ void	print_2d_ray(t_data *data)
 		double draw_x = t * (data->ray.x - data->player.x);
 		double draw_y = t * (data->ray.y - data->player.y);
 
+		if (data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
+			|| data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) < 0)
+		{
+			//printf("print_2d_ray\n");
+			break;
+		}
 		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), COLOR_RAY);
 	}
 }
 
-double perp_wall_distt(t_data *data)
+double perp_wall_distt(t_data *data/* , int ray */)
 {
 	double delta_x = data->ray.x - data->player.x;
 	double delta_y = data->ray.y - data->player.y;
-	double ray_angle = atan2(delta_y, delta_x) - (data->player.direction * M_PI / 180.0);
-	double true_distance = sqrt(delta_x * delta_x + delta_y * delta_y) * cos(ray_angle);
-	return true_distance;
+
+	double forward_x = cos(data->player.direction * M_PI / 180.0); //i should probably store this once since it wont change after starting raycasting
+	double forward_y = sin(data->player.direction * M_PI / 180.0);
+
+	double true_distance = delta_x * forward_x + delta_y * forward_y;
+
+	/* if (ray == 0)
+	{
+		printf("delta_x = %f + %f = %f\n", data->ray.x, data->player.x, delta_x);
+		printf("delta_y = %f + %f = %f\n", data->ray.y, data->player.y, delta_y);
+		printf("forward_x = %f\n", forward_x);
+		printf("forward_y = %f\n", forward_y);
+		printf("true_distance = %f\n", true_distance);
+	} */
+	
+	return (true_distance);
 }
 
 void	print_3d_ray(t_data *data, int ray)
 {
-	/* double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + (data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-	double ray_angle = data->ray.direction - data->player.direction;
-	double true_distance = total_distance * cos(ray_angle * M_PI / 180.0);
-	(void)perp_wall_dist;
-	(void)true_distance; */
+	double perp_wall_dist = perp_wall_distt(data/* , ray */);
 
-	//double wall_height = WINDOW_HEIGHT / true_distance;
-	double wall_height = WINDOW_HEIGHT / perp_wall_distt(data);
+	double fov_rad = FOV * M_PI / 180.0;
+	double proj_plane = (WINDOW_WIDTH / 2.0) / tan(fov_rad / 2.0);
+
+	double wall_height = proj_plane / perp_wall_dist;
 
 	int wall_start = (WINDOW_HEIGHT - wall_height) / 2;
 	int wall_end = wall_start + wall_height;
@@ -202,25 +215,19 @@ void	print_3d_ray(t_data *data, int ray)
 	// --- TEX_X calculation ---
 	double wall_x;
 	if (data->ray.wall_hit == EAST || data->ray.wall_hit == WEST)
-		wall_x = data->player.y + perp_wall_distt(data) * data->ray.y_vector;
+		wall_x = data->player.y + perp_wall_dist * data->ray.y_vector;
 	else
-		wall_x = data->player.x + perp_wall_distt(data) * data->ray.x_vector;
+		wall_x = data->player.x + perp_wall_dist * data->ray.x_vector;
 
-	double my_wall_x = wall_x;
-	if (my_wall_x < 0)
-		my_wall_x *= -1;
-	my_wall_x = my_wall_x - (int)my_wall_x;
-	wall_x -= floor(wall_x); // fractional part
-	/* if (ray == WINDOW_WIDTH / 2)
-		printf("MY_WALL_X: %f, OTHER_WALL_X: %f\n", my_wall_x, wall_x); */
+	if (wall_x < 0)
+		wall_x *= -1;
+	wall_x = wall_x - (int)wall_x;
 
 	int tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
 	if (tex_x < 0) tex_x = 0;
 	if (tex_x >= data->textures[data->ray.wall_hit].width) tex_x = data->textures[data->ray.wall_hit].width - 1;
-	//if (ray == WINDOW_WIDTH / 2)
-		//printf("TEX_X: %d\n", tex_x);
 
-	// --- Drawing ---
+
 	for (int y = 0; y < wall_start; y++)
 		fill_image_buffer(data->image, y, ray, data->surface.ceiling);  // Ceiling
 
@@ -230,7 +237,7 @@ void	print_3d_ray(t_data *data, int ray)
 	{
 		// --- TEX_Y calculation ---
 		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
-		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256;
+		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
 
 		int new_tex_y = (int)tex_pos;
 		if (new_tex_y < 0) new_tex_y = 0;
@@ -269,34 +276,11 @@ void	raycasting(t_data *data)
 			move_ray(data, &y, &x);
 			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
 		}
-		/* double perp_wall_dist;
-		if (side == 0)
-			perp_wall_dist = fabs((x - data->player.x + (1 - (data->ray.x_vector > 0 ? 1 : -1)) / 2) / data->ray.x_vector);
-		else
-			perp_wall_dist = fabs((y - data->player.y + (1 - (data->ray.y_vector > 0 ? 1 : -1)) / 2) / data->ray.y_vector); */
 		print_2d_ray(data);
 		print_3d_ray(data, ray);
 		ray += 1;
 	}
 }
-
-/* void	clear_screen(t_image image) //maybe not needed since every pixel will be overwritten when implementing floor and ceiling
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while(i < image.height)
-	{
-		j = 0;
-		while (j < image.width)
-		{
-			fill_image_buffer(image, i, j, COLOR_VOID);
-			j++;
-		}
-		i++;
-	}
-} */
 
 void copy_minimap_to_image(t_data *data)
 {
@@ -589,7 +573,7 @@ void	move_right(t_data *data)
 
 void	turn_left(t_data *data, int speed)
 {
-	data->player.direction -= speed * data->delta_time,
+	data->player.direction -= speed * data->delta_time;
 	data->movement_happend = true;
 	if (data->player.direction < 0)
 		data->player.direction += 360;
@@ -597,7 +581,7 @@ void	turn_left(t_data *data, int speed)
 
 void	turn_right(t_data *data, int speed)
 {
-	data->player.direction += speed * data->delta_time,
+	data->player.direction += speed * data->delta_time;
 	data->movement_happend = true;
 	if (data->player.direction > 360)
 		data->player.direction -= 360;
@@ -675,14 +659,16 @@ int	key_release(int key, t_data *data)
 
 int mouse_move(int x, int y, t_data *data)
 {
-	int delta_x = x - WINDOW_WIDTH / 2;
+	static int half_window_width = WINDOW_WIDTH / 2;
+	static int half_window_height = WINDOW_HEIGHT / 2;
+	int delta_x = x - half_window_width;
 
 	if (delta_x < 0)
-		turn_left(data, -(delta_x * 5));
+		turn_left(data, -(delta_x * 3));
 	else if (delta_x > 0)
-		turn_right(data, delta_x * 5);
-	if (x != WINDOW_WIDTH / 2 || y != WINDOW_HEIGHT / 2)
-		mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		turn_right(data, delta_x * 3);
+	if (x != half_window_width || y != half_window_height)
+		mlx_mouse_move(data->mlx, data->win, half_window_width, half_window_height);
 	return (0);
 }
 
