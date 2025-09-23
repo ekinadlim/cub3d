@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/20 15:42:17 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 14:16:26 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ int	exit_cub3d(char *error_msg)
 		mlx_destroy_image(data->mlx, data->image.buffer);
 	if (data->minimap.buffer)
 		mlx_destroy_image(data->mlx, data->minimap.buffer);
+	int i = 0;
+	while (i < 4)
+	{
+		if (data->textures[i].buffer)
+			mlx_destroy_image(data->mlx, data->textures[i].buffer);
+		i++;
+	}
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
@@ -65,6 +72,7 @@ void	free_2d_array(char **array)
 	array = NULL;
 }
 
+// Returns True if c is a whitespace
 bool	is_whitespace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f')
