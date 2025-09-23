@@ -6,24 +6,25 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:25:23 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/22 16:14:59 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 14:03:14 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	clean_up_map(char** map)
+void	clean_up_map(char **map)
 {
 	size_t	i;
 	size_t	j;
-	
+
 	i = 0;
 	j = 0;
 	while (map[i])
 	{
 		while (map[i][j])
 		{
-			if (map[i][j] == 'X')
+			if (map[i][j] == 'X' || map[i][j] == 'E' || map[i][j] == 'S'
+				|| map[i][j] == 'W' || map[i][j] == 'N')
 				map[i][j] = '0';
 			j++;
 		}
@@ -33,32 +34,31 @@ void	clean_up_map(char** map)
 }
 
 // Check for open walls;
-void	floodfill(size_t x, size_t y, char **map, t_data *data)
+void	floodfill(int x, int y, char **map, t_data *data)
 {
-/* 	for (size_t i = 0; i < (size_t)data->map.height; i++)
-	{
-		for (size_t j = 0; j < (size_t)data->map.width; j++)
+	/* 	for (size_t i = 0; i < (size_t)data->map.height; i++)
 		{
-			if (j == x && i == y)
-				printf("P");
-			else
-				printf("%c", map[i][j]);
+			for (size_t j = 0; j < (size_t)data->map.width; j++)
+			{
+				if (j == x && i == y)
+					printf("P");
+				else
+					printf("%c", map[i][j]);
+			}
+			printf("\n");
 		}
 		printf("\n");
-	}
-
-	printf("\n");
-	usleep(100000); */
+		usleep(100000); */
 	if (x == 0 || y == 0)
-		exit_cub3d("We got contact with the void!");
+		exit_pars("We got contact with the void!", NULL, data);
 	if (map[y + 1][x] == ' ' || map[y + 1][x] == '\0')
-		exit_cub3d("We got contact with the void!");
+		exit_pars("We got contact with the void!", NULL, data);
 	if (map[y - 1][x] == ' ' || map[y - 1][x] == '\0')
-		exit_cub3d("We got contact with the void!");
+		exit_pars("We got contact with the void!", NULL, data);
 	if (map[y][x + 1] == ' ' || map[y][x + 1] == '\0')
-		exit_cub3d("We got contact with the void!");
+		exit_pars("We got contact with the void!", NULL, data);
 	if (map[y][x - 1] == ' ' || map[y][x - 1] == '\0')
-		exit_cub3d("We got contact with the void!");
+		exit_pars("We got contact with the void!", NULL, data);
 	map[y][x] = 'X';
 	if (map[y + 1][x] == '0')
 		floodfill(x, y + 1, map, data);
@@ -73,7 +73,7 @@ void	floodfill(size_t x, size_t y, char **map, t_data *data)
 void	get_pos_and_dir(size_t x, size_t y, char c, t_data *data)
 {
 	if (data->player.x || data->player.y)
-		exit_cub3d("Only one player allowed!");
+		exit_pars("Only one player allowed!", NULL, data);
 	data->player.x = x + 0.5;
 	data->player.y = y + 0.5;
 	if (c == 'E')
@@ -85,36 +85,36 @@ void	get_pos_and_dir(size_t x, size_t y, char c, t_data *data)
 	else if (c == 'N')
 		data->player.direction = 270;
 	else
-		exit_cub3d("No idea how this happened!");
+		exit_pars("No idea how this happened!", NULL, data);
 }
 
 // save player coordinates (x + 0.5, y + 0.5);
-// save player directions (E=0, S=90, W=180, N=270) 
+// save player directions (E=0, S=90, W=180, N=270)
 void	get_player(char **map, t_data *data)
 {
-	size_t	x;
-	size_t	y;
-	size_t	player_x;
-	size_t	player_y;
-	
-	x = 0;
-	y = 0;
-	while (map[y])
+	t_vec_2d_size_t	i;
+	t_vec_2d_int	player;
+
+	i = (t_vec_2d_size_t){0, 0};
+	player = (t_vec_2d_int){-1, -1};
+	while (map[i.y])
 	{
-		while (map[y][x])
+		while (map[i.y][i.x])
 		{
-			if (ft_isalpha(map[y][x]))
+			if (map[i.y][i.x] == 'E' || map[i.y][i.x] == 'S'
+				|| map[i.y][i.x] == 'W' || map[i.y][i.x] == 'N')
 			{
-				get_pos_and_dir(x, y, map[y][x], data);
-				player_x = x;
-				player_y = y;
+				get_pos_and_dir(i.x, i.y, map[i.y][i.x], data);
+				player.x = i.x;
+				player.y = i.y;
 			}
-			x++;
+			i.x++;
 		}
-		y++;
-		x = 0;
+		i.y++;
+		i.x = 0;
 	}
-	data->map.map[player_y][player_x] = '0';
-	floodfill(player_x, player_y, map, data);
+	if (player.x < 0 || player.y < 0)
+		exit_pars("Player is missing!", NULL, data);
+	floodfill(player.x, player.y, map, data);
 	clean_up_map(map);
 }

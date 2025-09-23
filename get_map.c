@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:14:27 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/17 15:13:25 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 12:29:41 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*line_to_map(char *file_line, t_data *data)
 	i = 0;
 	map_line = ft_calloc(data->map.width + 1, sizeof(char));
 	if (!map_line)
-		exit_cub3d("Malloc Error!");
+		exit_pars("Malloc Error!", file_line, data);
 	while (file_line[i] && file_line[i] != '\n')
 	{
 		map_line[i] = file_line[i];
@@ -41,12 +41,12 @@ void	file_to_map(int fd, char *line, t_data *data)
 	i = 0;
 	data->map.map = ft_calloc(data->map.height + 1, sizeof(char *));
 	if (!data->map.map)
-		exit_cub3d("Malloc Error!");
+		exit_pars("Malloc Error!", line, data);
 	while (data->map.height > i)
 	{
 		line = get_next_line(fd);
 		if (ft_errno(false))
-			exit_cub3d("GNL: Malloc Error!");
+			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
 			break ;
 		data->map.map[i] = line_to_map(line, data);
@@ -63,7 +63,7 @@ void	get_map(int fd, size_t start, t_data *data)
 	{
 		line = get_next_line(fd);
 		if (ft_errno(false))
-			exit_cub3d("GNL: Malloc Error!");
+			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
 			break ;
 		free(line);

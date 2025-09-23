@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/20 18:24:42 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 12:44:05 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
 void	get_map(int fd, size_t start, t_data *data);
 size_t	get_map_size(int fd, t_data *data);
-size_t	get_color(t_data *data, char *line, int surface);
-int		get_image(t_data *data, char *line, int direction);
+size_t	get_color(int surface, char *line, t_data *data);
+int		get_image(int direction, char *line, t_data *data);
 void	get_player(char **map, t_data *data);
-void	floodfill(size_t x, size_t y, char **map, t_data *data);
+void	floodfill(int x, int y, char **map, t_data *data);
+void	exit_pars(char *err_msg, char *line, t_data *data);
 
 /* Helper */
 

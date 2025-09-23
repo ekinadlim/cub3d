@@ -18,7 +18,6 @@ SRC = 	main.c\
 		get_color.c\
 		get_image.c\
 		get_player.c\
-		floodfill.c\
 		helper.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)

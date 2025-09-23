@@ -6,11 +6,20 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/20 18:27:44 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 12:10:15 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
+
+// Exit function for the parsing
+void	exit_pars(char *err_msg, char *line, t_data *data)
+{
+	(void)data;
+	if (line)
+		free(line);
+	exit_cub3d(err_msg);
+}
 
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str 
@@ -29,7 +38,7 @@ char	*remove_first_spaces(char *str)
 	new_str = ft_substr(str, i, len - i);
 	free(str);
 	if (!new_str)
-		exit_cub3d("Malloc Error!");
+		exit_pars("Malloc Error!", NULL, NULL);
 	return (new_str);
 }
 
@@ -40,21 +49,21 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 	
 	flag = 0;
 	if (!ft_strncmp(line, "NO", 2))
-		flag = get_image(data, line, NORTH);
+		flag = get_image(NORTH, line, data);
 	else if (!ft_strncmp(line, "EA", 2))
-		flag = get_image(data, line, EAST);
+		flag = get_image(EAST, line, data);
 	else if (!ft_strncmp(line, "SO", 2))
-		flag = get_image(data, line, SOUTH);
+		flag = get_image(SOUTH, line, data);
 	else if (!ft_strncmp(line, "WE", 2))
-		flag = get_image(data, line, WEST);
+		flag = get_image(WEST, line, data);
 	else if (!ft_strncmp(line, "F", 1))
-		flag = get_color(data, line, FLOOR);
+		flag = get_color(FLOOR, line, data);
 	else if (!ft_strncmp(line, "C", 1))
-		flag = get_color(data, line, CEILING);
+		flag = get_color(CEILING, line, data);
 	else if (line[0])
-		exit_cub3d("Garbage!");
+		exit_pars("Garbage!", line, data);
 	if (flag & filemask)
-		exit_cub3d("Multiple occurance of the same element!");
+		exit_pars("Multiple occurance of the same element!", line, data);
 	return (flag);
 }
 
@@ -71,7 +80,7 @@ size_t	get_elements(int fd, t_data *data)
 	{
 		line = get_next_line(fd);
 		if (ft_errno(false))
-			exit_cub3d("GNL: Malloc Error!");
+			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
 			break ;
 		line = remove_first_spaces(line);
@@ -81,7 +90,7 @@ size_t	get_elements(int fd, t_data *data)
 			return (line_count);
 	}
 	if (filemask < (1 << ELEMENT_COUNT) - 1)
-		exit_cub3d("Missing elements!");
+		exit_pars("Missing elements!", line, data);
 	return (line_count);
 }
 
@@ -93,13 +102,13 @@ void	parsing(int argc, char **argv, t_data *data)
 	arg_validation(argc, argv[1]);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		exit_cub3d("Failed to open file!");
+		exit_pars("Failed to open file!", NULL, data);
 	line_count = get_elements(fd, data);
 	line_count += get_map_size(fd, data);
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		exit_cub3d("Failed to open file!");
+		exit_pars("Failed to open file!", NULL, data);
 	get_map(fd, line_count, data);
 	get_player(data->map.map, data);
 }
