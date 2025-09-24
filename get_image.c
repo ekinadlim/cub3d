@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 17:43:33 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:11:31 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	get_image(int direction, char *line, t_data *data)
 	data->textures[direction].buffer = mlx_xpm_file_to_image(data->mlx, path,
 			&data->textures[direction].width,
 			&data->textures[direction].height);
-	free (path);
+	free(path);
 	if (!data->textures[direction].buffer)
 		exit_pars("MLX: Failed to convert xpm to img!", line, data);
 	data->textures[direction].address = mlx_get_data_addr(data->textures[direction].buffer,

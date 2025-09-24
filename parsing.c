@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 18:24:54 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:12:14 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	exit_pars(char *err_msg, char *line, t_data *data)
 	(void)data;
 	if (data->fd > 0)
 	{
-		get_next_line(data->fd, true); //i think we should store fd in data, so we can easily use in exit_pars instead of passing to all functions (check if fd != -1 before calling gnl)
+		get_next_line(data->fd, true);
 		close (data->fd);
 	}
 	if (line)
@@ -53,13 +53,13 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 	size_t	flag;
 	
 	flag = 0;
-	if (!ft_strncmp(line, "NO", 2))
+	if (!ft_strncmp(line, "NO", 2) && !data->textures[NORTH].buffer)
 		flag = get_image(NORTH, line, data);
-	else if (!ft_strncmp(line, "EA", 2))
+	else if (!ft_strncmp(line, "EA", 2) && !data->textures[EAST].buffer)
 		flag = get_image(EAST, line, data);
-	else if (!ft_strncmp(line, "SO", 2))
+	else if (!ft_strncmp(line, "SO", 2) && !data->textures[SOUTH].buffer)
 		flag = get_image(SOUTH, line, data);
-	else if (!ft_strncmp(line, "WE", 2))
+	else if (!ft_strncmp(line, "WE", 2) && !data->textures[WEST].buffer)
 		flag = get_image(WEST, line, data);
 	else if (!ft_strncmp(line, "F", 1))
 		flag = get_color(FLOOR, line, data);
@@ -115,5 +115,6 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (data->fd < 0)
 		exit_pars("Failed to open file!", NULL, data);
 	get_map(line_count, data);
+	close(data->fd);
 	get_player(data->map.map, data);
 }

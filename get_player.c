@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:25:23 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 14:03:14 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/24 14:50:05 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,49 +33,13 @@ void	clean_up_map(char **map)
 	}
 }
 
-// Check for open walls;
-void	floodfill(int x, int y, char **map, t_data *data)
-{
-	/* 	for (size_t i = 0; i < (size_t)data->map.height; i++)
-		{
-			for (size_t j = 0; j < (size_t)data->map.width; j++)
-			{
-				if (j == x && i == y)
-					printf("P");
-				else
-					printf("%c", map[i][j]);
-			}
-			printf("\n");
-		}
-		printf("\n");
-		usleep(100000); */
-	if (x == 0 || y == 0)
-		exit_pars("We got contact with the void!", NULL, data);
-	if (map[y + 1][x] == ' ' || map[y + 1][x] == '\0')
-		exit_pars("We got contact with the void!", NULL, data);
-	if (map[y - 1][x] == ' ' || map[y - 1][x] == '\0')
-		exit_pars("We got contact with the void!", NULL, data);
-	if (map[y][x + 1] == ' ' || map[y][x + 1] == '\0')
-		exit_pars("We got contact with the void!", NULL, data);
-	if (map[y][x - 1] == ' ' || map[y][x - 1] == '\0')
-		exit_pars("We got contact with the void!", NULL, data);
-	map[y][x] = 'X';
-	if (map[y + 1][x] == '0')
-		floodfill(x, y + 1, map, data);
-	if (map[y - 1][x] == '0')
-		floodfill(x, y - 1, map, data);
-	if (map[y][x + 1] == '0')
-		floodfill(x + 1, y, map, data);
-	if (map[y][x - 1] == '0')
-		floodfill(x - 1, y, map, data);
-}
-
-void	get_pos_and_dir(size_t x, size_t y, char c, t_data *data)
+void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 {
 	if (data->player.x || data->player.y)
 		exit_pars("Only one player allowed!", NULL, data);
-	data->player.x = x + 0.5;
-	data->player.y = y + 0.5;
+	data->player.x = pos.x + 0.5;
+	data->player.y = pos.y + 0.5;
+	data->map.map[pos.y][pos.x] = '0';
 	if (c == 'E')
 		data->player.direction = 0;
 	else if (c == 'S')
@@ -92,29 +56,30 @@ void	get_pos_and_dir(size_t x, size_t y, char c, t_data *data)
 // save player directions (E=0, S=90, W=180, N=270)
 void	get_player(char **map, t_data *data)
 {
-	t_vec_2d_size_t	i;
+	t_vec_2d_size_t	pos;
 	t_vec_2d_int	player;
 
-	i = (t_vec_2d_size_t){0, 0};
+	pos = (t_vec_2d_size_t){0, 0};
 	player = (t_vec_2d_int){-1, -1};
-	while (map[i.y])
+	while (map[pos.y])
 	{
-		while (map[i.y][i.x])
+		while (map[pos.y][pos.x])
 		{
-			if (map[i.y][i.x] == 'E' || map[i.y][i.x] == 'S'
-				|| map[i.y][i.x] == 'W' || map[i.y][i.x] == 'N')
+			if (map[pos.y][pos.x] == 'E' || map[pos.y][pos.x] == 'S'
+				|| map[pos.y][pos.x] == 'W' || map[pos.y][pos.x] == 'N')
 			{
-				get_pos_and_dir(i.x, i.y, map[i.y][i.x], data);
-				player.x = i.x;
-				player.y = i.y;
+				get_pos_and_dir(pos, map[pos.y][pos.x], data);
+				player.x = pos.x;
+				player.y = pos.y;
 			}
-			i.x++;
+			pos.x++;
 		}
-		i.y++;
-		i.x = 0;
+		pos.y++;
+		pos.x = 0;
 	}
 	if (player.x < 0 || player.y < 0)
 		exit_pars("Player is missing!", NULL, data);
-	floodfill(player.x, player.y, map, data);
+	// floodfill(player, map, data);
 	clean_up_map(map);
+	check_map(player, map, data);
 }

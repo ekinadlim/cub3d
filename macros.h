@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 15:50:07 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/24 15:11:37 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # define _GNU_SOURCE //for M_PI
 
-# define MAP_CHAR_SET "10 NESW"
+# define MAP_CHAR_SET "01 NESW"
 
 # define PI_DIVIDED_BY_180 (M_PI / 180.0) // converts degrees to radians
 //Do a lot of similar MACROS

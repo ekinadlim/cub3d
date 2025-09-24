@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP -g -fsanitize=undefined #comment out -pedantic -Wno-newline-eof
+CFLAGS = -Wall -Werror -Wextra -MMD -MP #-g -fsanitize=undefined #comment out -pedantic -Wno-newline-eof
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
@@ -18,6 +18,7 @@ SRC = 	main.c\
 		get_color.c\
 		get_image.c\
 		get_player.c\
+		check_map.c\
 		helper.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
