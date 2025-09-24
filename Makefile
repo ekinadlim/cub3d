@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP #-fsanitize=undefined #-g #comment out -pedantic -Wno-newline-eof
+CFLAGS = -Wall -Werror -Wextra -MMD -MP -g -fsanitize=undefined #comment out -pedantic -Wno-newline-eof
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
@@ -25,7 +25,7 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
-	./$(NAME) maps/example.cub
+#./$(NAME) maps/example.cub
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
@@ -50,6 +50,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) maps/example.cub
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/example.cub
 
 .PHONY: all clean fclean re val

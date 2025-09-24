@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 13:24:44 by apartowi          #+#    #+#             */
-/*   Updated: 2025/08/25 19:46:21 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:18:42 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	ft_printptr(unsigned long n, char previous, int *count);
 void	ft_check_negative(int n, char previous, int *count);
 
 //get_next_line_bonus
-char	*get_next_line(int fd);
+char	*get_next_line(int fd, bool free_remainder);
 char	*ft_eof_or_error(int a_r, char *buffer, char **line, char **remainder);
 void	ft_free_remainder(char **remainder);
 char	*gnl_ft_strjoin(char const *s1, char const *s2, size_t n);

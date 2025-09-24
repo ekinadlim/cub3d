@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 19:22:30 by apartowi          #+#    #+#             */
-/*   Updated: 2025/09/03 14:46:24 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:18:02 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,14 @@ static char	*ft_real_gnl(int fd, char *buffer, char **line, char **remainder)
 	}
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, bool free_remainder)
 {
 	char		*buffer;
 	char		*line;
 	static char	*remainder[1024];
 
+	if (free_remainder)
+		return (ft_free_remainder(&remainder[fd]), NULL);
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (0);
 	line = gnl_ft_strjoin(0, "", 1);

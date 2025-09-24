@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:14:27 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:29:41 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:18:21 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*line_to_map(char *file_line, t_data *data)
 	return (map_line);
 }
 
-void	file_to_map(int fd, char *line, t_data *data)
+void	file_to_map(char *line, t_data *data)
 {
 	int	i;
 	
@@ -44,7 +44,7 @@ void	file_to_map(int fd, char *line, t_data *data)
 		exit_pars("Malloc Error!", line, data);
 	while (data->map.height > i)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(data->fd, false);
 		if (ft_errno(false))
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
@@ -55,13 +55,13 @@ void	file_to_map(int fd, char *line, t_data *data)
 	}
 }
 
-void	get_map(int fd, size_t start, t_data *data)
+void	get_map(size_t start, t_data *data)
 {
 	char	*line;
 	
 	while (start)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(data->fd, false);
 		if (ft_errno(false))
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
@@ -69,5 +69,5 @@ void	get_map(int fd, size_t start, t_data *data)
 		free(line);
 		start--;
 	}
-	file_to_map(fd, line, data);
+	file_to_map(line, data);
 }

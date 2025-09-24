@@ -19,8 +19,8 @@
 
 void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
-void	get_map(int fd, size_t start, t_data *data);
-size_t	get_map_size(int fd, t_data *data);
+void	get_map(size_t start, t_data *data);
+size_t	get_map_size(t_data *data);
 size_t	get_color(int surface, char *line, t_data *data);
 int		get_image(int direction, char *line, t_data *data);
 void	get_player(char **map, t_data *data);

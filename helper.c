@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 14:16:26 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 17:21:35 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,17 @@ int	exit_cub3d(char *error_msg)
 			mlx_destroy_image(data->mlx, data->textures[i].buffer);
 		i++;
 	}
+	if (data->map.map)
+	{
+		i = 0;
+		while (i < data->map.height) //correct?
+		{
+			if (data->map.map[i])
+				free (data->map.map[i]);
+			i++;
+		}
+		free (data->map.map);
+	}
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
@@ -63,7 +74,7 @@ void	free_2d_array(char **array)
 	i = 0;
 	if (!array)
 		return ;
-	while (array[i])
+	while (array[i]) //needs testing
 	{
 		free(array[i]);
 		i++;

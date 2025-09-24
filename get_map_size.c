@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map_size.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:13:08 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:20:35 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:18:13 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	is_valid_line(char *line, t_data *data)
 }
 
 // Returns the starting line
-size_t	skip_first_newlines(int fd, t_data *data)
+size_t	skip_first_newlines(t_data *data)
 {
 	size_t	start;
 	char	*line;
@@ -47,7 +47,7 @@ size_t	skip_first_newlines(int fd, t_data *data)
 	start = 0;
 	while (1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(data->fd, false);
 		if (ft_errno(false))
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
@@ -65,17 +65,17 @@ size_t	skip_first_newlines(int fd, t_data *data)
 }
 
 // Returns the starting line of the map
-size_t	get_map_size(int fd, t_data *data)
+size_t	get_map_size(t_data *data)
 {
 	char	*line;
 	size_t	start;
 	bool	has_nl;
 
 	has_nl = false;
-	start = skip_first_newlines(fd, data);
+	start = skip_first_newlines(data);
 	while (1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(data->fd, false);
 		if (ft_errno(false))
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)

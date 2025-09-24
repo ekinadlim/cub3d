@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:10:15 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:24:54 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 void	exit_pars(char *err_msg, char *line, t_data *data)
 {
 	(void)data;
+	if (data->fd > 0)
+	{
+		get_next_line(data->fd, true); //i think we should store fd in data, so we can easily use in exit_pars instead of passing to all functions (check if fd != -1 before calling gnl)
+		close (data->fd);
+	}
 	if (line)
 		free(line);
 	exit_cub3d(err_msg);
@@ -68,7 +73,7 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 }
 
 // Handles the textures and colors from the .cub file
-size_t	get_elements(int fd, t_data *data)
+size_t	get_elements(t_data *data)
 {
 	char	*line;
 	size_t	filemask;
@@ -78,13 +83,14 @@ size_t	get_elements(int fd, t_data *data)
 	line_count = 0;
 	while (1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(data->fd, false);
 		if (ft_errno(false))
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
 			break ;
 		line = remove_first_spaces(line);
 		filemask += distribute_element(line, data, filemask);
+		free(line);
 		line_count++;
 		if (filemask == (1 << ELEMENT_COUNT) - 1)
 			return (line_count);
@@ -96,19 +102,18 @@ size_t	get_elements(int fd, t_data *data)
 
 void	parsing(int argc, char **argv, t_data *data)
 {
-	int		fd;
 	size_t	line_count;
 
 	arg_validation(argc, argv[1]);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
+	data->fd = open(argv[1], O_RDONLY);
+	if (data->fd < 0)
 		exit_pars("Failed to open file!", NULL, data);
-	line_count = get_elements(fd, data);
-	line_count += get_map_size(fd, data);
-	close(fd);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
+	line_count = get_elements(data);
+	line_count += get_map_size(data);
+	close(data->fd);
+	data->fd = open(argv[1], O_RDONLY);
+	if (data->fd < 0)
 		exit_pars("Failed to open file!", NULL, data);
-	get_map(fd, line_count, data);
+	get_map(line_count, data);
 	get_player(data->map.map, data);
 }

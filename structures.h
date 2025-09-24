@@ -83,6 +83,7 @@ typedef struct s_data
 	t_map		map;
 	int			surface[2];
 	t_image		textures[4];
+	int			fd;
 }				t_data;
 
 #endif // STRUCTURES_H
