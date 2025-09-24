@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:44:05 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/24 14:50:28 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ size_t	get_map_size(int fd, t_data *data);
 size_t	get_color(int surface, char *line, t_data *data);
 int		get_image(int direction, char *line, t_data *data);
 void	get_player(char **map, t_data *data);
-void	floodfill(int x, int y, char **map, t_data *data);
+void	floodfill(t_vec_2d_int pos, char **map, t_data *data);
 void	exit_pars(char *err_msg, char *line, t_data *data);
+void	check_map(t_vec_2d_int player_pos, char **map, t_data *data);
 
 /* Helper */
 

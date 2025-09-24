@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:10:15 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/24 16:12:14 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ size_t	distribute_element(char *line, t_data *data, size_t filemask)
 	size_t	flag;
 	
 	flag = 0;
-	if (!ft_strncmp(line, "NO", 2))
+	if (!ft_strncmp(line, "NO", 2) && !data->textures[NORTH].buffer)
 		flag = get_image(NORTH, line, data);
-	else if (!ft_strncmp(line, "EA", 2))
+	else if (!ft_strncmp(line, "EA", 2) && !data->textures[EAST].buffer)
 		flag = get_image(EAST, line, data);
-	else if (!ft_strncmp(line, "SO", 2))
+	else if (!ft_strncmp(line, "SO", 2) && !data->textures[SOUTH].buffer)
 		flag = get_image(SOUTH, line, data);
-	else if (!ft_strncmp(line, "WE", 2))
+	else if (!ft_strncmp(line, "WE", 2) && !data->textures[WEST].buffer)
 		flag = get_image(WEST, line, data);
 	else if (!ft_strncmp(line, "F", 1))
 		flag = get_color(FLOOR, line, data);
@@ -85,6 +85,7 @@ size_t	get_elements(int fd, t_data *data)
 			break ;
 		line = remove_first_spaces(line);
 		filemask += distribute_element(line, data, filemask);
+		free(line);
 		line_count++;
 		if (filemask == (1 << ELEMENT_COUNT) - 1)
 			return (line_count);

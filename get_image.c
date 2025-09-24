@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 12:12:11 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/24 16:11:31 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*get_path(char *line, t_data *data)
 	path = ft_substr(line, start, len);
 	if (!path)
 		exit_pars("Substr: Malloc Error!", line, data);
-	return (free(line), path);
+	return (path);
 }
 
 // Retrieves the image from the xpm file and returns a mask depending on the direction
@@ -50,6 +50,7 @@ int	get_image(int direction, char *line, t_data *data)
 	data->textures[direction].buffer = mlx_xpm_file_to_image(data->mlx, path,
 			&data->textures[direction].width,
 			&data->textures[direction].height);
+	free(path);
 	if (!data->textures[direction].buffer)
 		exit_pars("MLX: Failed to convert xpm to img!", line, data);
 	data->textures[direction].address = mlx_get_data_addr(data->textures[direction].buffer,
