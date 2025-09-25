@@ -115,6 +115,6 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (data->fd < 0)
 		exit_pars("Failed to open file!", NULL, data);
 	get_map(line_count, data);
-	close(data->fd);
 	get_player(data->map.map, data);
+	close(data->fd);
 }
