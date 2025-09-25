@@ -190,10 +190,12 @@ void	raycasting(t_data *data)
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
 			//maybe toggle if grid view for minimap or wave (print_2d_ray)
-			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
+			if (data->ray_toggle)
+				fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
 		}
 		//maybe toggle if grid view for minimap or wave (print_2d_ray)
-		print_2d_ray(data);
+		if (!data->ray_toggle)
+			print_2d_ray(data);
 		print_3d_ray(data, ray);
 		ray += 1;
 	}
@@ -241,7 +243,7 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		if (data->movement_happend || data->keys['m'])
+		if (data->movement_happend || data->keys['m']|| data->keys['r'])
 			print_map(data);
 	}
 	return (0);

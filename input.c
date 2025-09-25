@@ -19,6 +19,11 @@ int	key_press(int key, t_data *data)
 		data->keys['m'] = true;
 		data->minimap_toggle = !data->minimap_toggle;
 	}
+	else if (key == 'r')
+	{
+		data->keys['r'] = true;
+		data->ray_toggle = !data->ray_toggle;
+	}
 	else if (key == 'q' || key == KEY_ESC)
 		exit_cub3d(NULL);
 	return (0);

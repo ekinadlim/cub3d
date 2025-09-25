@@ -74,8 +74,9 @@ typedef struct s_data
 	t_player	player;
 	t_image		image;
 	t_image		minimap;
-	bool 		movement_happend; // to know if we need to print
-	bool		minimap_toggle;
+	bool 		movement_happend; // to know if we need to print (better name)
+	bool		minimap_toggle; //on/off
+	bool		ray_toggle; //which ray view in minimap
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;
