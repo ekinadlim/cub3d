@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:03:43 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/25 14:01:13 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 15:49:24 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	get_color_number(char *line, size_t *i, int color_shift, t_data *data)
 	{
 		if (line[*i] >= '0' && line[*i] <= '9')
 		{
-			if (digit > 2 || (digit > 0 && str_num[digit - 1] == '0'))
+			if (digit > 2 || (digit > 0 && ((str_num[0] == '0' && str_num[digit - 1] == '0') || is_whitespace(line[*i - 1]))))
 				exit_pars("Invalid Color Code!", line, data);
 			str_num[digit++] = line[*i];
 		}
@@ -41,7 +41,7 @@ int	get_color_number(char *line, size_t *i, int color_shift, t_data *data)
 			(*i)++;
 			return (comma_handling(color_shift, str_num, line, data));
 		}
-		else if (line[*i] && !is_whitespace(line[*i]))
+		else if (!is_whitespace(line[*i]))
 			exit_pars("Garbage in Surface element!", line, data);
 		(*i)++;
 	}

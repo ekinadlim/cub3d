@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/24 14:50:28 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:21:09 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	check_map(t_vec_2d_int player_pos, char **map, t_data *data);
 
 /* Helper */
 
-int	exit_cub3d(char *error_msg); // maybe have this only for execution and have an own function for the rest
+int		exit_cub3d(char *error_msg);
 t_data	*get_data(void);
 void	free_2d_array(char **array);
 bool	is_whitespace(char c);

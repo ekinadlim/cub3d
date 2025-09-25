@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/25 14:08:58 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:23:13 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,6 @@ void	parsing(int argc, char **argv, t_data *data)
 	if (data->fd < 0)
 		exit_pars("Failed to open file!", NULL, data);
 	get_map(line_count, data);
-	close(data->fd);
 	get_player(data->map.map, data);
+	close(data->fd);
 }

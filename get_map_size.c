@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map_size.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:13:08 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 18:18:13 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:20:47 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ size_t	get_map_size(t_data *data)
 			exit_pars("GNL: Malloc Error!", line, data);
 		if (!line)
 			break ;
-		if (!ft_strncmp(line, "\n", 2) && !has_nl)
+		if (!ft_strncmp(line, "\n", 2))
 			has_nl = true;
 		else if (has_nl)
 			exit_pars("Map separated by new line(s)!", line, data);
