@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:25:23 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/24 14:50:05 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:05:14 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	get_player(char **map, t_data *data)
 	}
 	if (player.x < 0 || player.y < 0)
 		exit_pars("Player is missing!", NULL, data);
-	// floodfill(player, map, data);
 	clean_up_map(map);
 	check_map(player, map, data);
 }
