@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_image.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/24 16:11:31 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:03:19 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,22 @@ char	*get_path(char *line, t_data *data)
 	return (path);
 }
 
-// Retrieves the image from the xpm file and returns a mask depending on the direction
-int	get_image(int direction, char *line, t_data *data)
+// Retrieves the image from the xpm file
+// and returns a mask depending on the direction
+int	get_image(int dir, char *line, t_data *data)
 {
 	char	*path;
 
 	path = get_path(line, data);
-	data->textures[direction].buffer = mlx_xpm_file_to_image(data->mlx, path,
-			&data->textures[direction].width,
-			&data->textures[direction].height);
+	data->textures[dir].buffer = mlx_xpm_file_to_image(data->mlx, path,
+			&data->textures[dir].width, &data->textures[dir].height);
 	free(path);
-	if (!data->textures[direction].buffer)
+	if (!data->textures[dir].buffer)
 		exit_pars("MLX: Failed to convert xpm to img!", line, data);
-	data->textures[direction].address = mlx_get_data_addr(data->textures[direction].buffer,
-			&data->textures[direction].bits_per_pixel,
-			&data->textures[direction].size_line,
-			&data->textures[direction].endian);
-	if (!data->textures[direction].address)
+	data->textures[dir].address = mlx_get_data_addr(data->textures[dir].buffer,
+			&data->textures[dir].bits_per_pixel, &data->textures[dir].size_line,
+			&data->textures[dir].endian);
+	if (!data->textures[dir].address)
 		exit_pars("MLX: Failed to get data address!", line, data);
-	return (1 << direction);
+	return (1 << dir);
 }

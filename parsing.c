@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/24 16:12:14 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:08:58 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exit_pars(char *err_msg, char *line, t_data *data)
 	if (data->fd > 0)
 	{
 		get_next_line(data->fd, true);
-		close (data->fd);
+		close(data->fd);
 	}
 	if (line)
 		free(line);
@@ -27,7 +27,7 @@ void	exit_pars(char *err_msg, char *line, t_data *data)
 }
 
 // Removes all spaces in the beginning of str
-// but exits if there are other whitespaces through out the rest of str 
+// but exits if there are other whitespaces through out the rest of str
 char	*remove_first_spaces(char *str)
 {
 	size_t	i;
@@ -51,7 +51,7 @@ char	*remove_first_spaces(char *str)
 size_t	distribute_element(char *line, t_data *data, size_t filemask)
 {
 	size_t	flag;
-	
+
 	flag = 0;
 	if (!ft_strncmp(line, "NO", 2) && !data->textures[NORTH].buffer)
 		flag = get_image(NORTH, line, data);

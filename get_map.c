@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:14:27 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/24 16:19:33 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/25 14:04:41 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*line_to_map(char *file_line, t_data *data)
 {
 	char	*map_line;
 	int		i;
-	
+
 	i = 0;
 	map_line = ft_calloc(data->map.width + 1, sizeof(char));
 	if (!map_line)
@@ -37,7 +37,7 @@ char	*line_to_map(char *file_line, t_data *data)
 void	file_to_map(char *line, t_data *data)
 {
 	int	i;
-	
+
 	i = 0;
 	data->map.map = ft_calloc(data->map.height + 1, sizeof(char *));
 	if (!data->map.map)
@@ -58,7 +58,7 @@ void	file_to_map(char *line, t_data *data)
 void	get_map(size_t start, t_data *data)
 {
 	char	*line;
-	
+
 	while (start)
 	{
 		line = get_next_line(data->fd, false);
