@@ -561,13 +561,13 @@ void	continuous_collision_detection_x_negative(t_data *data, double x)
 }
 */
 
-void ccd_positive_y(t_data *data, double y, double offset)
+void ccd_positive_y(t_data *data, double *y, double offset)
 {
 	int i;
 	bool is_valid = true;
 
 	i = 1;
-	while (i < y)
+	while (i < *y)
 	{
 		if (!check_if_wall(data, data->player.y + i, data->player.x))
 		{
@@ -576,22 +576,19 @@ void ccd_positive_y(t_data *data, double y, double offset)
 		}
 		i++;
 	}
-	if (!is_valid || !check_if_wall(data, data->player.y + y + offset, data->player.x))
+	if (!is_valid || !check_if_wall(data, data->player.y + *y + offset, data->player.x))
 	{
-		y = (int)data->player.y + i - data->player.y - offset;
-		printf("1 ccd_positive_y: player.y: %f, wall: %d, y: %f\n", data->player.y, (int)data->player.y + i, y);
+		*y = (int)data->player.y + i - data->player.y - offset;
 	}
-	data->player.y += y;
-	data->movement_happend = true;
 }
 
-void ccd_negative_y(t_data *data, double y, double offset)
+void ccd_negative_y(t_data *data, double *y, double offset)
 {
 	int i;
 	bool is_valid = true;
 
 	i = -1;
-	while (i > y)
+	while (i > *y)
 	{
 		if (!check_if_wall(data, data->player.y + i, data->player.x))
 		{
@@ -600,30 +597,27 @@ void ccd_negative_y(t_data *data, double y, double offset)
 		}
 		i--;
 	}
-	if (!is_valid || !check_if_wall(data, data->player.y + y + offset, data->player.x))
+	if (!is_valid || !check_if_wall(data, data->player.y + *y + offset, data->player.x))
 	{
-		y = (int)data->player.y + i + 1 - data->player.y - offset;
-		printf("1 ccd_negative_y: player.y: %f, wall: %d, y: %f\n", data->player.y, (int)data->player.y + i, y);
+		*y = (int)data->player.y + i + 1 - data->player.y - offset;
 	}
-	data->player.y += y;
-	data->movement_happend = true;
 }
 
-void	continuous_collision_detection_y(t_data *data, double y, double offset)
+void	continuous_collision_detection_y(t_data *data, double *y, double offset)
 {
-	if (y >= 1)
+	if (*y >= 1)
 		ccd_positive_y(data, y, offset);
-	else if (y <= -1)
+	else if (*y <= -1)
 		ccd_negative_y(data, y, offset);
 }
 
-void ccd_positive_x(t_data *data, double x, double offset)
+void ccd_positive_x(t_data *data, double *x, double offset)
 {
 	int i;
 	bool is_valid = true;
 
 	i = 1;
-	while (i < x)
+	while (i < *x)
 	{
 		if (!check_if_wall(data, data->player.y, data->player.x + i))
 		{
@@ -632,22 +626,19 @@ void ccd_positive_x(t_data *data, double x, double offset)
 		}
 		i++;
 	}
-	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + x + offset))
+	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + *x + offset))
 	{
-		x = (int)data->player.x + i - data->player.x - offset;
-		printf("1 ccd_positive_x: player.x: %f, wall: %d, x: %f\n", data->player.x, (int)data->player.x + i, x);
+		*x = (int)data->player.x + i - data->player.x - offset;
 	}
-	data->player.x += x;
-	data->movement_happend = true;
 }
 
-void ccd_negative_x(t_data *data, double x, double offset)
+void ccd_negative_x(t_data *data, double *x, double offset)
 {
 	int i;
 	bool is_valid = true;
 
 	i = -1;
-	while (i > x)
+	while (i > *x)
 	{
 		if (!check_if_wall(data, data->player.y, data->player.x + i))
 		{
@@ -656,21 +647,76 @@ void ccd_negative_x(t_data *data, double x, double offset)
 		}
 		i--;
 	}
-	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + x + offset))
+	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + *x + offset))
 	{
-		x = (int)data->player.x + i + 1 - data->player.x - offset;
-		printf("1 ccd_negative_x: player.x: %f, wall: %d, x: %f\n", data->player.x, (int)data->player.x + i, x);
+		*x = (int)data->player.x + i + 1 - data->player.x - offset;
 	}
-	data->player.x += x;
-	data->movement_happend = true;
 }
 
-void	continuous_collision_detection_x(t_data *data, double x, double offset)
+void	continuous_collision_detection_x(t_data *data, double *x, double offset)
 {
-	if (x >= 1)
+	if (*x >= 1)
 		ccd_positive_x(data, x, offset);
-	else if (x <= -1)
+	else if (*x <= -1)
 		ccd_negative_x(data, x, offset);
+}
+
+void	move_y(t_data *data, double y, double offset)
+{
+	bool	can_move;
+
+	can_move = false;
+	if (y <= -1 || y >= 1)
+	{
+		continuous_collision_detection_y(data, &y, offset);
+		can_move = true;
+	}
+	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
+		can_move = true;
+	else if (y > 0 && data->player.y - (int)data->player.y < 0.8)
+	{
+		y = (int)data->player.y + 1 - offset - data->player.y;
+		can_move = true;
+	}
+	else if (y < 0 && data->player.y - (int)data->player.y > 0.2)
+	{
+		y = (int)data->player.y - offset - data->player.y;
+		can_move = true;
+	}
+	if(can_move)
+	{
+		data->player.y += y;
+		data->movement_happend = true;
+	}
+}
+
+void	move_x(t_data *data, double x, double offset)
+{
+	bool	can_move;
+
+	can_move = false;
+	if (x <= -1 || x >= 1)
+	{
+		continuous_collision_detection_x(data, &x, offset);
+		can_move = true;
+	}
+	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
+		can_move = true;
+	else if (x > 0 && data->player.x - (int)data->player.x < 0.8)
+	{
+		x = (int)data->player.x + 1 - offset - data->player.x;
+		can_move = true;
+	}
+	else if (x < 0 && data->player.x - (int)data->player.x > 0.2)
+	{
+		x = (int)data->player.x - offset - data->player.x;
+		can_move = true;
+	}
+	if(can_move)
+	{
+		data->player.x += x;
+		data->movement_happend = true;
+	}
 }
 
 void	move_forward(t_data *data)
@@ -678,36 +724,18 @@ void	move_forward(t_data *data)
 	double radian = data->player.direction * M_PI / 180.0;
 	double x = cos(radian) * (4 * data->delta_time);
 	double y = sin(radian) * (4 * data->delta_time);
-	double offset;
+	double offset; //can just pass either 0.2 or -0.2 inside the function to save 3 lines
 
 	if (y < 0)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (y <= -1 || y >= 1)
-	{
-		continuous_collision_detection_y(data, y, offset);
-	}
-	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
-	{
-		//printf("player.y: %f, y: %f\n", data->player.y, y);
-		data->player.y += y;
-		data->movement_happend = true;
-	}
+	move_y(data, y, offset);
 	if (x < 0)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (x <= -1 || x >= 1)
-	{
-		continuous_collision_detection_x(data, x, offset);
-	}
-	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
-	{
-		//printf("player.x: %f, x: %f\n", data->player.x, x);
-		data->player.x += x;
-		data->movement_happend = true;
-	}
+	move_x(data, x, offset);
 }
 
 void	move_backwards(t_data *data)
@@ -721,28 +749,12 @@ void	move_backwards(t_data *data)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (y <= -1 || y >= 1)
-	{
-		continuous_collision_detection_y(data, y, offset);
-	}
-	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
-	{
-		data->player.y += y;
-		data->movement_happend = true;
-	}
+	move_y(data, y, offset);
 	if (x < 0)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (x <= -1 || x >= 1)
-	{
-		continuous_collision_detection_x(data, x, offset);
-	}
-	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
-	{
-		data->player.x += x;
-		data->movement_happend = true;
-	}
+	move_x(data, x, offset);
 }
 
 void	move_left(t_data *data)
@@ -756,28 +768,12 @@ void	move_left(t_data *data)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (y <= -1 || y >= 1)
-	{
-		continuous_collision_detection_y(data, y, offset);
-	}
-	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
-	{
-		data->player.y += y;
-		data->movement_happend = true;
-	}
+	move_y(data, y, offset);
 	if (x < 0)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (x <= -1 || x >= 1)
-	{
-		continuous_collision_detection_x(data, x, offset);
-	}
-	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
-	{
-		data->player.x += x;
-		data->movement_happend = true;
-	}
+	move_x(data, x, offset);
 }
 
 void	move_right(t_data *data)
@@ -791,28 +787,12 @@ void	move_right(t_data *data)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (y <= -1 || y >= 1)
-	{
-		continuous_collision_detection_y(data, y, offset);
-	}
-	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
-	{
-		data->player.y += y;
-		data->movement_happend = true;
-	}
+	move_y(data, y, offset);
 	if (x < 0)
 		offset = -0.2;
 	else
 		offset = 0.2;
-	if (x <= -1 || x >= 1)
-	{
-		continuous_collision_detection_x(data, x, offset);
-	}
-	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
-	{
-		data->player.x += x;
-		data->movement_happend = true;
-	}
+	move_x(data, x, offset);
 }
 
 void	turn_left(t_data *data, int speed)
