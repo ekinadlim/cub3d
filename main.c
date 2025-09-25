@@ -26,70 +26,6 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 		*(int *)pixel_index = color;
 	}
 }
-//for testing
-int		map_height = 10;
-int		map_width = 10;
-
-/* char	map[14][25] = 
-{
-	"1111111111111111111111111",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	" 101001000000000000000001",
-	" 100000000000000000000001",
-	" 100000000000000000000001",
-	"1001001000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1000000000000000000000001",
-	"1111111111111111111111111",
-}; */
-
-/* char	map[14][25] = 
-{
-	"1111111111111111111111111",
-	"1000000000110000000000001",
-	"1000000001110000000000001",
-	"1001000000000000000000001",
-	"1111111110110000011100001",
-	"1000000000110000011101111",
-	"1111011111111101110000001",
-	"1111011111111101110101001",
-	"1100000011010101110000001",
-	"1000000000000000110000001",
-	"1000000000000000110101001",
-	"1100000111010101111101111",
-	"11110111 1110101 10111101",
-	"11111111 1111111 11111111",
-}; */
-
-char	map[10][10] = 
-{
-	"1111111111",
-	"1000000001",
-	"1000000001",
-	"1001001001",
-	"1000000001",
-	"1000000001",
-	"1001001001",
-	"1000100001",
-	"1000000001",
-	"1111111111",
-};
-
-/* char	map[5][5] = 
-{
-	"11111",
-	"10001",
-	"10101",
-	"10001",
-	"11111",
-}; */
 
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
@@ -148,27 +84,6 @@ void	move_ray(t_data *data, int *y, int *x)
 			(*x)--;
 			data->ray.wall_hit = WEST;
 		}
-	}
-}
-
-void	print_2d_ray(t_data *data)
-{
-	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
-									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-	int steps = (int)(total_distance * GRID_SIZE * SCALING);
-
-	for (int i = 0; i <= steps; i += 5) {
-		double t = (double)i / steps;
-		double draw_x = t * (data->ray.x - data->player.x);
-		double draw_y = t * (data->ray.y - data->player.y);
-
-		if (data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
-			|| data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) < 0)
-		{
-			//printf("print_2d_ray\n");
-			break;
-		}
-		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), COLOR_RAY);
 	}
 }
 
@@ -231,18 +146,18 @@ void	print_3d_ray(t_data *data, int ray)
 	for (int y = 0; y < wall_start; y++)
 		fill_image_buffer(data->image, y, ray, data->surface[CEILING]);  // Ceiling
 
-	double step = (double)data->textures[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
-	double tex_pos = (wall_start - WINDOW_HEIGHT / 2.0 + wall_height / 2.0) * step;
+	//double step = (double)data->textures[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
+	//double tex_pos = (wall_start - WINDOW_HEIGHT / 2.0 + wall_height / 2.0) * step;
 	for (int y = wall_start; y < wall_end; y++)
 	{
 		// --- TEX_Y calculation ---
 		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
 		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
 
-		int new_tex_y = (int)tex_pos;
+		/* int new_tex_y = (int)tex_pos;
 		if (new_tex_y < 0) new_tex_y = 0;
 		if (new_tex_y >= data->textures[data->ray.wall_hit].height) new_tex_y = data->textures[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
-		tex_pos += step;
+		tex_pos += step; */
 		if (tex_y < 0) tex_y = 0;
 		if (tex_y >= data->textures[data->ray.wall_hit].height) tex_y = data->textures[data->ray.wall_hit].height - 1;
 
@@ -274,176 +189,18 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
+			//maybe toggle if grid view for minimap or wave (print_2d_ray)
 			//fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
 		}
+		//maybe toggle if grid view for minimap or wave (print_2d_ray)
 		print_2d_ray(data);
 		print_3d_ray(data, ray);
 		ray += 1;
 	}
 }
 
-void copy_minimap_to_image(t_data *data)
-{
-	int		i;
-	int		j;
-	char	*pixel_index;
-	int		color;
-
-	fill_image_buffer(data->minimap, data->minimap.height / 2, data->minimap.width / 2, COLOR_PLAYER); //Player
-	i = 0;
-	while (i < data->minimap.height)
-	{
-		j = 0;
-		while (j < data->minimap.width)
-		{
-			pixel_index = data->minimap.address + (i * data->minimap.size_line) + (j * (data->minimap.bits_per_pixel / 8));
-			color = *(int *)pixel_index;
-			fill_image_buffer(data->image, MINIMAP_POS_Y + i, MINIMAP_POY_X + j, color);
-			j++;
-		}
-		i++;
-	}
-}
-
-/* void	print_minimap_grid(t_data *data)
-{
-	int	i;
-	int	j;
-	int	a;
-	int b;
-	int color;
-
-	i = 0;
-	while (i < map_height)
-	{
-		j = 0;
-		while (j < map_width)
-		{
-			if (map[i][j] == '1')
-				color = COLOR_WALL;
-			else if (map[i][j] == '0')
-				color = COLOR_FLOOR;
-			else
-				color = COLOR_VOID;
-			a = 0;
-			while (a < GRID_SIZE * SCALING)
-			{
-				b = 0;
-				while (b < GRID_SIZE * SCALING)
-				{
-					fill_image_buffer(data->minimap, (i * GRID_SIZE * SCALING) + a, (j * GRID_SIZE * SCALING) + b, color);
-					b++;
-				}
-				a++;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-void	new_minimap_grid_print(t_data *data)
-{
-	int offset = GRID_SIZE * SCALING / 2;
-	int color;
-	double start_y = data->player.y - offset;
-	double start_x = data->player.x - offset;
-	double end_y = start_y + GRID_SIZE * SCALING;
-	double end_x = start_x + GRID_SIZE * SCALING;
-	int i;
-	int j;
-
-
-	while (start_y < end_y)
-	{
-		start_x = end_x - GRID_SIZE * SCALING;
-		while (start_x < end_x)
-		{
-			if (start_y < 0 || start_x < 0 || end_y > map_height || end_x > map_width)
-				color = COLOR_VOID;
-			else if (map[(int)start_y][(int)start_x] == '1')
-				color = COLOR_WALL;
-			else if (map[(int)start_y][(int)start_x] == '0')
-				color = COLOR_FLOOR;
-			else
-				color = COLOR_VOID;
-			i = 0;
-			while (i < GRID_SIZE * SCALING)
-			{
-				j = 0;
-				while (j < GRID_SIZE * SCALING)
-				{
-					fill_image_buffer(data->minimap, (((start_y) * GRID_SIZE * SCALING) + offset) + i, (((start_x) * GRID_SIZE * SCALING) + offset) + j, color);
-					j++;
-				}
-				i++;
-			}
-			start_x++;
-		}
-		start_y++;
-	}
-} */
-
-void	print_minimap_grid(t_data *data)
-{
-	/* double origin_offset_y = (data->player.y - (int)data->player.y) * 10;
-	double origin_offset_x = (data->player.x - (int)data->player.x) * 10; */
-
-	double current_offset_y = 0;
-	double current_offset_x = 0;
-
-	double starting_y = data->player.y - GRID_COUNT / 2; //top left
-	double starting_x = data->player.x - GRID_COUNT / 2; //top left
-
-	double current_y = starting_y;
-	double current_x = starting_x;
-
-	for (int map_y = 0; map_y < GRID_COUNT; map_y++)
-	{
-		current_x = starting_x; //lets say 4.8
-		for (int map_x = 0; map_x < GRID_COUNT; map_x++)
-		{
-			current_offset_y = 0;
-			for (int pixel_y = 0; pixel_y < GRID_SIZE * SCALING; pixel_y++)
-			{
-				current_offset_x = 0;
-				for (int pixel_x = 0; pixel_x < GRID_SIZE * SCALING; pixel_x++)
-				{
-					int color;
-					double real_y = (current_y + current_offset_y);
-					double real_x = (current_x + current_offset_x);
-					if (real_y > -1 && real_y < 0)
-						real_y = -1;
-					if (real_x > -1 && real_x < 0)
-						real_x = -1;
-					if (real_y < 0 || real_x < 0 || real_y >= data->map.height || real_x >= data->map.width)
-						color = COLOR_VOID;
-					else if (data->map.map[(int)real_y][(int)real_x] == '1')
-						color = COLOR_WALL;
-					else if (data->map.map[(int)real_y][(int)real_x] == '0')
-						color = COLOR_FLOOR;
-					else
-						color = COLOR_VOID;
-
-					fill_image_buffer(data->minimap, pixel_y + (map_y * GRID_SIZE * SCALING), pixel_x + (map_x * GRID_SIZE * SCALING), color);
-
-					//if (map_y == 0 && map_x == 0)
-						//printf("real_y: %d, real_x: %d, pixel_y add: %d, pixel_x add %d, current_y + current_offset_y: %f, current_x + current_offset_x: %f\n", real_y, real_x, pixel_y + (map_y * GRID_SIZE), pixel_x + (map_x * GRID_SIZE), current_y + current_offset_y, current_x + current_offset_x);
-
-					current_offset_x += 0.1 / SCALING;
-				}
-				current_offset_y += 0.1 / SCALING;
-			}
-			current_x++;
-		}
-		current_y++;
-	}
-}
-
 void	print_map(t_data *data)
 {
-	//clear_screen(data->image);
-
 	if (data->minimap_toggle)
 		print_minimap_grid(data);
 
@@ -461,356 +218,6 @@ bool	check_if_wall(t_data *data, double y, double x)
 	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ')
 		return (false);
 	return (true);
-}
-
-/*
-void	continuous_collision_detection_y_positive(t_data *data, double y)
-{
-	int i = 1;
-	int valid = 1;
-
-	while (i < y)
-	{
-		if (!check_if_wall(data, data->player.y + i, data->player.x))
-		{
-			valid = 0;
-			break ;
-		}
-		i++;
-	}
-	printf("Before y: %f\n", y);
-	if (!valid)
-	{
-		y = (int)(data->player.y + i) - data->player.y - 0.2;
-	}
-	printf("After y: %f\n", y);
-	data->player.y += y;
-	data->movement_happend = true;
-}
-
-void	continuous_collision_detection_y_negative(t_data *data, double y)
-{
-	int i = -1;
-	int valid = 1;
-
-	while (i >= y)
-	{
-		if (!check_if_wall(data, data->player.y + i, data->player.x))
-		{
-			valid = 0;
-			break ;
-		}
-		i--;
-	}
-	printf("Before y: %f\n", y);
-	if (!valid)
-	{
-		y = (int)(data->player.y + i + 1) - data->player.y + 0.2;
-	}
-	printf("After y: %f\n", y);
-	data->player.y += y;
-	data->movement_happend = true;
-}
-
-void	continuous_collision_detection_x_positive(t_data *data, double x)
-{
-	int i = 1;
-	int valid = 1;
-
-	while (i < x)
-	{
-		if (!check_if_wall(data, data->player.y, data->player.x + i))
-		{
-			valid = 0;
-			break ;
-		}
-		i++;
-	}
-	printf("Before x: %f\n", x);
-	if (!valid)
-	{
-		x = (int)(data->player.x + i) - data->player.x - 0.2;
-	}
-	printf("After x: %f\n", x);
-	data->player.x += x;
-	data->movement_happend = true;
-}
-
-void	continuous_collision_detection_x_negative(t_data *data, double x)
-{
-	int i = -1;
-	int valid = 1;
-
-	while (i >= x)
-	{
-		if (!check_if_wall(data, data->player.y + i, data->player.x))
-		{
-			valid = 0;
-			break ;
-		}
-		i--;
-	}
-	printf("Before x: %f\n", x);
-	if (!valid)
-	{
-		x = (int)(data->player.x + i + 1) - data->player.x + 0.2;
-	}
-	printf("After x: %f\n", x);
-	data->player.x += x;
-	data->movement_happend = true;
-}
-*/
-
-void ccd_positive_y(t_data *data, double *y, double offset)
-{
-	int i;
-	bool is_valid = true;
-
-	i = 1;
-	while (i < *y)
-	{
-		if (!check_if_wall(data, data->player.y + i, data->player.x))
-		{
-			is_valid = false;
-			break ;
-		}
-		i++;
-	}
-	if (!is_valid || !check_if_wall(data, data->player.y + *y + offset, data->player.x))
-	{
-		*y = (int)data->player.y + i - data->player.y - offset;
-	}
-}
-
-void ccd_negative_y(t_data *data, double *y, double offset)
-{
-	int i;
-	bool is_valid = true;
-
-	i = -1;
-	while (i > *y)
-	{
-		if (!check_if_wall(data, data->player.y + i, data->player.x))
-		{
-			is_valid = false;
-			break ;
-		}
-		i--;
-	}
-	if (!is_valid || !check_if_wall(data, data->player.y + *y + offset, data->player.x))
-	{
-		*y = (int)data->player.y + i + 1 - data->player.y - offset;
-	}
-}
-
-void	continuous_collision_detection_y(t_data *data, double *y, double offset)
-{
-	if (*y >= 1)
-		ccd_positive_y(data, y, offset);
-	else if (*y <= -1)
-		ccd_negative_y(data, y, offset);
-}
-
-void ccd_positive_x(t_data *data, double *x, double offset)
-{
-	int i;
-	bool is_valid = true;
-
-	i = 1;
-	while (i < *x)
-	{
-		if (!check_if_wall(data, data->player.y, data->player.x + i))
-		{
-			is_valid = false;
-			break ;
-		}
-		i++;
-	}
-	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + *x + offset))
-	{
-		*x = (int)data->player.x + i - data->player.x - offset;
-	}
-}
-
-void ccd_negative_x(t_data *data, double *x, double offset)
-{
-	int i;
-	bool is_valid = true;
-
-	i = -1;
-	while (i > *x)
-	{
-		if (!check_if_wall(data, data->player.y, data->player.x + i))
-		{
-			is_valid = false;
-			break ;
-		}
-		i--;
-	}
-	if (!is_valid || !check_if_wall(data, data->player.y, data->player.x + *x + offset))
-	{
-		*x = (int)data->player.x + i + 1 - data->player.x - offset;
-	}
-}
-
-void	continuous_collision_detection_x(t_data *data, double *x, double offset)
-{
-	if (*x >= 1)
-		ccd_positive_x(data, x, offset);
-	else if (*x <= -1)
-		ccd_negative_x(data, x, offset);
-}
-
-void	move_y(t_data *data, double y, double offset)
-{
-	bool	can_move;
-
-	can_move = false;
-	if (y <= -1 || y >= 1)
-	{
-		continuous_collision_detection_y(data, &y, offset);
-		can_move = true;
-	}
-	else if (check_if_wall(data, data->player.y + y + offset, data->player.x))
-		can_move = true;
-	else if (y > 0 && data->player.y - (int)data->player.y < 0.8)
-	{
-		y = (int)data->player.y + 1 - offset - data->player.y;
-		can_move = true;
-	}
-	else if (y < 0 && data->player.y - (int)data->player.y > 0.2)
-	{
-		y = (int)data->player.y - offset - data->player.y;
-		can_move = true;
-	}
-	if(can_move)
-	{
-		data->player.y += y;
-		data->movement_happend = true;
-	}
-}
-
-void	move_x(t_data *data, double x, double offset)
-{
-	bool	can_move;
-
-	can_move = false;
-	if (x <= -1 || x >= 1)
-	{
-		continuous_collision_detection_x(data, &x, offset);
-		can_move = true;
-	}
-	else if (check_if_wall(data, data->player.y, data->player.x + x + offset))
-		can_move = true;
-	else if (x > 0 && data->player.x - (int)data->player.x < 0.8)
-	{
-		x = (int)data->player.x + 1 - offset - data->player.x;
-		can_move = true;
-	}
-	else if (x < 0 && data->player.x - (int)data->player.x > 0.2)
-	{
-		x = (int)data->player.x - offset - data->player.x;
-		can_move = true;
-	}
-	if(can_move)
-	{
-		data->player.x += x;
-		data->movement_happend = true;
-	}
-}
-
-void	move_forward(t_data *data)
-{
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * (4 * data->delta_time);
-	double y = sin(radian) * (4 * data->delta_time);
-	double offset; //can just pass either 0.2 or -0.2 inside the function to save 3 lines
-
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
-}
-
-void	move_backwards(t_data *data)
-{
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * (-4 * data->delta_time);
-	double y = sin(radian) * (-4 * data->delta_time);
-	double offset;
-
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
-}
-
-void	move_left(t_data *data)
-{
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian - (M_PI / 2)) * (4 * data->delta_time);
-	double y = sin(radian - (M_PI / 2)) * (4 * data->delta_time);
-	double offset;
-
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
-}
-
-void	move_right(t_data *data)
-{
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian + (M_PI / 2)) * (4 * data->delta_time);
-	double y = sin(radian + (M_PI / 2)) * (4 * data->delta_time);
-	double offset;
-
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
-}
-
-void	turn_left(t_data *data, int speed)
-{
-	//printf("speed: %d * delta_time: %f = %f\n", speed, data->delta_time, speed * data->delta_time);
-	data->player.direction -= speed * data->delta_time;
-	data->movement_happend = true;
-	if (data->player.direction < 0)
-		data->player.direction += 360;
-}
-
-void	turn_right(t_data *data, int speed)
-{
-	//printf("speed: %d * delta_time: %f = %f\n", speed, data->delta_time, speed * data->delta_time);
-	data->player.direction += speed * data->delta_time;
-	data->movement_happend = true;
-	if (data->player.direction > 360)
-		data->player.direction -= 360;
 }
 
 int	game_loop(t_data *data)
@@ -837,78 +244,6 @@ int	game_loop(t_data *data)
 		if (data->movement_happend || data->keys['m'])
 			print_map(data);
 	}
-	return (0);
-}
-
-int	key_press(int key, t_data *data)
-{
-	if (key == 'w')
-		data->keys['w'] = true;
-	else if (key == 'd')
-		data->keys['d'] = true;
-	else if (key == 's')
-		data->keys['s'] = true;
-	else if (key == 'a')
-		data->keys['a'] = true;
-	else if (key == KEY_LEFT)
-		data->keys['j'] = true;
-	else if (key == KEY_RIGHT)
-		data->keys['l'] = true;
-	else if (key == 'm' && !data->keys['m'])
-	{
-		data->keys['m'] = true;
-		data->minimap_toggle = !data->minimap_toggle;
-	}
-	else if (key == 'q' || key == KEY_ESC)
-		exit_cub3d(NULL);
-	return (0);
-}
-
-int	key_release(int key, t_data *data)
-{
-	if (key == 'w')
-		data->keys['w'] = false;
-	else if (key == 'd')
-		data->keys['d'] = false;
-	else if (key == 's')
-		data->keys['s'] = false;
-	else if (key == 'a')
-		data->keys['a'] = false;
-	else if (key == KEY_LEFT)
-		data->keys['j'] = false;
-	else if (key == KEY_RIGHT)
-		data->keys['l'] = false;
-	else if (key == 'm')
-		data->keys['m'] = false;
-	return (0);
-}
-
-int mouse_move(int x, int y, t_data *data)
-{
-	static int half_window_width = WINDOW_WIDTH / 2;
-	static int half_window_height = WINDOW_HEIGHT / 2;
-	int delta_x = x - half_window_width;
-
-	if (delta_x < 0)
-		turn_left(data, -(delta_x * 3));
-	else if (delta_x > 0)
-		turn_right(data, delta_x * 3);
-	if (x != half_window_width || y != half_window_height)
-		mlx_mouse_move(data->mlx, data->win, half_window_width, half_window_height);
-	return (0);
-}
-
-int	mouse_click(int button, int x, int y, t_data *data)
-{
-	(void)button;
-	mouse_move(x, y, data);
-	return (0);
-}
-
-int	mouse_release(int button, int x, int y, t_data *data)
-{
-	(void)button;
-	mouse_move(x, y, data);
 	return (0);
 }
 
@@ -940,10 +275,9 @@ int main(int argc, char **argv)
 	
 	init_data();
 	data = get_data();
-	//do small map
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);
 	parsing(argc, argv, data);
 	data->time_reference = get_current_time();
 	data->image.height = WINDOW_HEIGHT;

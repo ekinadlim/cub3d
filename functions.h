@@ -13,9 +13,44 @@
 #ifndef FUNCTIONS_H
 # define FUNCTIONS_H
 
-/* Execution */
+/* ----------- Execution ----------- */
 
-/* Parsing */
+/* Input */
+
+int	key_press(int key, t_data *data);
+int	key_release(int key, t_data *data);
+int	mouse_move(int x, int y, t_data *data);
+int	mouse_click(int button, int x, int y, t_data *data);
+int	mouse_release(int button, int x, int y, t_data *data);
+
+/* Player Movement */
+
+void	move_forward(t_data *data);
+void	move_backwards(t_data *data);
+void	move_left(t_data *data);
+void	move_right(t_data *data);
+void	move_y(t_data *data, double y, double offset);
+void	move_x(t_data *data, double x, double offset);
+
+/* Player Rotation */
+
+void	turn_right(t_data *data, int speed);
+void	turn_left(t_data *data, int speed);
+
+/* Minimap */
+
+void	copy_minimap_to_image(t_data *data);
+void	print_2d_ray(t_data *data); //change name
+void	print_minimap_grid(t_data *data);
+
+/* Raycasting */
+
+/* I don't know where to put them */
+
+bool	check_if_wall(t_data *data, double y, double x);
+void	fill_image_buffer(t_image image, int y, int x, int color);
+
+/* ----------- Parsing ----------- */
 
 void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
