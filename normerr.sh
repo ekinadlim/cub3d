@@ -1,3 +1,3 @@
 #!/bin/bash
 
-norminette $1 | grep -v "Ok"
+norminette $1 | grep -v "OK"

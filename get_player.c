@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:25:23 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/25 14:05:14 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/09/30 15:38:34 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	clean_up_map(char **map)
 void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 {
 	if (data->player.x || data->player.y)
-		exit_pars("Only one player allowed!", NULL, data);
+		exit_pars("Only one player allowed!", data);
 	data->player.x = pos.x + 0.5;
 	data->player.y = pos.y + 0.5;
 	data->map.map[pos.y][pos.x] = '0';
@@ -49,7 +49,7 @@ void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 	else if (c == 'N')
 		data->player.direction = 270;
 	else
-		exit_pars("No idea how this happened!", NULL, data);
+		exit_pars("No idea how this happened!", data);
 }
 
 // save player coordinates (x + 0.5, y + 0.5);
@@ -78,7 +78,7 @@ void	get_player(char **map, t_data *data)
 		pos.x = 0;
 	}
 	if (player.x < 0 || player.y < 0)
-		exit_pars("Player is missing!", NULL, data);
+		exit_pars("Player is missing!", data);
 	clean_up_map(map);
-	check_map(player, map, data);
+	check_map(map, data);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/23 17:21:35 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:45:29 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,7 @@ int	exit_cub3d(char *error_msg)
 			mlx_destroy_image(data->mlx, data->textures[i].buffer);
 		i++;
 	}
-	if (data->map.map)
-	{
-		i = 0;
-		while (i < data->map.height) //correct?
-		{
-			if (data->map.map[i])
-				free (data->map.map[i]);
-			i++;
-		}
-		free (data->map.map);
-	}
+	free_2d_array(&data->map.map);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
@@ -67,20 +57,21 @@ int	exit_cub3d(char *error_msg)
 	exit(EXIT_SUCCESS);
 }
 
-void	free_2d_array(char **array)
+void	free_2d_array(char ***array)
 {
 	size_t	i;
 
 	i = 0;
-	if (!array)
+	if (!array || !*array)
 		return ;
-	while (array[i]) //needs testing
+	while ((*array)[i])
 	{
-		free(array[i]);
+		free((*array)[i]);
+		(*array)[i] = NULL;
 		i++;
 	}
-	free(array);
-	array = NULL;
+	free(*array);
+	*array = NULL;
 }
 
 // Returns True if c is a whitespace
