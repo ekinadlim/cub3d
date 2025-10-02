@@ -29,10 +29,28 @@ void	print_2d_ray(t_data *data)
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
 	int steps = (int)(total_distance * GRID_SIZE * SCALING);
 
-	for (int i = 0; i <= steps; i += 5) {
-		double t = (double)i / steps;
-		double draw_x = t * (data->ray.x - data->player.x);
-		double draw_y = t * (data->ray.y - data->player.y);
+	if (steps <= 0)
+	{
+		printf("AAAAAAA: steps = %d\n", steps);
+		//steps = 1;
+	}
+
+	for (int i = 0; i <= steps; i += 10) {
+		double progress = (double)i / steps; //goes from from 0 to 1, so from player position to ray position
+		double draw_x = progress * (data->ray.x - data->player.x);
+		double draw_y = progress * (data->ray.y - data->player.y);
+
+		/* if (isnan(draw_x) || isnan(draw_y))
+        {
+			if (steps <= 0)
+			{
+				printf("DEBUG: steps <= 0, total_distance: %f\n", total_distance);
+			}
+            printf("DEBUG NaN: draw values - i:%d progress:%f draw_x:%f draw_y:%f\n", 
+                i, progress, draw_x, draw_y);
+            printf("DEBUG NaN: components - ray.x:%f player.x:%f ray.y:%f player.y:%f\n", 
+                data->ray.x, data->player.x, data->ray.y, data->player.y);
+        } */
 
 		if (data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
 			|| data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) < 0)

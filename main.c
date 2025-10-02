@@ -214,7 +214,7 @@ void	print_map(t_data *data)
 	data->movement_happend = false;
 }
 
-bool	check_if_wall(t_data *data, double y, double x)
+bool	check_if_wall(t_data *data, double y, double x) //better name (is_grid_valid) or something like that
 {
 	(void)data;
 	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ')
