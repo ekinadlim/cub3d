@@ -1,7 +1,7 @@
-NO textures/prototype/one.xpm
-SO textures/prototype/two.xpm
-WE textures/prototype/three.xpm
-EA textures/prototype/four.xpm
+NO portal_textures/crystal_box.xpm
+SO portal_textures/crystal_imac.xpm
+WE portal_textures/crystal.xpm
+EA portal_textures/crystal_sign.xpm
 
 F 112,112,112
 C 32,32,32

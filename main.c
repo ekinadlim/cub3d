@@ -243,7 +243,7 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		if (data->movement_happend || data->keys['m']|| data->keys['r'])
+		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
 			print_map(data);
 	}
 	return (0);
@@ -253,7 +253,7 @@ void	start_mlx(t_data *data)
 {
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
-		exit_cub3d(NULL);//free (maybe use exit_cub3d() and pass an exit status for function fail or normal exit?)
+		exit_cub3d(NULL);
 	data->image.buffer = mlx_new_image(data->mlx, data->image.width, data->image.height);
 	if (data->image.buffer == NULL)
 		exit_cub3d(NULL);
