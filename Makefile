@@ -11,6 +11,12 @@ OBJ_DIR = obj
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC = 	main.c\
+		input.c\
+		movement_1.c\
+		movement_2.c\
+		movement_3.c\
+		player_rotation.c\
+		minimap.c\
 		parsing.c\
 		arg_validation.c\
 		get_map.c\

@@ -20,6 +20,8 @@
 # define PI_DIVIDED_BY_180 (M_PI / 180.0) // converts degrees to radians
 //Do a lot of similar MACROS
 
+#define EPSILON 1e-10
+
 # define WINDOW_HEIGHT	900 //480
 # define WINDOW_WIDTH	1600 //640
 

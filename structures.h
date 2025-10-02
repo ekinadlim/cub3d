@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/29 15:53:42 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/02 14:46:31 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ typedef struct s_data
 	t_player	player;
 	t_image		image;
 	t_image		minimap;
-	bool		movement_happend;
-	bool		minimap_toggle;
+	bool 		movement_happend; // to know if we need to print (better name)
+	bool		minimap_toggle; //on/off
+	bool		ray_toggle; //which ray view in minimap
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;
