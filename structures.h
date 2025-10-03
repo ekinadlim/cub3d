@@ -32,23 +32,35 @@ typedef struct s_player
 	double		y;
 	double		x;
 	double		direction;
+	double		direction_in_radians; //data->player.direction * M_PI / 180.0
+	double		direction_sin; //sin(data->player.direction * M_PI / 180.0)
+	double		direction_cos; //cos(data->player.direction * M_PI / 180.0)
+	double		direction_right_sin; //sin((data->player.direction + 90) * M_PI / 180.0)
+	double		direction_right_cos; //cos((data->player.direction + 90) * M_PI / 180.0)
 }				t_player;
+
+typedef struct s_value //better name
+{
+	double		fov_tan_half; //tan((FOV * PI_180) / 2.0)
+	double		proj_plane; //(WINDOW_WIDTH / 2.0) / tan((FOV * PI_180) / 2.0)
+	double		ray_direction_x[WINDOW_WIDTH];
+}				t_value;
 
 typedef struct s_image
 {
 	int			height;
 	int			width;
+	int			half_height;
+	int			half_width;
 	void		*buffer;
 	char		*address;
-	int			bits_per_pixel;
+	int			bytes_per_pixel;
 	int			size_line;
 	int			endian;
 }				t_image;
 
 typedef struct s_ray
 {
-	double		direction;
-	double		radian;
 	double		y_vector;
 	double		x_vector;
 	double		y;
@@ -89,6 +101,7 @@ typedef struct s_data
 	int			surface[2];
 	t_image		textures[4];
 	t_parsing	pars;
+	t_value		value;
 }				t_data;
 
 #endif // STRUCTURES_H

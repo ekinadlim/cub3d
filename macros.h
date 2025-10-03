@@ -17,13 +17,13 @@
 
 # define MAP_CHAR_SET "01 NESW"
 
-# define PI_DIVIDED_BY_180 (M_PI / 180.0) // converts degrees to radians
+# define PI_180 0.017453292519943295474371680598 // converts degrees to radians
 //Do a lot of similar MACROS
 
 #define EPSILON 1e-10
 
-# define WINDOW_HEIGHT	900 //480
-# define WINDOW_WIDTH	1600 //640
+# define WINDOW_WIDTH	/* 1600 */ 1280 /* 640 */
+# define WINDOW_HEIGHT	/* 900 */ 720 /* 480 */
 
 # define BUFFER_SIZE 100
 
@@ -35,7 +35,7 @@
 # define MINIMAP_POY_X	0 //(WINDOW_WIDTH - MINIMAP_WIDTH) /* RIGHT */
 # define GRID_COUNT		10 //How many Grids there are per row/column on the Minimap
 # define GRID_SIZE		10 //How many Pixels there are per row/column for each Grid
-# define SCALING		2 //For the Minimap size
+# define SCALING		1.5 //For the Minimap size
 
 # define FPS	60
 # define FOV	90

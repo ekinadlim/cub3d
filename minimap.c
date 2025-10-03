@@ -7,14 +7,14 @@ void copy_minimap_to_image(t_data *data)
 	char	*pixel_index;
 	int		color;
 
-	fill_image_buffer(data->minimap, data->minimap.height / 2, data->minimap.width / 2, COLOR_PLAYER); //Player
+	fill_image_buffer(data->minimap, data->minimap.half_height, data->minimap.half_width, COLOR_PLAYER); //Player
 	i = 0;
 	while (i < data->minimap.height)
 	{
 		j = 0;
 		while (j < data->minimap.width)
 		{
-			pixel_index = data->minimap.address + (i * data->minimap.size_line) + (j * (data->minimap.bits_per_pixel / 8));
+			pixel_index = data->minimap.address + (i * data->minimap.size_line) + (j * data->minimap.bytes_per_pixel);
 			color = *(int *)pixel_index;
 			fill_image_buffer(data->image, MINIMAP_POS_Y + i, MINIMAP_POY_X + j, color);
 			j++;
@@ -52,13 +52,13 @@ void	print_2d_ray(t_data *data)
                 data->ray.x, data->player.x, data->ray.y, data->player.y);
         } */
 
-		if (data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
-			|| data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING) < 0)
+		if (data->minimap.half_height + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.half_width + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
+			|| data->minimap.half_height + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.half_width + (int)(draw_x * GRID_SIZE * SCALING) < 0)
 		{
 			//printf("print_2d_ray\n");
 			break;
 		}
-		fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)(draw_x * GRID_SIZE * SCALING), COLOR_RAY);
+		fill_image_buffer(data->minimap, data->minimap.half_height + (int)(draw_y * GRID_SIZE * SCALING), data->minimap.half_width + (int)(draw_x * GRID_SIZE * SCALING), COLOR_RAY);
 	}
 }
 

@@ -50,6 +50,8 @@ void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 		data->player.direction = 270;
 	else
 		exit_pars("No idea how this happened!", data);
+	data->player.direction_in_radians
+		= data->player.direction * PI_180;
 }
 
 // save player coordinates (x + 0.5, y + 0.5);

@@ -22,15 +22,29 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 
 	if (x >= 0 && y >= 0 && x < image.width && y < image.height) //protection not needed?
 	{
-		pixel_index = image.address + (y * image.size_line) + (x * (image.bits_per_pixel / 8));
+		pixel_index = image.address + (y * image.size_line) + (x * image.bytes_per_pixel);
 		*(int *)pixel_index = color;
+	}
+}
+
+void	calculate_fixed_values(t_data *data)
+{
+	int	ray;
+
+	ray = 0;
+	data->value.fov_tan_half = tan((FOV * PI_180) / 2.0); //maybe not needed in struct, just do as const in this function
+	data->value.proj_plane = data->image.half_width / data->value.fov_tan_half;
+	while (ray < WINDOW_WIDTH)
+	{
+		data->value.ray_direction_x[ray] = (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * data->value.fov_tan_half;
+		ray++;
 	}
 }
 
 void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
-	data->ray.y_vector = sin(data->player.direction * M_PI / 180.0) + ((2.0 * ray / (double)WINDOW_WIDTH - 1.0) * tan((FOV * M_PI / 180.0) / 2.0)) * sin((data->player.direction + 90) * M_PI / 180.0);
-	data->ray.x_vector = cos(data->player.direction * M_PI / 180.0) + ((2.0 * ray / (double)WINDOW_WIDTH - 1.0) * tan((FOV * M_PI / 180.0) / 2.0)) * cos((data->player.direction + 90) * M_PI / 180.0);
+	data->ray.y_vector = data->player.direction_sin + data->value.ray_direction_x[ray] * data->player.direction_right_sin;
+	data->ray.x_vector = data->player.direction_cos + data->value.ray_direction_x[ray] * data->player.direction_right_cos;
 	data->ray.y = data->player.y;
 	data->ray.x = data->player.x;
 	*y = (int)data->ray.y;
@@ -92,31 +106,16 @@ double perp_wall_distt(t_data *data/* , int ray */)
 	double delta_x = data->ray.x - data->player.x;
 	double delta_y = data->ray.y - data->player.y;
 
-	double forward_x = cos(data->player.direction * M_PI / 180.0); //i should probably store this once since it wont change after starting raycasting
-	double forward_y = sin(data->player.direction * M_PI / 180.0);
+	double true_distance = delta_x * data->player.direction_cos + delta_y * data->player.direction_sin;
 
-	double true_distance = delta_x * forward_x + delta_y * forward_y;
-
-	/* if (ray == 0)
-	{
-		printf("delta_x = %f + %f = %f\n", data->ray.x, data->player.x, delta_x);
-		printf("delta_y = %f + %f = %f\n", data->ray.y, data->player.y, delta_y);
-		printf("forward_x = %f\n", forward_x);
-		printf("forward_y = %f\n", forward_y);
-		printf("true_distance = %f\n", true_distance);
-	} */
-	
 	return (true_distance);
 }
 
 void	print_3d_ray(t_data *data, int ray)
 {
-	double perp_wall_dist = perp_wall_distt(data/* , ray */);
+	const double perp_wall_dist = perp_wall_distt(data/* , ray */);
 
-	double fov_rad = FOV * M_PI / 180.0;
-	double proj_plane = (WINDOW_WIDTH / 2.0) / tan(fov_rad / 2.0);
-
-	double wall_height = proj_plane / perp_wall_dist;
+	double wall_height = data->value.proj_plane / perp_wall_dist;
 
 	int wall_start = (WINDOW_HEIGHT - wall_height) / 2;
 	int wall_end = wall_start + wall_height;
@@ -146,27 +145,18 @@ void	print_3d_ray(t_data *data, int ray)
 	for (int y = 0; y < wall_start; y++)
 		fill_image_buffer(data->image, y, ray, data->surface[CEILING]);  // Ceiling
 
-	//double step = (double)data->textures[data->ray.wall_hit].height / wall_height; // tex pixels per screen pixel
-	//double tex_pos = (wall_start - WINDOW_HEIGHT / 2.0 + wall_height / 2.0) * step;
 	for (int y = wall_start; y < wall_end; y++)
 	{
 		// --- TEX_Y calculation ---
 		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
 		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
 
-		/* int new_tex_y = (int)tex_pos;
-		if (new_tex_y < 0) new_tex_y = 0;
-		if (new_tex_y >= data->textures[data->ray.wall_hit].height) new_tex_y = data->textures[data->ray.wall_hit].height - 1; // clamp (use & if power-of-two)
-		tex_pos += step; */
 		if (tex_y < 0) tex_y = 0;
 		if (tex_y >= data->textures[data->ray.wall_hit].height) tex_y = data->textures[data->ray.wall_hit].height - 1;
 
-		/* if ((y == wall_start || y == wall_end - 1) && (ray == 0 || ray == WINDOW_WIDTH / 2 || ray == WINDOW_WIDTH -1))
-			printf("RAY: %d: HEIGHT: %f, TEX_Y: %d, NEW_TEX_Y: %d\n", ray, wall_height, tex_y, new_tex_y); */
-
 		char *pixel_index = data->textures[data->ray.wall_hit].address +
 			(tex_y * data->textures[data->ray.wall_hit].size_line) +
-			(tex_x * (data->textures[data->ray.wall_hit].bits_per_pixel / 8));
+			(tex_x * (data->textures[data->ray.wall_hit].bytes_per_pixel)); //here
 		int color = *(int *)pixel_index;
 		fill_image_buffer(data->image, y, ray, color);
 	}
@@ -175,13 +165,23 @@ void	print_3d_ray(t_data *data, int ray)
 		fill_image_buffer(data->image, y, ray, data->surface[FLOOR]);  // Floor
 }
 
+void	calculate_raycasting_values(t_data *data)
+{
+	//data->player.direction_in_radians = data->player.direction * PI_180; //not here
+	data->player.direction_sin = sin(data->player.direction_in_radians);
+	data->player.direction_cos = cos(data->player.direction_in_radians);
+	data->player.direction_right_sin = sin((data->player.direction + 90) * PI_180);
+	data->player.direction_right_cos = cos((data->player.direction + 90) * PI_180);
+}
+
 void	raycasting(t_data *data)
 {
-	int	ray;
+	int		ray;
 	int		y;
 	int		x;
 
 	ray = 0;
+	calculate_raycasting_values(data);
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
@@ -189,15 +189,13 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			//maybe toggle if grid view for minimap or wave (print_2d_ray)
 			if (data->ray_toggle)
-				fill_image_buffer(data->minimap, data->minimap.height / 2 + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.width / 2 + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
+				fill_image_buffer(data->minimap, data->minimap.half_height + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.half_width + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
 		}
-		//maybe toggle if grid view for minimap or wave (print_2d_ray)
 		if (!data->ray_toggle)
 			print_2d_ray(data);
 		print_3d_ray(data, ray);
-		ray += 1;
+		ray++;
 	}
 }
 
@@ -224,11 +222,34 @@ bool	check_if_wall(t_data *data, double y, double x) //better name (is_grid_vali
 
 int	game_loop(t_data *data)
 {
-	long	current_time;
-
-	if (get_current_time() - data->time_reference > 1000 / FPS)
-	{
-		current_time = get_current_time();
+	static long last_frame_time = 0;
+    static double current_fps = 0.0;
+    static int frame_count = 0;
+    long current_time = get_current_time();
+    
+    // Initialize on first run
+    if (last_frame_time == 0)
+        last_frame_time = current_time;
+    
+    // Calculate FPS based on time since last frame
+    long frame_time = current_time - last_frame_time;
+    if (frame_time > 0)
+    {
+        double instantaneous_fps = 1000.0 / frame_time;
+        
+        // Only update displayed FPS every 30 frames
+        frame_count++;
+        if (frame_count >= 30)
+        {
+            current_fps = instantaneous_fps;
+            frame_count = 0;
+        }
+    }
+    
+    last_frame_time = current_time;
+	//if (get_current_time() - data->time_reference > 1000 / FPS)
+	//{
+		//current_time = get_current_time();
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
@@ -243,9 +264,14 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
-			print_map(data);
-	}
+		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		print_map(data);
+		//counter++;
+	//}
+
+	char fps_text[32];
+    snprintf(fps_text, sizeof(fps_text), "FPS: %.0f", current_fps);  // %.0f removes decimals
+    mlx_string_put(data->mlx, data->win, 10, 20, 0xFFFFFF, fps_text);
 	return (0);
 }
 
@@ -257,18 +283,20 @@ void	start_mlx(t_data *data)
 	data->image.buffer = mlx_new_image(data->mlx, data->image.width, data->image.height);
 	if (data->image.buffer == NULL)
 		exit_cub3d(NULL);
-	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bits_per_pixel, &data->image.size_line, &data->image.endian);
+	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bytes_per_pixel, &data->image.size_line, &data->image.endian);
+	data->image.bytes_per_pixel /= 8;
 	if (data->image.address == NULL)
 		exit_cub3d(NULL);
 	data->minimap.buffer = mlx_new_image(data->mlx, data->minimap.width, data->minimap.height);
 	if (data->minimap.buffer == NULL)
 		exit_cub3d(NULL);
-	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bits_per_pixel, &data->minimap.size_line, &data->minimap.endian);
+	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bytes_per_pixel, &data->minimap.size_line, &data->minimap.endian);
+	data->minimap.bytes_per_pixel /= 8;
 	if (data->minimap.address == NULL)
 		exit_cub3d(NULL);
 	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
 	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
-	mlx_mouse_move(data->mlx, data->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	mlx_mouse_move(data->mlx, data->win, data->image.half_width, data->image.half_height);
 }
 
 int main(int argc, char **argv)
@@ -283,10 +311,17 @@ int main(int argc, char **argv)
 	parsing(argc, argv, data);
 	data->time_reference = get_current_time();
 	data->image.height = WINDOW_HEIGHT;
+	data->image.half_height = data->image.height / 2;
 	data->image.width = WINDOW_WIDTH;
+	data->image.half_width = data->image.width / 2;
 	data->minimap.height = MINIMAP_HEIGHT * SCALING;
+	data->minimap.half_height = data->minimap.height / 2;
 	data->minimap.width = MINIMAP_WIDTH * SCALING;
+	data->minimap.half_width = data->minimap.width / 2;
 	data->minimap_toggle = true;
+	//data->value.fov_tan_half = tan((FOV * PI_180) / 2.0);
+	//data->value.proj_plane = data->image.half_width / data->value.fov_tan_half;
+	calculate_fixed_values(data);
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
