@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/30 14:20:38 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/03 16:01:17 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@
 
 # define WINDOW_HEIGHT	900 //480
 # define WINDOW_WIDTH	1600 //640
-
-# define BUFFER_SIZE 100
 
 # define ELEMENT_COUNT 6
 

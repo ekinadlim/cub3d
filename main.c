@@ -287,6 +287,7 @@ int main(int argc, char **argv)
 	data->minimap.height = MINIMAP_HEIGHT * SCALING;
 	data->minimap.width = MINIMAP_WIDTH * SCALING;
 	data->minimap_toggle = true;
+	data->player.y = 2.81;
 	start_mlx(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
