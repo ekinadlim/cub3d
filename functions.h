@@ -34,8 +34,8 @@ void	move_x(t_data *data, double x, double offset);
 
 /* Player Rotation */
 
-void	turn_right(t_data *data, int speed);
-void	turn_left(t_data *data, int speed);
+void	turn_right(t_data *data, double speed);
+void	turn_left(t_data *data, double speed);
 
 /* Minimap */
 

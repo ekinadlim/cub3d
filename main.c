@@ -199,6 +199,35 @@ void	raycasting(t_data *data)
 	}
 }
 
+void	crosshair(t_data *data)
+{
+	int	y;
+	int	x;
+
+	y = -1;
+	while (y < 1)
+	{
+		x = -5;
+		while (x < 5)
+		{
+			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, 0xFFFFFF);
+			x++;
+		}
+		y++;
+	}
+	x = -1;
+	while (x < 1)
+	{
+		y = -5;
+		while (y < 5)
+		{
+			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, 0xFFFFFF);
+			y++;
+		}
+		x++;
+	}
+}
+
 void	print_map(t_data *data)
 {
 	if (data->minimap_toggle)
@@ -208,6 +237,7 @@ void	print_map(t_data *data)
 
 	if (data->minimap_toggle)
 		copy_minimap_to_image(data);
+	crosshair(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
 	data->movement_happend = false;
 }
@@ -253,9 +283,9 @@ int	game_loop(t_data *data)
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
-			turn_left(data, 150);
+			turn_left(data, 150 * data->delta_time);
 		if (data->keys['l'] && !data->keys['j'])
-			turn_right(data, 150);
+			turn_right(data, 150 * data->delta_time);
 		if (data->keys['a'] && !data->keys['d'])
 			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])

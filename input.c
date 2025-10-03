@@ -54,9 +54,9 @@ int	mouse_move(int x, int y, t_data *data)
 
 	delta_x = x - data->image.half_width;
 	if (delta_x < 0)
-		turn_left(data, -(delta_x * 3));
+		turn_left(data, -(delta_x * 0.1));
 	else if (delta_x > 0)
-		turn_right(data, delta_x * 3);
+		turn_right(data, delta_x * 0.1);
 	if (x != data->image.half_width || y != data->image.half_height)
 		mlx_mouse_move(data->mlx, data->win,
 			data->image.half_width, data->image.half_height);
