@@ -59,6 +59,10 @@
 # define COLOR_WALL		0x666666    // Medium gray walls
 # define COLOR_FLOOR	0x333333    // Dark gray floor
 
+# define COLOR_CROSSHAIR	0xFFFFFF
+
+# define MOVEMENT_SPEED	4
+
 typedef enum e_cardinal_direction
 {
 	NORTH,

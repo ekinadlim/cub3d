@@ -10,5 +10,9 @@
 		"string_view": "c",
 		"ranges": "c",
 		"sstream": "c"
+	},
+	"editor.tokenColorCustomizations": {
+		"comments": "",
+		"textMateRules": []
 	}
 }

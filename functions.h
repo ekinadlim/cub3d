@@ -29,8 +29,8 @@ void	move_forward(t_data *data);
 void	move_backwards(t_data *data);
 void	move_left(t_data *data);
 void	move_right(t_data *data);
-void	move_y(t_data *data, double y, double offset);
-void	move_x(t_data *data, double x, double offset);
+void	move_y(t_data *data, double y);
+void	move_x(t_data *data, double x);
 
 /* Player Rotation */
 
@@ -47,7 +47,7 @@ void	print_minimap_grid(t_data *data);
 
 /* I don't know where to put them */
 
-bool	check_if_wall(t_data *data, double y, double x);
+bool	is_wall(t_data *data, double y, double x);
 void	fill_image_buffer(t_image image, int y, int x, int color);
 
 /* ----------- Parsing ----------- */

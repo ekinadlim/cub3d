@@ -4,15 +4,15 @@ static bool	validate_x_position(t_data *data, double x)
 {
 	if (data->player.y - (int)data->player.y > 0.8001)
 	{
-		if (!check_if_wall(data, data->player.y + 1, x))
+		if (is_wall(data, data->player.y + 1, x))
 			return (false);
 	}
 	else if (data->player.y - (int)data->player.y < 0.1999)
 	{
-		if (!check_if_wall(data, data->player.y - 1, x))
+		if (is_wall(data, data->player.y - 1, x))
 			return (false);
 	}
-	if (!check_if_wall(data, data->player.y, x))
+	if (is_wall(data, data->player.y, x))
 		return (false);
 	return (true);
 }
@@ -53,26 +53,19 @@ static void ccd_negative_x(t_data *data, double *x, double offset)
 		*x = (int)data->player.x + i + 1 - data->player.x - offset;
 }
 
-static void	continuous_collision_detection_x(t_data *data, double *x, double offset)
-{
-	if (*x > 0)
-		ccd_positive_x(data, x, offset);
-	else if (*x < 0)
-		ccd_negative_x(data, x, offset);
-}
-
-void	move_x(t_data *data, double x, double offset)
+void	move_x(t_data *data, double x)
 {
 	bool	can_move;
 
 	can_move = false;
-	//printf("X Before: player.y = %.20f, player.x = %.20f, x = %.20f\n", data->player.y, data->player.x, x);
 	if (fabs(x) < EPSILON)
 		return;
-	continuous_collision_detection_x(data, &x, offset);
+	if (x > 0)
+		ccd_positive_x(data, &x, 0.2);
+	else if (x < 0)
+		ccd_negative_x(data, &x, -0.2);
 	if (fabs(x) < EPSILON)
 		return;
 	data->player.x += x;
 	data->movement_happend = true;
-	//printf("X After: player.y = %.20f, player.x = %.20f, x = %.20f\n", data->player.y, data->player.x, x);
 }

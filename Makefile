@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP #-g -fsanitize=undefined #comment out -pedantic -Wno-newline-eof
+CFLAGS = -Wall -Werror -Wextra -MMD -MP #-g -fsanitize=undefined -pedantic -Wno-newline-eof #comment out
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
@@ -57,6 +57,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/example.cub
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/small.cub
 
 .PHONY: all clean fclean re val

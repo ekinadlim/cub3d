@@ -41,7 +41,6 @@ typedef struct s_player
 
 typedef struct s_value //better name
 {
-	double		fov_tan_half; //tan((FOV * PI_180) / 2.0)
 	double		proj_plane; //(WINDOW_WIDTH / 2.0) / tan((FOV * PI_180) / 2.0)
 	double		ray_direction_x[WINDOW_WIDTH];
 }				t_value;

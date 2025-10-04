@@ -35,3 +35,5 @@ main.c:278:19: runtime error: signed integer overflow: -2147483648 * 51 cannot b
 SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior main.c:278:19 in 
 main.c:280:19: runtime error: -nan is outside the range of representable values of type 'int'
 SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior main.c:280:19 in
+
+//maybe limit map size just in case of int overflow

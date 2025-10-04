@@ -1,13 +1,5 @@
 #include "header.h"
 
-void	init_data(void)
-{
-	t_data	*data;
-
-	data = get_data();
-	ft_memset(data, 0, sizeof(t_data));
-}
-
 long	get_current_time(void)
 {
 	struct timeval	tv;
@@ -16,32 +8,51 @@ long	get_current_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+void	init_data(void)
+{
+	t_data	*data;
+
+	data = get_data();
+	ft_memset(data, 0, sizeof(t_data));
+	data->time_reference = get_current_time();
+	data->image.height = WINDOW_HEIGHT;
+	data->image.half_height = data->image.height / 2;
+	data->image.width = WINDOW_WIDTH;
+	data->image.half_width = data->image.width / 2;
+	data->minimap.height = MINIMAP_HEIGHT * SCALING;
+	data->minimap.half_height = data->minimap.height / 2;
+	data->minimap.width = MINIMAP_WIDTH * SCALING;
+	data->minimap.half_width = data->minimap.width / 2;
+	data->minimap_toggle = true;
+}
+
 void	fill_image_buffer(t_image image, int y, int x, int color)
 {
-	char *pixel_index;
+	char	*pixel_index;
 
-	if (x >= 0 && y >= 0 && x < image.width && y < image.height) //protection not needed?
+	if (x >= 0 && y >= 0 && x < image.width && y < image.height)
 	{
 		pixel_index = image.address + (y * image.size_line) + (x * image.bytes_per_pixel);
 		*(int *)pixel_index = color;
 	}
 }
 
-void	calculate_fixed_values(t_data *data)
+void	calculate_fixed_values(t_data *data) //done only once
 {
-	int	ray;
+	const double	fov_tan_half = tan((FOV * PI_180) / 2.0);
+	int				ray;
 
+	data->value.proj_plane = data->image.half_width / fov_tan_half;
 	ray = 0;
-	data->value.fov_tan_half = tan((FOV * PI_180) / 2.0); //maybe not needed in struct, just do as const in this function
-	data->value.proj_plane = data->image.half_width / data->value.fov_tan_half;
 	while (ray < WINDOW_WIDTH)
 	{
-		data->value.ray_direction_x[ray] = (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * data->value.fov_tan_half;
+		data->value.ray_direction_x[ray]
+			= (2.0 * ray / (double)WINDOW_WIDTH - 1.0) * fov_tan_half;
 		ray++;
 	}
 }
 
-void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
+void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x) //for each ray
 {
 	data->ray.y_vector = data->player.direction_sin + data->value.ray_direction_x[ray] * data->player.direction_right_sin;
 	data->ray.x_vector = data->player.direction_cos + data->value.ray_direction_x[ray] * data->player.direction_right_cos;
@@ -101,33 +112,19 @@ void	move_ray(t_data *data, int *y, int *x)
 	}
 }
 
-double perp_wall_distt(t_data *data/* , int ray */)
+double perp_wall_distt(t_data *data)
 {
-	double delta_x = data->ray.x - data->player.x;
-	double delta_y = data->ray.y - data->player.y;
+	const double	delta_x = data->ray.x - data->player.x;
+	const double	delta_y = data->ray.y - data->player.y;
 
-	double true_distance = delta_x * data->player.direction_cos + delta_y * data->player.direction_sin;
-
-	return (true_distance);
+	return (delta_x * data->player.direction_cos
+		+ delta_y * data->player.direction_sin);
 }
 
-void	print_3d_ray(t_data *data, int ray)
+int	get_texture_x(t_data *data, const double perp_wall_dist)
 {
-	const double perp_wall_dist = perp_wall_distt(data/* , ray */);
-
-	double wall_height = data->value.proj_plane / perp_wall_dist;
-
-	int wall_start = (WINDOW_HEIGHT - wall_height) / 2;
-	int wall_end = wall_start + wall_height;
-
-	// Clamp drawing bounds to screen
-	if (wall_start < 0)
-		wall_start = 0;
-	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
-		wall_end = WINDOW_HEIGHT;
-
-	// --- TEX_X calculation ---
-	double wall_x;
+	double	wall_x;
+	int		tex_x;
 	if (data->ray.wall_hit == EAST || data->ray.wall_hit == WEST)
 		wall_x = data->player.y + perp_wall_dist * data->ray.y_vector;
 	else
@@ -137,37 +134,80 @@ void	print_3d_ray(t_data *data, int ray)
 		wall_x *= -1;
 	wall_x = wall_x - (int)wall_x;
 
-	int tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
-	if (tex_x < 0) tex_x = 0;
-	if (tex_x >= data->textures[data->ray.wall_hit].width) tex_x = data->textures[data->ray.wall_hit].width - 1;
+	tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
+	if (tex_x < 0)
+		tex_x = 0;
+	if (tex_x >= data->textures[data->ray.wall_hit].width)
+		tex_x = data->textures[data->ray.wall_hit].width - 1;
 
+	return (tex_x * data->textures[data->ray.wall_hit].bytes_per_pixel);
+}
+
+int	get_texture_y(t_data *data, const int y, const int wall_height)
+{
+	const int	d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
+	int			tex_y;
+
+	tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
+
+	if (tex_y < 0)
+		tex_y = 0;
+	if (tex_y >= data->textures[data->ray.wall_hit].height)
+		tex_y = data->textures[data->ray.wall_hit].height - 1;
+
+	return (tex_y * data->textures[data->ray.wall_hit].size_line);
+}
+
+int	get_wall_start(const int wall_height)
+{
+	int	wall_start;
+
+	wall_start = (WINDOW_HEIGHT - wall_height) / 2;
+	if (wall_start < 0)
+		wall_start = 0;
+	return (wall_start);
+}
+
+int	get_wall_end(const int wall_start, const int wall_height)
+{
+	int	wall_end;
+	
+	wall_end = wall_start + wall_height;
+	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
+		wall_end = WINDOW_HEIGHT;
+	return (wall_end);
+}
+
+int get_texture_color(t_data *data, const int y, const int wall_height, const int tex_x)
+{
+	const char	*pixel_index = data->textures[data->ray.wall_hit].address + get_texture_y(data, y, wall_height) + tex_x;
+	const int	color = *(int *)pixel_index;
+
+	return (color);
+}
+
+void	print_3d_ray(t_data *data, int ray)
+{
+	const double	perp_wall_dist = perp_wall_distt(data);
+	const double	wall_height = data->value.proj_plane / perp_wall_dist;
+	const int		wall_start = get_wall_start(wall_height);
+	const int		wall_end = get_wall_end(wall_start, wall_height);
+	const int		tex_x = get_texture_x(data, perp_wall_dist);
 
 	for (int y = 0; y < wall_start; y++)
-		fill_image_buffer(data->image, y, ray, data->surface[CEILING]);  // Ceiling
+		fill_image_buffer(data->image, y, ray, data->surface[CEILING]); // Ceiling
 
 	for (int y = wall_start; y < wall_end; y++)
 	{
-		// --- TEX_Y calculation ---
-		int d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
-		int tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
-
-		if (tex_y < 0) tex_y = 0;
-		if (tex_y >= data->textures[data->ray.wall_hit].height) tex_y = data->textures[data->ray.wall_hit].height - 1;
-
-		char *pixel_index = data->textures[data->ray.wall_hit].address +
-			(tex_y * data->textures[data->ray.wall_hit].size_line) +
-			(tex_x * (data->textures[data->ray.wall_hit].bytes_per_pixel)); //here
-		int color = *(int *)pixel_index;
-		fill_image_buffer(data->image, y, ray, color);
+		fill_image_buffer(data->image, y, ray, get_texture_color(data, y, wall_height, tex_x));
 	}
 
 	for (int y = wall_end; y < WINDOW_HEIGHT; y++)
-		fill_image_buffer(data->image, y, ray, data->surface[FLOOR]);  // Floor
+		fill_image_buffer(data->image, y, ray, data->surface[FLOOR]); // Floor
 }
 
-void	calculate_raycasting_values(t_data *data)
+void	calculate_raycasting_values(t_data *data) //once before raycasting //maybe in turn_left/right instead??????
 {
-	//data->player.direction_in_radians = data->player.direction * PI_180; //not here
 	data->player.direction_sin = sin(data->player.direction_in_radians);
 	data->player.direction_cos = cos(data->player.direction_in_radians);
 	data->player.direction_right_sin = sin((data->player.direction + 90) * PI_180);
@@ -185,7 +225,7 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (y >= 0 && y < data->map.height && x < data->map.width && data->map.map[y][x] != '1' && data->map.map[y][x] != ' ')
+		while (y >= 0 && y < data->map.height && x < data->map.width && data->map.map[y][x] != '1' && data->map.map[y][x] != ' ') //is_wall()???
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
@@ -210,7 +250,7 @@ void	crosshair(t_data *data)
 		x = -5;
 		while (x < 5)
 		{
-			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, 0xFFFFFF);
+			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, COLOR_CROSSHAIR);
 			x++;
 		}
 		y++;
@@ -221,7 +261,7 @@ void	crosshair(t_data *data)
 		y = -5;
 		while (y < 5)
 		{
-			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, 0xFFFFFF);
+			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, COLOR_CROSSHAIR);
 			y++;
 		}
 		x++;
@@ -242,12 +282,12 @@ void	print_map(t_data *data)
 	data->movement_happend = false;
 }
 
-bool	check_if_wall(t_data *data, double y, double x) //better name (is_grid_valid) or something like that
+bool	is_wall(t_data *data, double y, double x) //better name (is_grid_valid) or something like that
 {
 	(void)data;
-	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ')
-		return (false);
-	return (true);
+	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ') //data->map.map[(int)y][(int)x] != '0'
+		return (true);
+	return (false);
 }
 
 int	game_loop(t_data *data)
@@ -305,8 +345,36 @@ int	game_loop(t_data *data)
 	return (0);
 }
 
+/* int	game_loop(t_data *data)
+{
+	long	current_time;
+
+	//if (get_current_time() - data->time_reference > 1000 / FPS)
+	//{
+		current_time = get_current_time();
+		data->delta_time = (current_time - data->time_reference) / 1000.0;
+		data->time_reference = current_time;
+		if (data->keys['j'] && !data->keys['l'])
+			turn_left(data, 150 * data->delta_time);
+		if (data->keys['l'] && !data->keys['j'])
+			turn_right(data, 150 * data->delta_time);
+		if (data->keys['a'] && !data->keys['d'])
+			move_left(data);
+		if (data->keys['d'] && !data->keys['a'])
+			move_right(data);
+		if (data->keys['w'] && !data->keys['s'])
+			move_forward(data);
+		if (data->keys['s'] && !data->keys['w'])
+			move_backwards(data);
+		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+			print_map(data);
+	//}
+	return (0);
+} */
+
 void	start_mlx(t_data *data)
 {
+	//msg
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
 		exit_cub3d(NULL);
@@ -325,8 +393,19 @@ void	start_mlx(t_data *data)
 	if (data->minimap.address == NULL)
 		exit_cub3d(NULL);
 	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
-	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
+	mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
 	mlx_mouse_move(data->mlx, data->win, data->image.half_width, data->image.half_height);
+}
+
+void	call_mlx_hooks(t_data *data)
+{
+	mlx_hook(data->win, 2, 1L << 0, key_press, data);
+	mlx_hook(data->win, 3, 1L << 1, key_release, data);
+	mlx_hook(data->win, 6, 1L << 6, mouse_move, data);
+	mlx_hook(data->win, 4, 1L << 2, mouse_click, data);
+	mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
+	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
+	mlx_loop_hook(data->mlx, game_loop, data);
 }
 
 int main(int argc, char **argv)
@@ -337,29 +416,12 @@ int main(int argc, char **argv)
 	data = get_data();
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		exit_cub3d(NULL);
+		exit_cub3d(NULL); //msg
 	parsing(argc, argv, data);
-	data->time_reference = get_current_time();
-	data->image.height = WINDOW_HEIGHT;
-	data->image.half_height = data->image.height / 2;
-	data->image.width = WINDOW_WIDTH;
-	data->image.half_width = data->image.width / 2;
-	data->minimap.height = MINIMAP_HEIGHT * SCALING;
-	data->minimap.half_height = data->minimap.height / 2;
-	data->minimap.width = MINIMAP_WIDTH * SCALING;
-	data->minimap.half_width = data->minimap.width / 2;
-	data->minimap_toggle = true;
-	//data->value.fov_tan_half = tan((FOV * PI_180) / 2.0);
-	//data->value.proj_plane = data->image.half_width / data->value.fov_tan_half;
 	calculate_fixed_values(data);
 	start_mlx(data);
-	mlx_hook(data->win, 2, 1L << 0, key_press, data);
-	mlx_hook(data->win, 3, 1L << 1, key_release, data);
-	mlx_hook(data->win, 6, 1L << 6, mouse_move, data);
-	mlx_hook(data->win, 4, 1L << 2, mouse_click, data);
-	mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
-	mlx_hook(data->win, 17, 0L, exit_cub3d, NULL);
-	mlx_loop_hook(data->mlx, game_loop, data);
+	call_mlx_hooks(data);
 	print_map(data);
 	mlx_loop(data->mlx);
+	return (0);
 }
