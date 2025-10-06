@@ -40,14 +40,14 @@ void	turn_left(t_data *data, double speed);
 /* Minimap */
 
 void	copy_minimap_to_image(t_data *data);
-void	print_2d_ray(t_data *data); //change name
-void	print_minimap_grid(t_data *data);
+void	draw_minimap_ray(t_data *data);
+void	draw_minimap_grid(t_data *data);
 
 /* Raycasting */
 
 /* I don't know where to put them */
 
-bool	is_wall(t_data *data, double y, double x);
+bool	is_wall(const t_data *data, double y, double x);
 void	fill_image_buffer(t_image image, int y, int x, int color);
 
 /* ----------- Parsing ----------- */

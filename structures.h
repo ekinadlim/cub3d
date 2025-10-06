@@ -43,6 +43,7 @@ typedef struct s_value //better name
 {
 	double		proj_plane; //(WINDOW_WIDTH / 2.0) / tan((FOV * PI_180) / 2.0)
 	double		ray_direction_x[WINDOW_WIDTH];
+	double		scaled_grid_size; //GRID_SIZE * SCALING
 }				t_value;
 
 typedef struct s_image

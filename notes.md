@@ -37,4 +37,5 @@ main.c:280:19: runtime error: -nan is outside the range of representable values 
 SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior main.c:280:19 in
 
 //maybe limit map size just in case of int overflow
-//use inline function???
+//use inline function??? (probably not)
+//make t_data *data const if function will not modify it???

@@ -24,6 +24,7 @@ void	init_data(void)
 	data->minimap.width = MINIMAP_WIDTH * SCALING;
 	data->minimap.half_width = data->minimap.width / 2;
 	data->minimap_toggle = true;
+	data->value.scaled_grid_size = GRID_SIZE * SCALING;
 }
 
 void	fill_image_buffer(t_image image, int y, int x, int color)
@@ -229,17 +230,17 @@ void	raycasting(t_data *data)
 		{
 			calculate_next_grid_distance(data, y, x);
 			move_ray(data, &y, &x);
-			if (data->ray_toggle)
-				fill_image_buffer(data->minimap, data->minimap.half_height + (int)((data->ray.y  - data->player.y) * GRID_SIZE * SCALING), data->minimap.half_width + (int)((data->ray.x - data->player.x) * GRID_SIZE * SCALING), COLOR_RAY);
+			if (data->minimap_toggle && data->ray_toggle)
+				fill_image_buffer(data->minimap, data->minimap.half_height + (int)((data->ray.y  - data->player.y) * data->value.scaled_grid_size), data->minimap.half_width + (int)((data->ray.x - data->player.x) * data->value.scaled_grid_size), COLOR_RAY);
 		}
-		if (!data->ray_toggle)
-			print_2d_ray(data);
+		if (data->minimap_toggle && !data->ray_toggle)
+			draw_minimap_ray(data);
 		print_3d_ray(data, ray);
 		ray++;
 	}
 }
 
-void	crosshair(t_data *data)
+void	draw_crosshair(t_data *data)
 {
 	int	y;
 	int	x;
@@ -268,23 +269,22 @@ void	crosshair(t_data *data)
 	}
 }
 
-void	print_map(t_data *data)
+void	render_game(t_data *data)
 {
 	if (data->minimap_toggle)
-		print_minimap_grid(data);
+		draw_minimap_grid(data);
 
 	raycasting(data);
 
 	if (data->minimap_toggle)
 		copy_minimap_to_image(data);
-	crosshair(data);
+	draw_crosshair(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
 	data->movement_happend = false;
 }
 
-bool	is_wall(t_data *data, double y, double x) //better name (is_grid_valid) or something like that
+bool	is_wall(const t_data *data, double y, double x)
 {
-	(void)data;
 	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ') //data->map.map[(int)y][(int)x] != '0'
 		return (true);
 	return (false);
@@ -334,8 +334,8 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
-		print_map(data);
+		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		render_game(data);
 		//counter++;
 	//}
 
@@ -366,8 +366,8 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
-			print_map(data);
+		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		render_game(data);
 	//}
 	return (0);
 } */
@@ -421,7 +421,7 @@ int main(int argc, char **argv)
 	calculate_fixed_values(data);
 	start_mlx(data);
 	call_mlx_hooks(data);
-	print_map(data);
+	render_game(data);
 	mlx_loop(data->mlx);
 	return (0);
 }
