@@ -334,7 +334,7 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
 		render_game(data);
 		//counter++;
 	//}

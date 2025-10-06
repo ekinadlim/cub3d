@@ -32,7 +32,7 @@
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
 # define MINIMAP_POS_Y	0 //(WINDOW_HEIGHT - MINIMAP_HEIGHT) /* BOTTOM */
-# define MINIMAP_POY_X	0 //(WINDOW_WIDTH - MINIMAP_WIDTH) /* RIGHT */
+# define MINIMAP_POS_X	0 //(WINDOW_WIDTH - MINIMAP_WIDTH) /* RIGHT */
 # define GRID_COUNT		10 //How many Grids there are per row/column on the Minimap
 # define GRID_SIZE		10 //How many Pixels there are per row/column for each Grid
 # define SCALING		1.5 //For the Minimap size
