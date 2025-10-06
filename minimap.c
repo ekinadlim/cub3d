@@ -27,7 +27,7 @@ void	print_2d_ray(t_data *data)
 {
 	double total_distance = sqrt((data->ray.x - data->player.x) * (data->ray.x - data->player.x) + 
 									(data->ray.y - data->player.y) * (data->ray.y - data->player.y));
-	int steps = (int)(total_distance * GRID_SIZE * SCALING);
+	int steps = (int)(total_distance * GRID_SIZE * SCALING); //const double scaled_grid_size = GRID_SIZE * SCALING //or just save in struct since it won't change
 
 	if (steps <= 0)
 	{
@@ -40,18 +40,6 @@ void	print_2d_ray(t_data *data)
 		double draw_x = progress * (data->ray.x - data->player.x);
 		double draw_y = progress * (data->ray.y - data->player.y);
 
-		/* if (isnan(draw_x) || isnan(draw_y))
-        {
-			if (steps <= 0)
-			{
-				printf("DEBUG: steps <= 0, total_distance: %f\n", total_distance);
-			}
-            printf("DEBUG NaN: draw values - i:%d progress:%f draw_x:%f draw_y:%f\n", 
-                i, progress, draw_x, draw_y);
-            printf("DEBUG NaN: components - ray.x:%f player.x:%f ray.y:%f player.y:%f\n", 
-                data->ray.x, data->player.x, data->ray.y, data->player.y);
-        } */
-
 		if (data->minimap.half_height + (int)(draw_y * GRID_SIZE * SCALING) >= data->minimap.height || data->minimap.half_width + (int)(draw_x * GRID_SIZE * SCALING) >= data->minimap.width
 			|| data->minimap.half_height + (int)(draw_y * GRID_SIZE * SCALING) < 0 || data->minimap.half_width + (int)(draw_x * GRID_SIZE * SCALING) < 0)
 		{
@@ -62,13 +50,31 @@ void	print_2d_ray(t_data *data)
 	}
 }
 
+static inline int	get_minimap_grid_color(t_data *data, double real_y, double real_x)
+{
+	int	color;
+	if (real_y > -1 && real_y < 0)
+		real_y = -1;
+	if (real_x > -1 && real_x < 0)
+		real_x = -1;
+	if (real_y < 0 || real_x < 0 || real_y >= data->map.height || real_x >= data->map.width)
+		color = COLOR_VOID;
+	else if (data->map.map[(int)real_y][(int)real_x] == '1')
+		color = COLOR_WALL;
+	else if (data->map.map[(int)real_y][(int)real_x] == '0')
+		color = COLOR_FLOOR;
+	else
+		color = COLOR_VOID;
+	return (color);
+}
+
 void	print_minimap_grid(t_data *data)
 {
 	double current_offset_y = 0;
 	double current_offset_x = 0;
 
-	double starting_y = data->player.y - GRID_COUNT / 2; //top left
-	double starting_x = data->player.x - GRID_COUNT / 2; //top left
+	const double starting_y = data->player.y - GRID_COUNT / 2; //top left //y not needed
+	const double starting_x = data->player.x - GRID_COUNT / 2; //top left
 
 	double current_y = starting_y;
 	double current_x = starting_x;
@@ -84,23 +90,7 @@ void	print_minimap_grid(t_data *data)
 				current_offset_x = 0;
 				for (int pixel_x = 0; pixel_x < GRID_SIZE * SCALING; pixel_x++)
 				{
-					int color;
-					double real_y = (current_y + current_offset_y);
-					double real_x = (current_x + current_offset_x);
-					if (real_y > -1 && real_y < 0)
-						real_y = -1;
-					if (real_x > -1 && real_x < 0)
-						real_x = -1;
-					if (real_y < 0 || real_x < 0 || real_y >= data->map.height || real_x >= data->map.width)
-						color = COLOR_VOID;
-					else if (data->map.map[(int)real_y][(int)real_x] == '1')
-						color = COLOR_WALL;
-					else if (data->map.map[(int)real_y][(int)real_x] == '0')
-						color = COLOR_FLOOR;
-					else
-						color = COLOR_VOID;
-
-					fill_image_buffer(data->minimap, pixel_y + (map_y * GRID_SIZE * SCALING), pixel_x + (map_x * GRID_SIZE * SCALING), color);
+					fill_image_buffer(data->minimap, pixel_y + (map_y * GRID_SIZE * SCALING), pixel_x + (map_x * GRID_SIZE * SCALING), get_minimap_grid_color(data, current_y + current_offset_y, current_x + current_offset_x));
 					current_offset_x += 0.1 / SCALING;
 				}
 				current_offset_y += 0.1 / SCALING;
