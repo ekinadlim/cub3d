@@ -32,11 +32,11 @@ typedef struct s_player
 	double		y;
 	double		x;
 	double		direction;
-	double		direction_in_radians; //data->player.direction * M_PI / 180.0
-	double		direction_sin; //sin(data->player.direction * M_PI / 180.0)
-	double		direction_cos; //cos(data->player.direction * M_PI / 180.0)
-	double		direction_right_sin; //sin((data->player.direction + 90) * M_PI / 180.0)
-	double		direction_right_cos; //cos((data->player.direction + 90) * M_PI / 180.0)
+	double		direction_in_radians;
+	double		direction_sin;
+	double		direction_cos;
+	double		direction_right_sin;
+	double		direction_right_cos;
 }				t_player;
 
 typedef struct s_value //better name
@@ -77,7 +77,7 @@ typedef struct s_map
 	int			width;
 }				t_map;
 
-typedef	struct s_parsing
+typedef struct s_parsing
 {
 	int			fd;
 	char		*line;
@@ -90,9 +90,9 @@ typedef struct s_data
 	t_player	player;
 	t_image		image;
 	t_image		minimap;
-	bool 		movement_happend; // to know if we need to print (better name)
-	bool		minimap_toggle; //on/off
-	bool		ray_toggle; //which ray view in minimap
+	bool		movement_happend; //to know if we need to render (better name)
+	bool		minimap_toggle;
+	bool		ray_toggle; //which ray view in minimap (wave or grid)
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;

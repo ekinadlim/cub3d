@@ -17,11 +17,11 @@
 
 /* Input */
 
-int	key_press(int key, t_data *data);
-int	key_release(int key, t_data *data);
-int	mouse_move(int x, int y, t_data *data);
-int	mouse_click(int button, int x, int y, t_data *data);
-int	mouse_release(int button, int x, int y, t_data *data);
+int		key_press(int key, t_data *data);
+int		key_release(int key, t_data *data);
+int		mouse_move(int x, int y, t_data *data);
+int		mouse_click(int button, int x, int y, t_data *data);
+int		mouse_release(int button, int x, int y, t_data *data);
 
 /* Player Movement */
 
@@ -65,9 +65,8 @@ void	check_map(char **map, t_data *data);
 
 /* Helper */
 
-int		exit_cub3d(char *error_msg);
 t_data	*get_data(void);
-void	free_2d_array(char ***array);
+int		exit_cub3d(char *error_msg);
 bool	is_whitespace(char c);
 
 #endif // FUNCTIONS_H

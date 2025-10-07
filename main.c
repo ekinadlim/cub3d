@@ -256,7 +256,7 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (!is_wall(data, y, x)) //!is_wall()???
+		while (!is_wall(data, y, x))
 		{
 			calculate_next_grid_distance(data, &y, &x);
 			if (data->minimap_toggle && data->ray_toggle)

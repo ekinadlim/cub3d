@@ -17,9 +17,9 @@ static bool	validate_y_position(t_data *data, double y)
 	return (true);
 }
 
-static void ccd_positive_y(t_data *data, double *y, double offset)
+static void	ccd_positive_y(t_data *data, double *y, double offset)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (i < *y)
@@ -35,9 +35,9 @@ static void ccd_positive_y(t_data *data, double *y, double offset)
 		*y = (int)data->player.y + i - data->player.y - offset;
 }
 
-static void ccd_negative_y(t_data *data, double *y, double offset)
+static void	ccd_negative_y(t_data *data, double *y, double offset)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (i > *y)
@@ -59,13 +59,13 @@ void	move_y(t_data *data, double y)
 
 	can_move = false;
 	if (fabs(y) < EPSILON)
-		return;
+		return ;
 	if (y > 0)
 		ccd_positive_y(data, &y, 0.2);
 	else if (y < 0)
 		ccd_negative_y(data, &y, -0.2);
 	if (fabs(y) < EPSILON)
-		return;
+		return ;
 	data->player.y += y;
 	data->movement_happend = true;
 }
