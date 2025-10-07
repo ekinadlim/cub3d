@@ -17,13 +17,12 @@
 
 # define MAP_CHAR_SET "01 NESW"
 
-# define PI_180 0.017453292519943295474371680598 // converts degrees to radians
-//Do a lot of similar MACROS
+# define PI_180 0.017453292519943295474371680598 //converts degrees to radians
 
-#define EPSILON 1e-10
+# define EPSILON 1e-10
 
-# define WINDOW_WIDTH	/* 1600 */ 1280 /* 640 */
-# define WINDOW_HEIGHT	/* 900 */ 720 /* 480 */
+# define WINDOW_WIDTH	1280 /* 1600 */ /* 640 */
+# define WINDOW_HEIGHT	720 /* 900 */ /* 480 */
 
 # define ELEMENT_COUNT 6
 

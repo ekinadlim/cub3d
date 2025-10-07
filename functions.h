@@ -45,10 +45,22 @@ void	draw_minimap_grid(t_data *data);
 
 /* Raycasting */
 
-/* I don't know where to put them */
+void	raycasting(t_data *data);
 
-bool	is_wall(const t_data *data, double y, double x);
-void	fill_image_buffer(t_image image, int y, int x, int color);
+/* Rendering */
+
+void	draw_vertical_line(t_data *data, int ray, const double perp_wall_dist);
+void	draw_crosshair(t_data *data);
+
+/* Init Stuff */
+
+void	init_data(void);
+void	calculate_fixed_values(t_data *data);
+void	start_mlx(t_data *data);
+
+/* Game Loop */
+
+int		game_loop(t_data *data);
 
 /* ----------- Parsing ----------- */
 
@@ -60,13 +72,19 @@ size_t	get_color(int surface, int filemask, t_data *data);
 int		get_image(int direction, int filemask, t_data *data);
 void	get_player(char **map, t_data *data);
 void	floodfill(t_vec_2d_int pos, char **map, t_data *data);
-void	exit_pars(char *err_msg, t_data *data);
 void	check_map(char **map, t_data *data);
 
 /* Helper */
 
 t_data	*get_data(void);
-int		exit_cub3d(char *error_msg);
+long	get_current_time(void);
 bool	is_whitespace(char c);
+bool	is_wall(const t_data *data, double y, double x);
+void	fill_image_buffer(t_image image, int y, int x, int color);
+
+/* Cleanup */
+
+void	exit_pars(char *err_msg, t_data *data);
+int		exit_cub3d(char *error_msg);
 
 #endif // FUNCTIONS_H

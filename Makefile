@@ -11,6 +11,9 @@ OBJ_DIR = obj
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC = 	main.c\
+		init.c\
+		raycasting.c\
+		rendering.c\
 		input.c\
 		movement_1.c\
 		movement_2.c\
@@ -26,6 +29,7 @@ SRC = 	main.c\
 		get_player.c\
 		check_map.c\
 		helper.c\
+		cleanup.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
