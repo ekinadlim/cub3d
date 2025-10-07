@@ -33,12 +33,13 @@ void	fill_image_buffer(t_image image, int y, int x, int color)
 
 	if (x >= 0 && y >= 0 && x < image.width && y < image.height)
 	{
-		pixel_index = image.address + (y * image.size_line) + (x * image.bytes_per_pixel);
+		pixel_index = image.address
+			+ (y * image.size_line) + (x * image.bytes_per_pixel);
 		*(int *)pixel_index = color;
 	}
 }
 
-void	calculate_fixed_values(t_data *data) //done only once
+void	calculate_fixed_values(t_data *data)
 {
 	const double	fov_tan_half = tan((FOV * PI_180) / 2.0);
 	int				ray;
@@ -53,30 +54,44 @@ void	calculate_fixed_values(t_data *data) //done only once
 	}
 }
 
-void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x) //for each ray
+void	calculate_and_assign_ray_values(t_data *data, int ray, int *y, int *x)
 {
-	data->ray.y_vector = data->player.direction_sin + data->value.ray_direction_x[ray] * data->player.direction_right_sin;
-	data->ray.x_vector = data->player.direction_cos + data->value.ray_direction_x[ray] * data->player.direction_right_cos;
+	data->ray.y_vector = data->player.direction_sin
+		+ data->value.ray_direction_x[ray] * data->player.direction_right_sin;
+	data->ray.x_vector = data->player.direction_cos
+		+ data->value.ray_direction_x[ray] * data->player.direction_right_cos;
 	data->ray.y = data->player.y;
 	data->ray.x = data->player.x;
 	*y = (int)data->ray.y;
 	*x = (int)data->ray.x;
 }
 
-void	calculate_next_grid_distance(t_data *data, int y, int x)
+void	update_y_coordinate_and_wall_hit(t_data *data, int *y)
 {
-	if (data->ray.y_vector == 0)
-		data->ray.next_y_grid_distance = 9999;
-	else if(data->ray.y_vector > 0)
-		data->ray.next_y_grid_distance = (y + 1 - data->ray.y) / data->ray.y_vector;
+	if (data->ray.y_vector > 0)
+	{
+		(*y)++;
+		data->ray.wall_hit = SOUTH;
+	}
 	else
-		data->ray.next_y_grid_distance = (data->ray.y - y) / (-data->ray.y_vector);
-	if (data->ray.x_vector == 0)
-		data->ray.next_x_grid_distance = 9999;
-	else if(data->ray.x_vector > 0)
-		data->ray.next_x_grid_distance = (x + 1 - data->ray.x) / data->ray.x_vector;
+	{
+		(*y)--;
+		data->ray.wall_hit = NORTH;
+	}
+}
+
+void	update_x_coordinate_and_wall_hit(t_data *data, int *x)
+{
+	if (data->ray.x_vector > 0)
+	{
+		(*x)++;
+		data->ray.wall_hit = EAST;
+	}
 	else
-		data->ray.next_x_grid_distance = (data->ray.x - x) / (-data->ray.x_vector);
+	{
+		(*x)--;
+		data->ray.wall_hit = WEST;
+	}
 }
 
 void	move_ray(t_data *data, int *y, int *x)
@@ -85,35 +100,38 @@ void	move_ray(t_data *data, int *y, int *x)
 	{
 		data->ray.y += data->ray.next_y_grid_distance * data->ray.y_vector;
 		data->ray.x += data->ray.next_y_grid_distance * data->ray.x_vector;
-		if (data->ray.y_vector > 0)
-		{
-			(*y)++;
-			data->ray.wall_hit = SOUTH;
-		}
-		else
-		{
-			(*y)--;
-			data->ray.wall_hit = NORTH;
-		}
+		update_y_coordinate_and_wall_hit(data, y);
 	}
 	else
 	{
 		data->ray.y += data->ray.next_x_grid_distance * data->ray.y_vector;
 		data->ray.x += data->ray.next_x_grid_distance * data->ray.x_vector;
-		if (data->ray.x_vector > 0)
-		{
-			(*x)++;
-			data->ray.wall_hit = EAST;
-		}
-		else
-		{
-			(*x)--;
-			data->ray.wall_hit = WEST;
-		}
+		update_x_coordinate_and_wall_hit(data, x);
 	}
 }
 
-double perp_wall_distt(t_data *data)
+void	calculate_next_grid_distance(t_data *data, int *y, int *x)
+{
+	if (data->ray.y_vector == 0)
+		data->ray.next_y_grid_distance = 9999;
+	else if (data->ray.y_vector > 0)
+		data->ray.next_y_grid_distance
+			= ((*y) + 1 - data->ray.y) / data->ray.y_vector;
+	else
+		data->ray.next_y_grid_distance
+			= (data->ray.y - (*y)) / (-data->ray.y_vector);
+	if (data->ray.x_vector == 0)
+		data->ray.next_x_grid_distance = 9999;
+	else if (data->ray.x_vector > 0)
+		data->ray.next_x_grid_distance
+			= ((*x) + 1 - data->ray.x) / data->ray.x_vector;
+	else
+		data->ray.next_x_grid_distance
+			= (data->ray.x - (*x)) / (-data->ray.x_vector);
+	move_ray(data, y, x);
+}
+
+double	get_perp_wall_dist(t_data *data)
 {
 	const double	delta_x = data->ray.x - data->player.x;
 	const double	delta_y = data->ray.y - data->player.y;
@@ -126,6 +144,7 @@ int	get_texture_x(t_data *data, const double perp_wall_dist)
 {
 	double	wall_x;
 	int		tex_x;
+
 	if (data->ray.wall_hit == EAST || data->ray.wall_hit == WEST)
 		wall_x = data->player.y + perp_wall_dist * data->ray.y_vector;
 	else
@@ -172,47 +191,58 @@ int	get_wall_start(const int wall_height)
 int	get_wall_end(const int wall_start, const int wall_height)
 {
 	int	wall_end;
-	
+
 	wall_end = wall_start + wall_height;
 	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
 		wall_end = WINDOW_HEIGHT;
 	return (wall_end);
 }
 
-int get_texture_color(t_data *data, const int y, const int wall_height, const int tex_x)
+int	get_texture_color(t_data *data,
+	const int y, const int wall_height, const int tex_x)
 {
-	const char	*pixel_index = data->textures[data->ray.wall_hit].address + get_texture_y(data, y, wall_height) + tex_x;
+	const char	*pixel_index = data->textures[data->ray.wall_hit].address
+		+ get_texture_y(data, y, wall_height) + tex_x;
 	const int	color = *(int *)pixel_index;
 
 	return (color);
 }
 
-void	print_3d_ray(t_data *data, int ray)
+void	print_3d_ray(t_data *data, int ray, const double perp_wall_dist) //better name
 {
-	const double	perp_wall_dist = perp_wall_distt(data);
 	const double	wall_height = data->value.proj_plane / perp_wall_dist;
 	const int		wall_start = get_wall_start(wall_height);
 	const int		wall_end = get_wall_end(wall_start, wall_height);
 	const int		tex_x = get_texture_x(data, perp_wall_dist);
+	int				y;
 
-	for (int y = 0; y < wall_start; y++)
-		fill_image_buffer(data->image, y, ray, data->surface[CEILING]); // Ceiling
-
-	for (int y = wall_start; y < wall_end; y++)
+	y = 0;
+	while (y < wall_start)
 	{
-		fill_image_buffer(data->image, y, ray, get_texture_color(data, y, wall_height, tex_x));
+		fill_image_buffer(data->image, y, ray, data->surface[CEILING]);
+		y++;
 	}
-
-	for (int y = wall_end; y < WINDOW_HEIGHT; y++)
-		fill_image_buffer(data->image, y, ray, data->surface[FLOOR]); // Floor
+	while (y < wall_end)
+	{
+		fill_image_buffer(data->image, y, ray,
+			get_texture_color(data, y, wall_height, tex_x));
+		y++;
+	}
+	while (y < WINDOW_HEIGHT)
+	{
+		fill_image_buffer(data->image, y, ray, data->surface[FLOOR]);
+		y++;
+	}
 }
 
-void	calculate_raycasting_values(t_data *data) //once before raycasting //maybe in turn_left/right instead??????
+void	calculate_raycasting_values(t_data *data)
 {
 	data->player.direction_sin = sin(data->player.direction_in_radians);
 	data->player.direction_cos = cos(data->player.direction_in_radians);
-	data->player.direction_right_sin = sin((data->player.direction + 90) * PI_180);
-	data->player.direction_right_cos = cos((data->player.direction + 90) * PI_180);
+	data->player.direction_right_sin
+		= sin((data->player.direction + 90) * PI_180);
+	data->player.direction_right_cos
+		= cos((data->player.direction + 90) * PI_180);
 }
 
 void	raycasting(t_data *data)
@@ -226,16 +256,20 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (y >= 0 && y < data->map.height && x < data->map.width && data->map.map[y][x] != '1' && data->map.map[y][x] != ' ') //is_wall()???
+		while (!is_wall(data, y, x)) //!is_wall()???
 		{
-			calculate_next_grid_distance(data, y, x);
-			move_ray(data, &y, &x);
+			calculate_next_grid_distance(data, &y, &x);
 			if (data->minimap_toggle && data->ray_toggle)
-				fill_image_buffer(data->minimap, data->minimap.half_height + (int)((data->ray.y  - data->player.y) * data->value.scaled_grid_size), data->minimap.half_width + (int)((data->ray.x - data->player.x) * data->value.scaled_grid_size), COLOR_RAY);
+				fill_image_buffer(data->minimap, data->minimap.half_height
+					+ (int)((data->ray.y - data->player.y)
+						* data->value.scaled_grid_size),
+					data->minimap.half_width
+					+ (int)((data->ray.x - data->player.x)
+						* data->value.scaled_grid_size), COLOR_RAY);
 		}
 		if (data->minimap_toggle && !data->ray_toggle)
 			draw_minimap_ray(data);
-		print_3d_ray(data, ray);
+		print_3d_ray(data, ray, get_perp_wall_dist(data));
 		ray++;
 	}
 }
@@ -245,27 +279,25 @@ void	draw_crosshair(t_data *data)
 	int	y;
 	int	x;
 
-	y = -1;
-	while (y < 1)
+	y = -2;
+	while (++y < 1)
 	{
-		x = -5;
-		while (x < 5)
+		x = -6;
+		while (++x < 5)
 		{
-			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, COLOR_CROSSHAIR);
-			x++;
+			fill_image_buffer(data->image, data->image.half_height + y,
+				data->image.half_width + x, COLOR_CROSSHAIR);
 		}
-		y++;
 	}
-	x = -1;
-	while (x < 1)
+	x = -2;
+	while (++x < 1)
 	{
-		y = -5;
-		while (y < 5)
+		y = -6;
+		while (++y < 5)
 		{
-			fill_image_buffer(data->image, data->image.half_height + y, data->image.half_width + x, COLOR_CROSSHAIR);
-			y++;
+			fill_image_buffer(data->image, data->image.half_height + y,
+				data->image.half_width + x, COLOR_CROSSHAIR);
 		}
-		x++;
 	}
 }
 
@@ -273,9 +305,7 @@ void	render_game(t_data *data)
 {
 	if (data->minimap_toggle)
 		draw_minimap_grid(data);
-
 	raycasting(data);
-
 	if (data->minimap_toggle)
 		copy_minimap_to_image(data);
 	draw_crosshair(data);
@@ -285,12 +315,14 @@ void	render_game(t_data *data)
 
 bool	is_wall(const t_data *data, double y, double x)
 {
-	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width || data->map.map[(int)y][(int)x] == '1'|| data->map.map[(int)y][(int)x] == ' ') //data->map.map[(int)y][(int)x] != '0'
+	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width
+		|| data->map.map[(int)y][(int)x] == '1'
+		|| data->map.map[(int)y][(int)x] == ' ') //data->map.map[(int)y][(int)x] != '0' (keep in mind doors in bonus)
 		return (true);
 	return (false);
 }
 
-int	game_loop(t_data *data)
+/* int	game_loop(t_data *data)
 {
 	static long last_frame_time = 0;
     static double current_fps = 0.0;
@@ -343,9 +375,9 @@ int	game_loop(t_data *data)
     snprintf(fps_text, sizeof(fps_text), "FPS: %.0f", current_fps);  // %.0f removes decimals
     mlx_string_put(data->mlx, data->win, 10, 20, 0xFFFFFF, fps_text);
 	return (0);
-}
+} */
 
-/* int	game_loop(t_data *data)
+int	game_loop(t_data *data)
 {
 	long	current_time;
 
@@ -370,7 +402,7 @@ int	game_loop(t_data *data)
 		render_game(data);
 	//}
 	return (0);
-} */
+}
 
 void	start_mlx(t_data *data)
 {
@@ -393,7 +425,7 @@ void	start_mlx(t_data *data)
 	if (data->minimap.address == NULL)
 		exit_cub3d(NULL);
 	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
-	mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
+	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
 	mlx_mouse_move(data->mlx, data->win, data->image.half_width, data->image.half_height);
 }
 
