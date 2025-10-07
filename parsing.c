@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/02 14:47:38 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/03 16:04:54 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exit_pars(char *err_msg, t_data *data)
 
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str
-char	*remove_first_spaces(char *str)
+char	*remove_first_spaces(char *str, t_data *data)
 {
 	size_t	i;
 	size_t	len;
@@ -48,7 +48,7 @@ char	*remove_first_spaces(char *str)
 	new_str = ft_substr(str, i, len - i);
 	free(str);
 	if (!new_str)
-		exit_pars("Malloc Error!", NULL);
+		exit_pars("Malloc Error!", data);
 	return (new_str);
 }
 
@@ -58,7 +58,7 @@ int	distribute_element(t_data *data, int filemask)
 	int	flag;
 
 	flag = 0;
-	data->pars.line = remove_first_spaces(data->pars.line);
+	data->pars.line = remove_first_spaces(data->pars.line, data);
 	if (!ft_strncmp(data->pars.line, "NO", 2))
 		flag = get_image(NORTH, filemask, data);
 	else if (!ft_strncmp(data->pars.line, "EA", 2))

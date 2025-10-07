@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:14:27 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/30 15:05:38 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/03 16:09:19 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	file_to_map(t_data *data)
 		data->pars.line = NULL;
 		i++;
 	}
+	get_next_line(data->pars.fd, true);
 }
 
 void	get_map(size_t start, t_data *data)
