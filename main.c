@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:34:08 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:34:09 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 void	render_game(t_data *data)
@@ -9,7 +21,7 @@ void	render_game(t_data *data)
 		copy_minimap_to_image(data);
 	draw_crosshair(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
-	data->movement_happend = false;
+	data->render_required = false;
 }
 
 /* int	game_loop(t_data *data)
@@ -45,9 +57,9 @@ void	render_game(t_data *data)
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
-			turn_left(data, 150 * data->delta_time);
+			turn_left(data, TURN_SPEED * data->delta_time);
 		if (data->keys['l'] && !data->keys['j'])
-			turn_right(data, 150 * data->delta_time);
+			turn_right(data, TURN_SPEED * data->delta_time);
 		if (data->keys['a'] && !data->keys['d'])
 			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])
@@ -56,7 +68,7 @@ void	render_game(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
 		render_game(data);
 		//counter++;
 	//}
@@ -71,15 +83,16 @@ int	game_loop(t_data *data)
 {
 	long	current_time;
 
-	//if (get_current_time() - data->time_reference > 1000 / FPS)
-	//{
+	if (FPS == UNLIMITED
+		|| get_current_time() - data->time_reference > 1000 / FPS)
+	{
 		current_time = get_current_time();
 		data->delta_time = (current_time - data->time_reference) / 1000.0;
 		data->time_reference = current_time;
 		if (data->keys['j'] && !data->keys['l'])
-			turn_left(data, 150 * data->delta_time);
+			turn_left(data, TURN_SPEED * data->delta_time);
 		if (data->keys['l'] && !data->keys['j'])
-			turn_right(data, 150 * data->delta_time);
+			turn_right(data, TURN_SPEED * data->delta_time);
 		if (data->keys['a'] && !data->keys['d'])
 			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])
@@ -88,21 +101,21 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_backwards(data);
-		//if (data->movement_happend || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
+		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed???
 		render_game(data);
-	//}
+	}
 	return (0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_data	*data;
-	
+
 	init_data();
 	data = get_data();
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		exit_cub3d(NULL); //msg
+		exit_cub3d("MLX: Failed to init mlx!");
 	parsing(argc, argv, data);
 	calculate_fixed_values(data);
 	start_mlx(data);

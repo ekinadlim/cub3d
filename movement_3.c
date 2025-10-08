@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement_3.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:33:41 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:33:42 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 static bool	validate_x_position(t_data *data, double x)
@@ -67,5 +79,5 @@ void	move_x(t_data *data, double x)
 	if (fabs(x) < EPSILON)
 		return ;
 	data->player.x += x;
-	data->movement_happend = true;
+	data->render_required = true;
 }

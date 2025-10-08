@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:34:01 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:34:02 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 void	init_data(void)
@@ -36,6 +48,10 @@ void	calculate_fixed_values(t_data *data)
 
 static void	call_mlx_hooks(t_data *data)
 {
+	mlx_do_key_autorepeatoff(data->mlx);
+	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
+	mlx_mouse_move(data->mlx, data->win,
+		data->image.half_width, data->image.half_height);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->win, 6, 1L << 6, mouse_move, data);
@@ -47,26 +63,29 @@ static void	call_mlx_hooks(t_data *data)
 
 void	start_mlx(t_data *data)
 {
-	//msg
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3D");
 	if (data->win == NULL)
-		exit_cub3d(NULL);
-	data->image.buffer = mlx_new_image(data->mlx, data->image.width, data->image.height);
+		exit_cub3d("MLX: Failed to create a new window!");
+	data->image.buffer
+		= mlx_new_image(data->mlx, data->image.width, data->image.height);
 	if (data->image.buffer == NULL)
-		exit_cub3d(NULL);
-	data->image.address = mlx_get_data_addr(data->image.buffer, &data->image.bytes_per_pixel, &data->image.size_line, &data->image.endian);
+		exit_cub3d("MLX: Failed to create a new img!");
+	data->image.address
+		= mlx_get_data_addr(data->image.buffer, &data->image.bytes_per_pixel,
+			&data->image.size_line, &data->image.endian);
 	data->image.bytes_per_pixel /= 8;
 	if (data->image.address == NULL)
-		exit_cub3d(NULL);
-	data->minimap.buffer = mlx_new_image(data->mlx, data->minimap.width, data->minimap.height);
+		exit_cub3d("MLX: Failed to get data addr!");
+	data->minimap.buffer
+		= mlx_new_image(data->mlx, data->minimap.width, data->minimap.height);
 	if (data->minimap.buffer == NULL)
-		exit_cub3d(NULL);
-	data->minimap.address = mlx_get_data_addr(data->minimap.buffer, &data->minimap.bytes_per_pixel, &data->minimap.size_line, &data->minimap.endian);
+		exit_cub3d("MLX: Failed to create a new img!");
+	data->minimap.address
+		= mlx_get_data_addr(data->minimap.buffer,
+			&data->minimap.bytes_per_pixel, &data->minimap.size_line,
+			&data->minimap.endian);
 	data->minimap.bytes_per_pixel /= 8;
 	if (data->minimap.address == NULL)
-		exit_cub3d(NULL);
-	mlx_do_key_autorepeatoff(data->mlx); //no fail possible?
-	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
-	mlx_mouse_move(data->mlx, data->win, data->image.half_width, data->image.half_height);
+		exit_cub3d("MLX: Failed to get data addr!");
 	call_mlx_hooks(data);
 }

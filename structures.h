@@ -90,7 +90,7 @@ typedef struct s_data
 	t_player	player;
 	t_image		image;
 	t_image		minimap;
-	bool		movement_happend; //to know if we need to render (better name)
+	bool		render_required; //to know if we need to render (better name)
 	bool		minimap_toggle;
 	bool		ray_toggle; //which ray view in minimap (wave or grid)
 	t_ray		ray;

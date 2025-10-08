@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement_2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:33:33 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:33:34 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 static bool	validate_y_position(t_data *data, double y)
@@ -67,5 +79,5 @@ void	move_y(t_data *data, double y)
 	if (fabs(y) < EPSILON)
 		return ;
 	data->player.y += y;
-	data->movement_happend = true;
+	data->render_required = true;
 }

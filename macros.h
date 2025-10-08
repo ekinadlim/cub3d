@@ -17,14 +17,13 @@
 
 # define MAP_CHAR_SET "01 NESW"
 
-# define PI_180 0.017453292519943295474371680598 //converts degrees to radians
+# define ELEMENT_COUNT 6
 
+# define PI_180 0.017453292519943295474371680598 //converts degrees to radians
 # define EPSILON 1e-10
 
 # define WINDOW_WIDTH	1280 /* 1600 */ /* 640 */
 # define WINDOW_HEIGHT	720 /* 900 */ /* 480 */
-
-# define ELEMENT_COUNT 6
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
@@ -34,7 +33,8 @@
 # define GRID_SIZE		10 //How many Pixels there are per row/column for each Grid
 # define SCALING		1.5 //For the Minimap size
 
-# define FPS	60
+# define UNLIMITED	-1 //For FPS
+# define FPS	UNLIMITED
 # define FOV	90
 
 # define KEY_ESC	65307
@@ -58,7 +58,9 @@
 
 # define COLOR_CROSSHAIR	0xFFFFFF
 
-# define MOVEMENT_SPEED	4
+# define MOVEMENT_SPEED		4
+# define TURN_SPEED			150
+# define MOUSE_SENSITIVITY	0.1
 
 typedef enum e_cardinal_direction
 {
