@@ -25,6 +25,8 @@ int	get_texture_x(t_data *data, const double perp_wall_dist)
 		wall_x *= -1;
 	wall_x = wall_x - (int)wall_x;
 	tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
+	if (data->ray.wall_hit == SOUTH || data->ray.wall_hit == WEST)
+		tex_x = data->textures[data->ray.wall_hit].width - 1 - tex_x;
 	if (tex_x < 0)
 		tex_x = 0;
 	if (tex_x >= data->textures[data->ray.wall_hit].width)
