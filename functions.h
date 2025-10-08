@@ -39,18 +39,23 @@ void	turn_left(t_data *data, double speed);
 
 /* Minimap */
 
-void	copy_minimap_to_image(t_data *data);
-void	draw_minimap_ray(t_data *data);
 void	draw_minimap_grid(t_data *data);
+void	draw_minimap_ray(t_data *data);
 
 /* Raycasting */
 
 void	raycasting(t_data *data);
+void	calculate_next_grid_distance(t_data *data, int *y, int *x);
 
 /* Rendering */
 
+void	render_game(t_data *data);
 void	draw_vertical_line(t_data *data, int ray, const double perp_wall_dist);
-void	draw_crosshair(t_data *data);
+int		get_texture_x(t_data *data, const double perp_wall_dist);
+int		get_wall_start(const int wall_height);
+int		get_wall_end(const int wall_start, const int wall_height);
+int		get_texture_color(t_data *data,
+			const int y, const int wall_height, const int tex_x);
 
 /* Init Stuff */
 

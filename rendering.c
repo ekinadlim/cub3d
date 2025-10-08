@@ -12,69 +12,6 @@
 
 #include "header.h"
 
-int	get_texture_x(t_data *data, const double perp_wall_dist)
-{
-	double	wall_x;
-	int		tex_x;
-
-	if (data->ray.wall_hit == EAST || data->ray.wall_hit == WEST)
-		wall_x = data->player.y + perp_wall_dist * data->ray.y_vector;
-	else
-		wall_x = data->player.x + perp_wall_dist * data->ray.x_vector;
-	if (wall_x < 0)
-		wall_x *= -1;
-	wall_x = wall_x - (int)wall_x;
-	tex_x = (int)(wall_x * data->textures[data->ray.wall_hit].width);
-	if (tex_x < 0)
-		tex_x = 0;
-	if (tex_x >= data->textures[data->ray.wall_hit].width)
-		tex_x = data->textures[data->ray.wall_hit].width - 1;
-	return (tex_x * data->textures[data->ray.wall_hit].bytes_per_pixel);
-}
-
-int	get_texture_y(t_data *data, const int y, const int wall_height)
-{
-	const int	d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
-	int			tex_y;
-
-	tex_y = ((d * data->textures[data->ray.wall_hit].height) / wall_height) / 256; //signed integer overflow
-	if (tex_y < 0)
-		tex_y = 0;
-	if (tex_y >= data->textures[data->ray.wall_hit].height)
-		tex_y = data->textures[data->ray.wall_hit].height - 1;
-	return (tex_y * data->textures[data->ray.wall_hit].size_line);
-}
-
-int	get_wall_start(const int wall_height)
-{
-	int	wall_start;
-
-	wall_start = (WINDOW_HEIGHT - wall_height) / 2;
-	if (wall_start < 0)
-		wall_start = 0;
-	return (wall_start);
-}
-
-int	get_wall_end(const int wall_start, const int wall_height)
-{
-	int	wall_end;
-
-	wall_end = wall_start + wall_height;
-	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
-		wall_end = WINDOW_HEIGHT;
-	return (wall_end);
-}
-
-int	get_texture_color(t_data *data,
-	const int y, const int wall_height, const int tex_x)
-{
-	const char	*pixel_index = data->textures[data->ray.wall_hit].address
-		+ get_texture_y(data, y, wall_height) + tex_x;
-	const int	color = *(int *)pixel_index;
-
-	return (color);
-}
-
 void	draw_vertical_line(t_data *data, int ray, const double perp_wall_dist)
 {
 	const double	wall_height = data->value.proj_plane / perp_wall_dist;
@@ -102,7 +39,7 @@ void	draw_vertical_line(t_data *data, int ray, const double perp_wall_dist)
 	}
 }
 
-void	draw_crosshair(t_data *data)
+static void	draw_crosshair(t_data *data)
 {
 	int	y;
 	int	x;
@@ -127,4 +64,43 @@ void	draw_crosshair(t_data *data)
 				data->image.half_width + x, COLOR_CROSSHAIR);
 		}
 	}
+}
+
+static void	copy_minimap_to_image(t_data *data)
+{
+	int		i;
+	int		j;
+	char	*pixel_index;
+	int		color;
+
+	fill_image_buffer(data->minimap,
+		data->minimap.half_height, data->minimap.half_width, COLOR_PLAYER);
+	i = 0;
+	while (i < data->minimap.height)
+	{
+		j = 0;
+		while (j < data->minimap.width)
+		{
+			pixel_index = data->minimap.address
+				+ (i * data->minimap.size_line)
+				+ (j * data->minimap.bytes_per_pixel);
+			color = *(int *)pixel_index;
+			fill_image_buffer(data->image,
+				MINIMAP_POS_Y + i, MINIMAP_POS_X + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	render_game(t_data *data)
+{
+	if (data->minimap_toggle)
+		draw_minimap_grid(data);
+	raycasting(data);
+	if (data->minimap_toggle)
+		copy_minimap_to_image(data);
+	draw_crosshair(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
+	data->render_required = false;
 }

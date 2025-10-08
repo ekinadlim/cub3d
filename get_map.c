@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-char	*line_to_map(t_data *data)
+static char	*line_to_map(t_data *data)
 {
 	char	*map_line;
 	int		i;
@@ -34,7 +34,7 @@ char	*line_to_map(t_data *data)
 	return (map_line);
 }
 
-void	file_to_map(t_data *data)
+static void	file_to_map(t_data *data)
 {
 	int	i;
 

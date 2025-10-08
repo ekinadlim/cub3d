@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-void	map_name_validation(char *path, char *extension)
+static void	map_name_validation(char *path, char *extension)
 {
 	int	path_index;
 	int	ext_index;

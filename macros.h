@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/03 16:01:17 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:43:04 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
-# define MINIMAP_POS_Y	0 //(WINDOW_HEIGHT - MINIMAP_HEIGHT) /* BOTTOM */
-# define MINIMAP_POS_X	0 //(WINDOW_WIDTH - MINIMAP_WIDTH) /* RIGHT */
-# define GRID_COUNT		10 //How many Grids there are per row/column on the Minimap
-# define GRID_SIZE		10 //How many Pixels there are per row/column for each Grid
-# define SCALING		1.5 //For the Minimap size
+# define MINIMAP_POS_Y	0
+# define MINIMAP_POS_X	0
+//How many Grids there are per row/column on the Minimap
+# define GRID_COUNT		10
+//How many Pixels there are per row/column for each Grid
+# define GRID_SIZE		10
+//For the Minimap size
+# define SCALING		1.5
 
 # define UNLIMITED	-1 //For FPS
 # define FPS	UNLIMITED

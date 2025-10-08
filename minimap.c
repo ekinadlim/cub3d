@@ -12,34 +12,7 @@
 
 #include "header.h"
 
-void	copy_minimap_to_image(t_data *data)
-{
-	int		i;
-	int		j;
-	char	*pixel_index;
-	int		color;
-
-	fill_image_buffer(data->minimap,
-		data->minimap.half_height, data->minimap.half_width, COLOR_PLAYER);
-	i = 0;
-	while (i < data->minimap.height)
-	{
-		j = 0;
-		while (j < data->minimap.width)
-		{
-			pixel_index = data->minimap.address
-				+ (i * data->minimap.size_line)
-				+ (j * data->minimap.bytes_per_pixel);
-			color = *(int *)pixel_index;
-			fill_image_buffer(data->image,
-				MINIMAP_POS_Y + i, MINIMAP_POS_X + j, color);
-			j++;
-		}
-		i++;
-	}
-}
-
-bool	draw_minimap_ray_pixel(t_data *data, const double progress)
+static bool	draw_minimap_ray_pixel(t_data *data, const double progress)
 {
 	const double	draw_x = progress * (data->ray.x - data->player.x)
 		* data->value.scaled_grid_size;

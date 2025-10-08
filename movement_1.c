@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-void	move_forward(t_data *data) //data->player.direction_sin??????
+void	move_forward(t_data *data)
 {
 	double	y;
 	double	x;

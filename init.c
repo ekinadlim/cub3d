@@ -48,8 +48,8 @@ void	calculate_fixed_values(t_data *data)
 
 static void	call_mlx_hooks(t_data *data)
 {
+	//mlx_mouse_hide(data->mlx, data->win); //this mlx function leaks
 	mlx_do_key_autorepeatoff(data->mlx);
-	//mlx_mouse_hide(data->mlx, data->win); //this is the only mlx function that leaks, shouldnt use it when submitting
 	mlx_mouse_move(data->mlx, data->win,
 		data->image.half_width, data->image.half_height);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);

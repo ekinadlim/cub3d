@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-bool	has_surroundable(t_vec_2d_int pos, char **map, t_data *data)
+static bool	has_surroundable(t_vec_2d_int pos, char **map, t_data *data)
 {
 	size_t	i;
 

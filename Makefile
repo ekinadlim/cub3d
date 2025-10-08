@@ -13,7 +13,9 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC = 	main.c\
 		init.c\
 		raycasting.c\
+		raycasting_utils.c\
 		rendering.c\
+		rendering_utils.c\
 		input.c\
 		movement_1.c\
 		movement_2.c\

@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-void	clean_up_map(char **map)
+static void	clean_up_map(char **map)
 {
 	size_t	i;
 	size_t	j;
@@ -33,7 +33,7 @@ void	clean_up_map(char **map)
 	}
 }
 
-void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
+static void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 {
 	if (data->player.x || data->player.y)
 		exit_pars("Only one player allowed!", data);
@@ -59,7 +59,7 @@ void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 void	get_player(char **map, t_data *data)
 {
 	t_vec_2d_size_t	pos;
-	t_vec_2d_int	player;
+	t_vec_2d_int	player; //not needed if we use data->player.y and data->player.x (not even needed to set them to -1 since 0 would be invalid anyway)
 
 	pos = (t_vec_2d_size_t){0, 0};
 	player = (t_vec_2d_int){-1, -1};
@@ -73,6 +73,7 @@ void	get_player(char **map, t_data *data)
 				get_pos_and_dir(pos, map[pos.y][pos.x], data);
 				player.x = pos.x;
 				player.y = pos.y;
+				//break ; //possible?
 			}
 			pos.x++;
 		}

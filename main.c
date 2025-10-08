@@ -12,18 +12,6 @@
 
 #include "header.h"
 
-void	render_game(t_data *data)
-{
-	if (data->minimap_toggle)
-		draw_minimap_grid(data);
-	raycasting(data);
-	if (data->minimap_toggle)
-		copy_minimap_to_image(data);
-	draw_crosshair(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
-	data->render_required = false;
-}
-
 /* int	game_loop(t_data *data)
 {
 	static long last_frame_time = 0;

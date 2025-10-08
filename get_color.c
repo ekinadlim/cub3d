@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-int	comma_handling(int color_shift, char str_num[5], t_data *data)
+static int	comma_handling(int color_shift, char str_num[5], t_data *data)
 {
 	if (color_shift == 0)
 		exit_pars("Remove the comma!", data);
@@ -21,7 +21,7 @@ int	comma_handling(int color_shift, char str_num[5], t_data *data)
 	return (ft_atoi(str_num));
 }
 
-int	get_color_number(size_t *i, int color_shift, t_data *data)
+static int	get_color_number(size_t *i, int color_shift, t_data *data)
 {
 	char	str_num[5];
 	size_t	digit;

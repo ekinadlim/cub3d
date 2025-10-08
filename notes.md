@@ -39,3 +39,4 @@ SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior main.c:280:19 in
 //maybe limit map size just in case of int overflow
 //use inline function??? (probably not)
 //make t_data *data const if function will not modify it???
+//what is 'X'?

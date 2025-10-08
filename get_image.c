@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-char	*get_path(t_data *data)
+static char	*get_path(t_data *data)
 {
 	size_t	start;
 	size_t	len;
