@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:08 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/08 13:34:09 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:28:35 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@
 		if (data->keys['w'] && !data->keys['s'])
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
-			move_backwards(data);
+			move_back(data);
 		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed
 		render_game(data);
 		//counter++;
@@ -88,7 +88,7 @@ int	game_loop(t_data *data)
 		if (data->keys['w'] && !data->keys['s'])
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
-			move_backwards(data);
+			move_back(data);
 		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed???
 		render_game(data);
 	}

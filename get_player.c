@@ -6,40 +6,14 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:25:23 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/30 15:38:34 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/09 18:13:35 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-static void	clean_up_map(char **map)
+void	get_player(int pos_x, int pos_y, char c, t_data *data)
 {
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (map[i])
-	{
-		while (map[i][j])
-		{
-			if (map[i][j] == 'X' || map[i][j] == 'E' || map[i][j] == 'S'
-				|| map[i][j] == 'W' || map[i][j] == 'N')
-				map[i][j] = '0';
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-}
-
-static void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
-{
-	if (data->player.x || data->player.y)
-		exit_pars("Only one player allowed!", data);
-	data->player.x = pos.x + 0.5;
-	data->player.y = pos.y + 0.5;
-	data->map.map[pos.y][pos.x] = '0';
 	if (c == 'E')
 		data->player.direction = 0;
 	else if (c == 'S')
@@ -49,39 +23,11 @@ static void	get_pos_and_dir(t_vec_2d_size_t pos, char c, t_data *data)
 	else if (c == 'N')
 		data->player.direction = 270;
 	else
-		exit_pars("No idea how this happened!", data);
+		return ;
+	if (data->player.x || data->player.y)
+		exit_pars("Only one player allowed!", data);
+	data->player.x = pos_x + 0.5;
+	data->player.y = pos_y + 0.5;
 	data->player.direction_in_radians
 		= data->player.direction * PI_180;
-}
-
-// save player coordinates (x + 0.5, y + 0.5);
-// save player directions (E=0, S=90, W=180, N=270)
-void	get_player(char **map, t_data *data)
-{
-	t_vec_2d_size_t	pos;
-	t_vec_2d_int	player; //not needed if we use data->player.y and data->player.x (not even needed to set them to -1 since 0 would be invalid anyway)
-
-	pos = (t_vec_2d_size_t){0, 0};
-	player = (t_vec_2d_int){-1, -1};
-	while (map[pos.y])
-	{
-		while (map[pos.y][pos.x])
-		{
-			if (map[pos.y][pos.x] == 'E' || map[pos.y][pos.x] == 'S'
-				|| map[pos.y][pos.x] == 'W' || map[pos.y][pos.x] == 'N')
-			{
-				get_pos_and_dir(pos, map[pos.y][pos.x], data);
-				player.x = pos.x;
-				player.y = pos.y;
-				//break ; //possible?
-			}
-			pos.x++;
-		}
-		pos.y++;
-		pos.x = 0;
-	}
-	if (player.x < 0 || player.y < 0)
-		exit_pars("Player is missing!", data);
-	clean_up_map(map);
-	check_map(map, data);
 }
