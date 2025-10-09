@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/03 16:01:17 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:43:04 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,27 @@
 
 # define MAP_CHAR_SET "01 NESW"
 
-# define PI_DIVIDED_BY_180 (M_PI / 180.0) // converts degrees to radians
-//Do a lot of similar MACROS
-
-#define EPSILON 1e-10
-
-# define WINDOW_HEIGHT	900 //480
-# define WINDOW_WIDTH	1600 //640
-
 # define ELEMENT_COUNT 6
+
+# define PI_180 0.017453292519943295474371680598 //converts degrees to radians
+# define EPSILON 1e-10
+
+# define WINDOW_WIDTH	1280 /* 1600 */ /* 640 */
+# define WINDOW_HEIGHT	720 /* 900 */ /* 480 */
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
-# define MINIMAP_POS_Y	0 //(WINDOW_HEIGHT - MINIMAP_HEIGHT) /* BOTTOM */
-# define MINIMAP_POY_X	0 //(WINDOW_WIDTH - MINIMAP_WIDTH) /* RIGHT */
-# define GRID_COUNT		10 //How many Grids there are per row/column on the Minimap
-# define GRID_SIZE		10 //How many Pixels there are per row/column for each Grid
-# define SCALING		2 //For the Minimap size
+# define MINIMAP_POS_Y	0
+# define MINIMAP_POS_X	0
+//How many Grids there are per row/column on the Minimap
+# define GRID_COUNT		10
+//How many Pixels there are per row/column for each Grid
+# define GRID_SIZE		10
+//For the Minimap size
+# define SCALING		1.5
 
-# define FPS	60
+# define UNLIMITED	-1 //For FPS
+# define FPS	UNLIMITED
 # define FOV	90
 
 # define KEY_ESC	65307
@@ -56,6 +58,12 @@
 # define COLOR_VOID		0x000000    // Dark void
 # define COLOR_WALL		0x666666    // Medium gray walls
 # define COLOR_FLOOR	0x333333    // Dark gray floor
+
+# define COLOR_CROSSHAIR	0xFFFFFF
+
+# define MOVEMENT_SPEED		4
+# define TURN_SPEED			150
+# define MOUSE_SENSITIVITY	0.1
 
 typedef enum e_cardinal_direction
 {

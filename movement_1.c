@@ -1,77 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement_1.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:33:29 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:33:30 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 void	move_forward(t_data *data)
 {
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * (4 * data->delta_time);
-	double y = sin(radian) * (4 * data->delta_time);
-	double offset; //can just pass either 0.2 or -0.2 inside the function to save 3 lines
+	double	y;
+	double	x;
 
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
+	y = sin(data->player.direction_in_radians)
+		* (MOVEMENT_SPEED * data->delta_time);
+	x = cos(data->player.direction_in_radians)
+		* (MOVEMENT_SPEED * data->delta_time);
+	move_y(data, y);
+	move_x(data, x);
 }
 
 void	move_backwards(t_data *data)
 {
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian) * (-4 * data->delta_time);
-	double y = sin(radian) * (-4 * data->delta_time);
-	double offset;
+	double	y;
+	double	x;
 
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
+	y = sin(data->player.direction_in_radians)
+		* (-MOVEMENT_SPEED * data->delta_time);
+	x = cos(data->player.direction_in_radians)
+		* (-MOVEMENT_SPEED * data->delta_time);
+	move_y(data, y);
+	move_x(data, x);
 }
 
 void	move_left(t_data *data)
 {
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian - (M_PI / 2)) * (4 * data->delta_time);
-	double y = sin(radian - (M_PI / 2)) * (4 * data->delta_time);
-	double offset;
+	double	y;
+	double	x;
 
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
+	y = sin(data->player.direction_in_radians - M_PI_2)
+		* (MOVEMENT_SPEED * data->delta_time);
+	x = cos(data->player.direction_in_radians - M_PI_2)
+		* (MOVEMENT_SPEED * data->delta_time);
+	move_y(data, y);
+	move_x(data, x);
 }
 
 void	move_right(t_data *data)
 {
-	double radian = data->player.direction * M_PI / 180.0;
-	double x = cos(radian + (M_PI / 2)) * (4 * data->delta_time);
-	double y = sin(radian + (M_PI / 2)) * (4 * data->delta_time);
-	double offset;
+	double	y;
+	double	x;
 
-	if (y < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_y(data, y, offset);
-	if (x < 0)
-		offset = -0.2;
-	else
-		offset = 0.2;
-	move_x(data, x, offset);
+	y = sin(data->player.direction_in_radians + M_PI_2)
+		* (MOVEMENT_SPEED * data->delta_time);
+	x = cos(data->player.direction_in_radians + M_PI_2)
+		* (MOVEMENT_SPEED * data->delta_time);
+	move_y(data, y);
+	move_x(data, x);
 }

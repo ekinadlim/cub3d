@@ -12,28 +12,9 @@
 
 #include "header.h"
 
-// Exit function for the parsing
-void	exit_pars(char *err_msg, t_data *data)
-{
-	if (data)
-	{
-		if (data->pars.fd > 0)
-		{
-			get_next_line(data->pars.fd, true);
-			close(data->pars.fd);
-		}
-		if (data->pars.line)
-		{
-			free(data->pars.line);
-			data->pars.line = NULL;
-		}
-	}
-	exit_cub3d(err_msg);
-}
-
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str
-char	*remove_first_spaces(char *str, t_data *data)
+static char	*remove_first_spaces(char *str, t_data *data)
 {
 	size_t	i;
 	size_t	len;
@@ -53,7 +34,7 @@ char	*remove_first_spaces(char *str, t_data *data)
 }
 
 // Converts and distributes element depending on what it is;
-int	distribute_element(t_data *data, int filemask)
+static int	distribute_element(t_data *data, int filemask)
 {
 	int	flag;
 
@@ -77,7 +58,7 @@ int	distribute_element(t_data *data, int filemask)
 }
 
 // Handles the textures and colors from the .cub file
-size_t	get_elements(t_data *data)
+static size_t	get_elements(t_data *data)
 {
 	int		filemask;
 	size_t	line_count;

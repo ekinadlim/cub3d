@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-void	map_name_validation(char *path, char *extension)
+static void	map_name_validation(char *path, char *extension)
 {
 	int	path_index;
 	int	ext_index;
@@ -21,7 +21,7 @@ void	map_name_validation(char *path, char *extension)
 		exit_pars("File Path missing!", NULL);
 	path_index = ft_strlen(path) - 1;
 	ext_index = 3;
-	while (extension[ext_index])
+	while (ext_index >= 0)
 	{
 		if (path_index <= 0 || path[path_index] != extension[ext_index])
 			exit_pars("Wrong file format!", NULL);

@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-char	*get_path(t_data *data)
+static char	*get_path(t_data *data)
 {
 	size_t	start;
 	size_t	len;
@@ -56,8 +56,9 @@ int	get_image(int dir, int filemask, t_data *data)
 	if (!data->textures[dir].buffer)
 		exit_pars("MLX: Failed to convert xpm to img!", data);
 	data->textures[dir].address = mlx_get_data_addr(data->textures[dir].buffer,
-			&data->textures[dir].bits_per_pixel, &data->textures[dir].size_line,
+			&data->textures[dir].bytes_per_pixel, &data->textures[dir].size_line,
 			&data->textures[dir].endian);
+	data->textures[dir].bytes_per_pixel /= 8;
 	if (!data->textures[dir].address)
 		exit_pars("MLX: Failed to get data address!", data);
 	return (1 << dir);

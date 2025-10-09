@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 13:32:57 by apartowi          #+#    #+#             */
+/*   Updated: 2025/10/08 13:32:58 by apartowi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 int	key_press(int key, t_data *data)
@@ -50,18 +62,16 @@ int	key_release(int key, t_data *data)
 
 int	mouse_move(int x, int y, t_data *data)
 {
-	static int	half_window_width = WINDOW_WIDTH / 2;
-	static int	half_window_height = WINDOW_HEIGHT / 2;
-	int			delta_x;
+	int	delta_x;
 
-	delta_x = x - half_window_width;
+	delta_x = x - data->image.half_width;
 	if (delta_x < 0)
-		turn_left(data, -(delta_x * 3));
+		turn_left(data, -(delta_x * MOUSE_SENSITIVITY));
 	else if (delta_x > 0)
-		turn_right(data, delta_x * 3);
-	if (x != half_window_width || y != half_window_height)
+		turn_right(data, delta_x * MOUSE_SENSITIVITY);
+	if (x != data->image.half_width || y != data->image.half_height)
 		mlx_mouse_move(data->mlx, data->win,
-			half_window_width, half_window_height);
+			data->image.half_width, data->image.half_height);
 	return (0);
 }
 

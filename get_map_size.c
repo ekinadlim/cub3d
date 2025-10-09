@@ -13,7 +13,7 @@
 #include "header.h"
 
 // Checks if the line is valid according to the MAP_CHAR_SET macro
-void	is_valid_line(t_data *data)
+static void	is_valid_line(t_data *data)
 {
 	size_t	i;
 	size_t	j;
@@ -39,7 +39,7 @@ void	is_valid_line(t_data *data)
 }
 
 // Returns the starting line
-size_t	skip_first_newlines(t_data *data)
+static size_t	skip_first_newlines(t_data *data)
 {
 	size_t	start;
 

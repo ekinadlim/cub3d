@@ -9,6 +9,11 @@
 		"string": "c",
 		"string_view": "c",
 		"ranges": "c",
-		"sstream": "c"
+		"sstream": "c",
+		"header.h": "c"
+	},
+	"editor.tokenColorCustomizations": {
+		"comments": "",
+		"textMateRules": []
 	}
 }
