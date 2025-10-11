@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/09 18:11:43 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/11 14:10:51 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 
 # define MAP_CHAR_SET	"01 NESW"
 # define ELEMENT_COUNT	6
-# define MAX_HEIGHT		10000
-# define MAX_WIDTH		10000
+# define MAX_HEIGHT		5000
+# define MAX_WIDTH		5000
 
 /* -------------- DISPLAY --------------- */
 
