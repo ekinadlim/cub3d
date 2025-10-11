@@ -80,7 +80,6 @@
 # define TURN_SPEED			150
 # define MOUSE_SENSITIVITY	0.1
 
-
 typedef enum e_cardinal_direction
 {
 	NORTH,

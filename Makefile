@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP -g #-fsanitize=undefined -pedantic -Wno-newline-eof #comment out
+CFLAGS = -Wall -Werror -Wextra -MMD -MP #-g -fsanitize=undefined -pedantic -Wno-newline-eof #comment out
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
