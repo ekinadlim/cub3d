@@ -39,6 +39,8 @@
 # define UNLIMITED	-1 //For FPS
 # define FPS	UNLIMITED
 # define FOV	90
+# define MAX_ANIMATION_FRAMES	100
+# define ANIMATION_SPEED	15
 
 # define KEY_ESC	65307
 # define KEY_UP		65362

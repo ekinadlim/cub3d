@@ -100,6 +100,10 @@ typedef struct s_data
 	t_map		map;
 	int			surface[2];
 	t_image		textures[4];
+	t_image		animation[4][MAX_ANIMATION_FRAMES]; //should be double array [4][MAX_ANIMATION]
+	int			animation_frames_amount[4]; //store how many frames each animation has
+	int			animation_index[4]; //should be [4] as well
+	double		animation_tracker[4]; //maybe [4] ???
 	t_parsing	pars;
 	t_value		value;
 }				t_data;

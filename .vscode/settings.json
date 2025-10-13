@@ -10,7 +10,13 @@
 		"string_view": "c",
 		"ranges": "c",
 		"sstream": "c",
-		"header.h": "c"
+		"header.h": "c",
+		"istream": "c",
+		"ostream": "c",
+		"functional": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c"
 	},
 	"editor.tokenColorCustomizations": {
 		"comments": "",
