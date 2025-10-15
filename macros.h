@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/08 13:43:04 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/10/09 18:11:43 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,39 @@
 
 # define _GNU_SOURCE //for M_PI
 
-# define MAP_CHAR_SET "01 NESW"
+/* ------------- CONSTANTS -------------- */
 
-# define ELEMENT_COUNT 6
-
-# define PI_180 0.017453292519943295474371680598 //converts degrees to radians
+//Converts degrees to radians
+# define PI_180 0.017453292519943295474371680598
+//The smallest positive floating-point number
 # define EPSILON 1e-10
+
+# define KEY_ESC	65307
+# define KEY_UP		65362
+# define KEY_RIGHT	65363
+# define KEY_DOWN	65364
+# define KEY_LEFT	65361
+
+/* -------------- PARSING --------------- */
+
+# define MAP_CHAR_SET	"01 NESW"
+# define ELEMENT_COUNT	6
+# define MAX_HEIGHT		10000
+# define MAX_WIDTH		10000
+
+/* -------------- DISPLAY --------------- */
 
 # define WINDOW_WIDTH	1280 /* 1600 */ /* 640 */
 # define WINDOW_HEIGHT	720 /* 900 */ /* 480 */
+
+# define UNLIMITED	-1 //For FPS
+# define FPS	UNLIMITED
+# define FOV	90
+
+# define MAX_ANIMATION_FRAMES	100
+# define ANIMATION_SPEED	15
+
+/* -------------- MINI MAP--------------- */
 
 # define MINIMAP_HEIGHT	100
 # define MINIMAP_WIDTH	100
@@ -36,32 +60,24 @@
 //For the Minimap size
 # define SCALING		1.5
 
-# define UNLIMITED	-1 //For FPS
-# define FPS	UNLIMITED
-# define FOV	90
-# define MAX_ANIMATION_FRAMES	100
-# define ANIMATION_SPEED	15
+# define COLOR_PLAYER	0xFF0000 //Red
+# define COLOR_RAY		0xFFDD44 //Yellow
+# define COLOR_VOID		0x000000 //Black
+# define COLOR_WALL		0x666666 //Medium gray
+# define COLOR_FLOOR	0x333333 //Dark gray
 
-# define KEY_ESC	65307
-# define KEY_UP		65362
-# define KEY_RIGHT	65363
-# define KEY_DOWN	65364
-# define KEY_LEFT	65361
+/* -------------- KEY BINDS ------------- */
 
-// Minimap Colors
-/* # define COLOR_PLAYER	0xFF0000
-# define COLOR_RAY		0xFFFF00
-# define COLOR_VOID		0x000000
-# define COLOR_WALL		0x0001F4
-# define COLOR_FLOOR	0x000064 */
+# define MOVE_FORWARD 'w'
+# define MOVE_BACK 's'
+# define MOVE_RIGHT 'd'
+# define MOVE_LEFT 'a'
 
-# define COLOR_PLAYER	0xFF0000    // Red player (stands out)
-# define COLOR_RAY		0xFFDD44    // Yellow rays (visible but not harsh)
-# define COLOR_VOID		0x000000    // Dark void
-# define COLOR_WALL		0x666666    // Medium gray walls
-# define COLOR_FLOOR	0x333333    // Dark gray floor
+/* -------------- CROSSHAIR ------------- */
 
 # define COLOR_CROSSHAIR	0xFFFFFF
+
+/* ---------------- SPEED --------------- */
 
 # define MOVEMENT_SPEED		4
 # define TURN_SPEED			150

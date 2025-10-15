@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:33:29 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/08 13:33:30 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:28:35 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	move_forward(t_data *data)
 	move_x(data, x);
 }
 
-void	move_backwards(t_data *data)
+void	move_back(t_data *data)
 {
 	double	y;
 	double	x;

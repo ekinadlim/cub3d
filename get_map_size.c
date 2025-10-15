@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:13:08 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/30 15:02:31 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/09 18:15:43 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ static void	is_valid_line(t_data *data)
 		while (MAP_CHAR_SET[j])
 		{
 			if (data->pars.line[i] == MAP_CHAR_SET[j])
+			{
+				get_player(i, data->map.height, MAP_CHAR_SET[j], data);
 				break ;
+			}
 			j++;
 		}
 		if (!MAP_CHAR_SET[j])
@@ -54,6 +57,8 @@ static size_t	skip_first_newlines(t_data *data)
 		if (ft_strncmp(data->pars.line, "\n", 2))
 		{
 			is_valid_line(data);
+			if (data->map.height > MAX_HEIGHT || data->map.width > MAX_WIDTH)
+				exit_pars("Map too big!", data);
 			free(data->pars.line);
 			data->pars.line = NULL;
 			return (start);
@@ -86,6 +91,8 @@ size_t	get_map_size(t_data *data)
 			exit_pars("Map separated by new line(s)!", data);
 		else
 			is_valid_line(data);
+		if (data->map.height > MAX_HEIGHT || data->map.width > MAX_WIDTH)
+			exit_pars("Map too big!", data);
 		free(data->pars.line);
 		data->pars.line = NULL;
 	}
