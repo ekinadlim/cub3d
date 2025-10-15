@@ -57,11 +57,11 @@
 //For the Minimap size
 # define SCALING		1.5
 
-# define COLOR_PLAYER	0xFF0000    //Red
-# define COLOR_RAY		0xFFDD44    //Yellow
-# define COLOR_VOID		0x000000    //Black
-# define COLOR_WALL		0x666666    //Medium gray
-# define COLOR_FLOOR	0x333333    //Dark gray
+# define COLOR_PLAYER	0xFF0000 //Red
+# define COLOR_RAY		0xFFDD44 //Yellow
+# define COLOR_VOID		0x000000 //Black
+# define COLOR_WALL		0x666666 //Medium gray
+# define COLOR_FLOOR	0x333333 //Dark gray
 
 /* -------------- KEY BINDS ------------- */
 
