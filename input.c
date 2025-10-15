@@ -14,13 +14,13 @@
 
 int	key_press(int key, t_data *data)
 {
-	if (key == 'w')
+	if (key == MOVE_FORWARD)
 		data->keys['w'] = true;
-	else if (key == 'd')
+	else if (key == MOVE_RIGHT)
 		data->keys['d'] = true;
-	else if (key == 's')
+	else if (key == MOVE_BACK)
 		data->keys['s'] = true;
-	else if (key == 'a')
+	else if (key == MOVE_LEFT)
 		data->keys['a'] = true;
 	else if (key == KEY_LEFT)
 		data->keys['j'] = true;
@@ -43,13 +43,13 @@ int	key_press(int key, t_data *data)
 
 int	key_release(int key, t_data *data)
 {
-	if (key == 'w')
+	if (key == MOVE_FORWARD)
 		data->keys['w'] = false;
-	else if (key == 'd')
+	else if (key == MOVE_RIGHT)
 		data->keys['d'] = false;
-	else if (key == 's')
+	else if (key == MOVE_BACK)
 		data->keys['s'] = false;
-	else if (key == 'a')
+	else if (key == MOVE_LEFT)
 		data->keys['a'] = false;
 	else if (key == KEY_LEFT)
 		data->keys['j'] = false;
