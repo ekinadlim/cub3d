@@ -77,15 +77,17 @@ void	load_animations(t_data *data)
 		path[15] = '0';
 		for (int i = 0; i < 10; i++)
 		{
-			//printf("%s\n", path);
-			data->animation[j][i].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->animation[j][i].width, &data->animation[j][i].height);
-			data->animation[j][i].address = mlx_get_data_addr(data->animation[j][i].buffer, &data->animation[j][i].bytes_per_pixel, &data->animation[j][i].size_line, &data->animation[j][i].endian);
-			data->animation[j][i].bytes_per_pixel /= 8;
-			//printf("%dx%d\n", data->animation[j][i].width, data->animation[j][i].height);
-			path[15]++;
-			data->animation_frames_amount[j] = i;
 			if (data->animation_frames_amount[j] >= MAX_ANIMATION_FRAMES) //???
-				exit_cub3d("AAAAAAAAAAAA");
+				exit_cub3d("3AAAAAAAAAAAA");
+			data->animation[j][i].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->animation[j][i].width, &data->animation[j][i].height);
+			if (!data->animation[j][i].buffer)
+				exit_cub3d("1AAAAAAAAAAAA");
+			data->animation[j][i].address = mlx_get_data_addr(data->animation[j][i].buffer, &data->animation[j][i].bytes_per_pixel, &data->animation[j][i].size_line, &data->animation[j][i].endian);
+			if (!data->animation[j][i].address)
+				exit_cub3d("2AAAAAAAAAAAA");
+			data->animation[j][i].bytes_per_pixel /= 8;
+			data->animation_frames_amount[j]++;
+			path[15]++;
 		}
 	}
 }
