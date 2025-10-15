@@ -62,9 +62,8 @@ int	key_release(int key, t_data *data)
 
 int	mouse_move(int x, int y, t_data *data)
 {
-	int	delta_x;
+	const int	delta_x = x - data->image.half_width;
 
-	delta_x = x - data->image.half_width;
 	if (delta_x < 0)
 		turn_left(data, -(delta_x * MOUSE_SENSITIVITY));
 	else if (delta_x > 0)
