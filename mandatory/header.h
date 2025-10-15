@@ -1,18 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   functions.h                                        :+:      :+:    :+:   */
+/*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/08/28 15:15:55 by eadlim           ###   ########.fr       */
+/*   Created: 2025/09/29 12:49:00 by eadlim            #+#    #+#             */
+/*   Updated: 2025/09/29 12:49:01 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FUNCTIONS_H
-# define FUNCTIONS_H
+#ifndef HEADER_H
+# define HEADER_H
 
-// Enter all functions of the projects
+# define _GNU_SOURCE
 
-#endif // FUNCTIONS_H
+# include "libft/libft.h"
+# include "mlx.h"
+# include <sys/time.h>
+# include <math.h>
+# include <stdbool.h>
+# include "macros.h"
+# include "structures.h"
+# include "functions.h"
+# include <fcntl.h>
+
+# include <stdio.h> //remove
+
+#endif

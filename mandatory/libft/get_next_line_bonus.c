@@ -6,7 +6,7 @@
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 19:22:30 by apartowi          #+#    #+#             */
-/*   Updated: 2025/08/25 19:45:06 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:18:02 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,20 @@ static int	ft_new_line_found(char *s1, char **line, char **remainder, int i)
 
 	temp = *line;
 	*line = gnl_ft_strjoin(*line, s1, i);
-	free (temp);
+	free(temp);
 	if (*line == 0)
 		return (-1);
 	if (s1[i + 1] != '\0')
 	{
 		temp = *remainder;
-		*remainder = gnl_ft_strjoin(0, s1 + i + 1, gnl_ft_strlen(s1 + i +1));
-		free (temp);
+		*remainder = gnl_ft_strjoin(0, s1 + i + 1, gnl_ft_strlen(s1 + i + 1));
+		free(temp);
 		if (*remainder == 0)
 			return (-1);
 	}
 	else if (*remainder)
 	{
-		free (*remainder);
+		free(*remainder);
 		*remainder = 0;
 	}
 	return (1);
@@ -56,10 +56,10 @@ static int	ft_check_remainder(char **line, char **remainder)
 	}
 	temp = *line;
 	*line = gnl_ft_strjoin(0, *remainder, gnl_ft_strlen(*remainder));
-	free (temp);
+	free(temp);
 	if (*line == 0)
 		return (-1);
-	free (*remainder);
+	free(*remainder);
 	*remainder = 0;
 	return (0);
 }
@@ -87,7 +87,7 @@ static int	ft_find_new_line(char *buffer, char **line, char **remainder)
 	}
 	temp = *line;
 	*line = gnl_ft_strjoin(*line, buffer, i - 1);
-	free (temp);
+	free(temp);
 	if (*line == 0)
 		return (-1);
 	return (0);
@@ -108,11 +108,11 @@ static char	*ft_real_gnl(int fd, char *buffer, char **line, char **remainder)
 		amount_read = ft_find_new_line(buffer, line, remainder);
 		if (amount_read == 1 || amount_read == -1)
 		{
-			free (buffer);
+			free(buffer);
 			if (amount_read == -1)
 			{
-				ft_free_remainder (remainder);
-				free (*line);
+				ft_free_remainder(remainder);
+				free(*line);
 				return (0);
 			}
 			return (*line);
@@ -120,25 +120,27 @@ static char	*ft_real_gnl(int fd, char *buffer, char **line, char **remainder)
 	}
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, bool free_remainder)
 {
 	char		*buffer;
 	char		*line;
 	static char	*remainder[1024];
 
+	if (free_remainder)
+		return (ft_free_remainder(&remainder[fd]), NULL);
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (0);
 	line = gnl_ft_strjoin(0, "", 1);
 	if (line == 0)
 	{
-		ft_free_remainder (&remainder[fd]);
+		ft_free_remainder(&remainder[fd]);
 		return (0);
 	}
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (buffer == 0)
 	{
-		ft_free_remainder (&remainder[fd]);
-		free (line);
+		ft_free_remainder(&remainder[fd]);
+		free(line);
 		ft_errno(true);
 		return (0);
 	}

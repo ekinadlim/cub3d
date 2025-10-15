@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP #-gcomment out
+CFLAGS = -Wall -Werror -Wextra -MMD -MP #-g -fsanitize=undefined -pedantic -Wno-newline-eof #comment out
 MLXFLAGS = -lX11 -lmlx -lXext
 #MAKEFLAGS = -s
 
@@ -10,14 +10,35 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = main.c
+SRC = 	main.c\
+		init.c\
+		raycasting.c\
+		raycasting_utils.c\
+		rendering.c\
+		rendering_utils.c\
+		input.c\
+		movement_1.c\
+		movement_2.c\
+		movement_3.c\
+		player_rotation.c\
+		minimap.c\
+		parsing.c\
+		arg_validation.c\
+		get_map.c\
+		get_map_size.c\
+		get_color.c\
+		get_image.c\
+		get_player.c\
+		check_map.c\
+		helper.c\
+		cleanup.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
-	./$(NAME)
+#./$(NAME) maps/example.cub
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
@@ -42,6 +63,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/small.cub
 
 .PHONY: all clean fclean re val
