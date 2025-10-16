@@ -99,11 +99,11 @@ typedef struct s_data
 	double		delta_time;
 	t_map		map;
 	int			surface[2];
-	t_image		textures[4];
-	t_image		animation[4][MAX_ANIMATION_FRAMES]; //should be double array [4][MAX_ANIMATION]
+	t_image		textures[4]; //THIS IS NOT NEEDED ANYMORE OR WE CHANGE IT'S NAME!
+	t_image		animation[4][MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
 	int			animation_frames_amount[4]; //store how many frames each animation has
-	int			animation_index[4]; //should be [4] as well
-	double		animation_tracker[4]; //maybe [4] ???
+	int			animation_index[4]; //index of which frame we are at now
+	double		animation_tracker[4];
 	t_parsing	pars;
 	t_value		value;
 }				t_data;
