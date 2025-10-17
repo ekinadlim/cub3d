@@ -53,22 +53,22 @@ int	get_image(int dir, int filemask, t_data *data)
 		path = get_path(data, &i);
 		if (!path)
 			break ;
-		data->animation[dir][frame].buffer = mlx_xpm_file_to_image(data->mlx,
-				path, &data->animation[dir][frame].width,
-				&data->animation[dir][frame].height);
+		data->animation.texture[dir][frame].buffer = mlx_xpm_file_to_image(data->mlx,
+				path, &data->animation.texture[dir][frame].width,
+				&data->animation.texture[dir][frame].height);
 		printf("path: %s\n", path);
 		free(path);
-		if (!data->animation[dir][frame].buffer)
+		if (!data->animation.texture[dir][frame].buffer)
 			exit_pars("MLX: Failed to convert xpm to img!", data);
-		data->animation[dir][frame].address = mlx_get_data_addr(data->animation[dir][frame].buffer,
-				&data->animation[dir][frame].bytes_per_pixel,
-				&data->animation[dir][frame].size_line,
-				&data->animation[dir][frame].endian);
-		data->animation[dir][frame].bytes_per_pixel /= 8;
-		if (!data->animation[dir][frame].address)
+		data->animation.texture[dir][frame].address = mlx_get_data_addr(data->animation.texture[dir][frame].buffer,
+				&data->animation.texture[dir][frame].bytes_per_pixel,
+				&data->animation.texture[dir][frame].size_line,
+				&data->animation.texture[dir][frame].endian);
+		data->animation.texture[dir][frame].bytes_per_pixel /= 8;
+		if (!data->animation.texture[dir][frame].address)
 			exit_pars("MLX: Failed to get data address!", data);
 		frame++;
-		data->animation_frames_amount[dir] = frame;
+		data->animation.frame_amount[dir] = frame;
 	}
 	
 	return (1 << dir);
