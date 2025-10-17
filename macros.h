@@ -30,7 +30,7 @@
 
 /* -------------- PARSING --------------- */
 
-# define MAP_CHAR_SET	"01 NESW"
+# define MAP_CHAR_SET	"01 DNESW"
 # define ELEMENT_COUNT	6
 # define MAX_HEIGHT		5000
 # define MAX_WIDTH		5000

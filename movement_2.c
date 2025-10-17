@@ -36,6 +36,10 @@ static void	ccd_positive_y(t_data *data, double *y, double offset)
 	i = 1;
 	while (i < *y)
 	{
+		/* if (is_closed_door(data, data->player.y + i, data->player.x))
+			data->map.map[(int)data->player.y + i][(int)data->player.x] = 'd';
+		if (is_closed_door(data, data->player.y + i, data->player.x))
+			data->map.map[(int)data->player.y + i][(int)data->player.x] = 'D'; */
 		if (!validate_y_position(data, data->player.y + i))
 		{
 			*y = (int)data->player.y + i - data->player.y - offset;

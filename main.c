@@ -102,6 +102,20 @@ int	main(int argc, char **argv)
 	if (data->mlx == NULL)
 		exit_cub3d("MLX: Failed to init mlx!");
 	parsing(argc, argv, data);
+
+	data->door_texture.buffer = mlx_xpm_file_to_image(data->mlx,
+				"textures/eyeNO/0.xpm", &data->door_texture.width,
+				&data->door_texture.height);
+	if (!data->door_texture.buffer)
+		exit_pars("MLX: Failed to convert xpm to img!", data);
+	data->door_texture.address = mlx_get_data_addr(data->door_texture.buffer,
+			&data->door_texture.bytes_per_pixel,
+			&data->door_texture.size_line,
+			&data->door_texture.endian);
+	data->door_texture.bytes_per_pixel /= 8;
+	if (!data->door_texture.address)
+		exit_pars("MLX: Failed to get data address!", data);
+
 	calculate_fixed_values(data);
 	start_mlx(data);
 	//render_game(data); ???

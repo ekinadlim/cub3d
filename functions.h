@@ -84,6 +84,8 @@ t_data	*get_data(void);
 long	get_current_time(void);
 bool	is_whitespace(char c);
 bool	is_wall(const t_data *data, double y, double x);
+bool	is_closed_door(const t_data *data, double y, double x);
+bool	is_open_door(const t_data *data, double y, double x);
 void	fill_image_buffer(t_image image, int y, int x, int color);
 
 /* Cleanup */
