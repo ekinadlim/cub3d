@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:08 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/09 17:28:35 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/17 17:38:29 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	game_loop(t_data *data)
 	return (0);
 }
 
-void	load_animations(t_data *data)
+/* void	load_animations(t_data *data)
 {
 	//Just to test
 	char path[] = "textures/eyeNO/0.xpm";
@@ -90,56 +90,6 @@ void	load_animations(t_data *data)
 			path[15]++;
 		}
 	}
-}
-
-/* #include "string.h"
-
-void	load_animations(t_data *data)
-{
-	char path[50]; // Increased buffer size for longer paths
-	
-	for (int j = 0; j < 4; j++)
-	{
-		// Set base path for each direction
-		if (j == 0)      // NORTH
-			strcpy(path, "textures/pt_horror/wall1/");
-		else if (j == 1) // EAST
-			strcpy(path, "textures/pt_horror/wall1/");
-		else if (j == 2) // SOUTH
-			strcpy(path, "textures/pt_horror/wall1/");
-		else if (j == 3) // WEST
-			strcpy(path, "textures/pt_horror/wall1/");
-		
-		for (int i = 1; i <= 64; i++) // Start from 1, go to 64
-		{
-			if (data->animation_frames_amount[j] >= MAX_ANIMATION_FRAMES)
-				exit_cub3d("Too many animation frames");
-			
-			// Build complete path: "textures/test/wall1/1.xpm"
-			char full_path[60];
-			sprintf(full_path, "%s%d.xpm", path, i);
-			
-			data->animation[j][data->animation_frames_amount[j]].buffer = mlx_xpm_file_to_image(data->mlx, full_path, 
-				&data->animation[j][data->animation_frames_amount[j]].width, 
-				&data->animation[j][data->animation_frames_amount[j]].height);
-			
-			if (!data->animation[j][data->animation_frames_amount[j]].buffer)
-				exit_cub3d("Failed to get animation frame buffer");
-				
-			data->animation[j][data->animation_frames_amount[j]].address = mlx_get_data_addr(
-				data->animation[j][data->animation_frames_amount[j]].buffer, 
-				&data->animation[j][data->animation_frames_amount[j]].bytes_per_pixel, 
-				&data->animation[j][data->animation_frames_amount[j]].size_line, 
-				&data->animation[j][data->animation_frames_amount[j]].endian);
-				
-			if (!data->animation[j][data->animation_frames_amount[j]].address)
-				exit_cub3d("Failed to get animation frame address");
-				
-			data->animation[j][data->animation_frames_amount[j]].bytes_per_pixel /= 8;
-			printf("j: %d, i: %d\n", j, i);
-			data->animation_frames_amount[j]++;
-		}
-	}
 } */
 
 int	main(int argc, char **argv)
@@ -152,7 +102,6 @@ int	main(int argc, char **argv)
 	if (data->mlx == NULL)
 		exit_cub3d("MLX: Failed to init mlx!");
 	parsing(argc, argv, data);
-	load_animations(data);
 	calculate_fixed_values(data);
 	start_mlx(data);
 	//render_game(data); ???
