@@ -50,6 +50,8 @@ int	get_image(int dir, int filemask, t_data *data)
 		exit_pars("Multiple occurance of the same element!", data);
 	while (1)
 	{
+		if (frame >= MAX_ANIMATION_FRAMES)
+			exit_pars("Too many frames foo", data);
 		path = get_path(data, &i);
 		if (!path)
 			break ;

@@ -14,23 +14,23 @@
 
 void	update_animation_frame(t_data *data)
 {
-	static long blabla = 0;
+	/* static long blabla = 0;
 	if (blabla == 0)
 	{
 		blabla = get_current_time();
-	}
+	} */
 	for (int i = 0; i < 4; i++)
 	{
 		data->animation.tracker[i] += data->delta_time * ANIMATION_SPEED;
 		if ((int)data->animation.tracker[i])
 		{
 			data->animation.index[i] += (int)data->animation.tracker[i];
-			while (data->animation.index[i] >= data->animation.frame_amount[i]) //animation_count for each texture
+			while (data->animation.index[i] >= data->animation.frame_amount[i])
 				data->animation.index[i] -= data->animation.frame_amount[i];
 			data->animation.tracker[i] = data->animation.tracker[i] - (int)data->animation.tracker[i];
 		}
 	}
-	//printf("MS: %ld ,Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation.index[0], data->delta_time);
+	//printf("%ld: Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation.index[0], data->delta_time);
 }
 
 int	game_loop(t_data *data)
