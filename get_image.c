@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/17 16:35:12 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/17 17:57:09 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int	get_image(int dir, int filemask, t_data *data)
 		exit_pars("Multiple occurance of the same element!", data);
 	while (1)
 	{
+		if (frame >= MAX_ANIMATION_FRAMES)
+			exit_pars("Too many frames foo", data);
 		path = get_path(data, &i);
 		if (!path)
 			break ;
