@@ -110,9 +110,8 @@ typedef struct s_data
 	t_animation	animation;
 	t_parsing	pars;
 	t_value		value;
-	bool		door;
 	t_image		door_texture;
-	t_image		current_texture;
+	t_image		*current_texture;
 }				t_data;
 
 #endif // STRUCTURES_H

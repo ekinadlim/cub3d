@@ -134,9 +134,6 @@ static void	ccd_negative_y(t_data *data, double *y, double offset)
 
 void	move_y(t_data *data, double y)
 {
-	bool	can_move;
-
-	can_move = false;
 	if (fabs(y) < EPSILON)
 		return ;
 	close_y_doors(data, data->player.y);

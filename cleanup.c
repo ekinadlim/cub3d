@@ -81,6 +81,8 @@ static void	destroy_animation_and_free_map(t_data *data)
 		}
 		i++;
 	}
+	if (data->door_texture.buffer)
+		mlx_destroy_image(data->mlx, data->door_texture.buffer);
 	free_2d_array(&data->map.map);
 }
 

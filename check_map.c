@@ -14,9 +14,6 @@
 
 static bool	has_surroundable(t_vec_2d_int pos, char **map, t_data *data)
 {
-	size_t	i;
-
-	i = 0;
 	if (pos.y == data->map.height - 1 || pos.y == 0 || pos.x == data->map.width
 		|| pos.x == 0)
 		return (false);

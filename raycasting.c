@@ -55,7 +55,6 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		//data->door = false;
 		while (!is_wall(data, y, x))
 		{
 			calculate_next_grid_distance(data, &y, &x);
@@ -68,12 +67,9 @@ void	raycasting(t_data *data)
 						* data->value.scaled_grid_size), COLOR_RAY);
 		}
 		if (is_closed_door(data, y, x))
-		{
-			//data->door = true;
-			data->current_texture = data->door_texture;
-		}
+			data->current_texture = &data->door_texture;
 		else
-			data->current_texture = data->animation.texture[data->ray.wall_hit][data->animation.index[data->ray.wall_hit]];
+			data->current_texture = &data->animation.texture[data->ray.wall_hit][data->animation.index[data->ray.wall_hit]];
 		if (data->minimap_toggle && !data->ray_toggle)
 			draw_minimap_ray(data);
 		draw_vertical_line(data, ray, get_perp_wall_dist(data));
