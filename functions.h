@@ -57,6 +57,13 @@ int		get_wall_end(const int wall_start, const int wall_height);
 int		get_texture_color(t_data *data,
 			const int y, const int wall_height, const int tex_x);
 
+/* Doors */
+
+void	y_doors(t_data *data, const double y,
+	char door, bool (*is_door)(const t_data *, const double, const double));
+void	x_doors(t_data *data, const double x,
+	char door, bool (*is_door)(const t_data *, const double, const double));
+
 /* Init Stuff */
 
 void	init_data(void);
@@ -83,10 +90,11 @@ void	check_map(char **map, t_data *data);
 t_data	*get_data(void);
 long	get_current_time(void);
 bool	is_whitespace(char c);
-bool	is_wall(const t_data *data, double y, double x);
-bool	is_closed_door(const t_data *data, double y, double x);
-bool	is_open_door(const t_data *data, double y, double x);
-void	fill_image_buffer(t_image image, int y, int x, int color);
+bool	is_wall(const t_data *data, const double y, const double x);
+bool	is_closed_door(const t_data *data, const double y, const double x);
+bool	is_open_door(const t_data *data, const double y, const double x);
+void	fill_image_buffer(t_image image,
+	const int y, const int x, const int color);
 
 /* Cleanup */
 

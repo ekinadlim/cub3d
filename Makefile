@@ -32,6 +32,7 @@ SRC = 	main.c\
 		check_map.c\
 		helper.c\
 		cleanup.c\
+		doors.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

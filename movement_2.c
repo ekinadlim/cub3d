@@ -32,29 +32,6 @@ static bool	validate_y_position(t_data *data, double y)
 	return (true);
 }
 
-static void	y_doors(t_data *data, double y,
-	char door, bool (*is_door)(const t_data *, double, double))
-{
-	if (is_door(data, y - 1, data->player.x))
-		data->map.map[(int)y - 1][(int)data->player.x] = door;
-	if (is_door(data, y - 1, data->player.x - 1))
-		data->map.map[(int)y - 1][(int)data->player.x - 1] = door;
-	if (is_door(data, y - 1, data->player.x + 1))
-		data->map.map[(int)y - 1][(int)data->player.x + 1] = door;
-	if (is_door(data, y, data->player.x))
-		data->map.map[(int)y][(int)data->player.x] = door;
-	if (is_door(data, y, data->player.x - 1))
-		data->map.map[(int)y][(int)data->player.x - 1] = door;
-	if (is_door(data, y, data->player.x + 1))
-		data->map.map[(int)y][(int)data->player.x + 1] = door;
-	if (is_door(data, y + 1, data->player.x))
-		data->map.map[(int)y + 1][(int)data->player.x] = door;
-	if (is_door(data, y + 1, data->player.x - 1))
-		data->map.map[(int)y + 1][(int)data->player.x - 1] = door;
-	if (is_door(data, y + 1, data->player.x + 1))
-		data->map.map[(int)y + 1][(int)data->player.x + 1] = door;
-}
-
 static void	ccd_positive_y(t_data *data, double *y, double offset)
 {
 	int	i;

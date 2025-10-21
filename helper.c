@@ -35,7 +35,7 @@ bool	is_whitespace(char c)
 	return (false);
 }
 
-bool	is_wall(const t_data *data, double y, double x)
+bool	is_wall(const t_data *data, const double y, const double x)
 {
 	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width
 		|| data->map.map[(int)y][(int)x] == '1'
@@ -45,23 +45,8 @@ bool	is_wall(const t_data *data, double y, double x)
 	return (false);
 }
 
-bool	is_closed_door(const t_data *data, double y, double x)
-{
-	if (y > 0 && y < data->map.height && x > 0 && x < data->map.width
-		&& data->map.map[(int)y][(int)x] == 'D') //idk
-		return (true);
-	return (false);
-}
-
-bool	is_open_door(const t_data *data, double y, double x)
-{
-	if (y > 0 && y < data->map.height && x > 0 && x < data->map.width
-		&& data->map.map[(int)y][(int)x] == 'd') //idk
-		return (true);
-	return (false);
-}
-
-void	fill_image_buffer(t_image image, int y, int x, int color)
+void	fill_image_buffer(t_image image,
+	const int y, const int x, const int color)
 {
 	char	*pixel_index;
 
