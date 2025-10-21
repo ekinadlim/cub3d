@@ -66,6 +66,10 @@ void	raycasting(t_data *data)
 					+ (int)((data->ray.x - data->player.x)
 						* data->value.scaled_grid_size), COLOR_RAY);
 		}
+		if (is_closed_door(data, y, x))
+			data->current_texture = &data->door_texture;
+		else
+			data->current_texture = &data->animation.texture[data->ray.wall_hit][data->animation.index[data->ray.wall_hit]];
 		if (data->minimap_toggle && !data->ray_toggle)
 			draw_minimap_ray(data);
 		draw_vertical_line(data, ray, get_perp_wall_dist(data));

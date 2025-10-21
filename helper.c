@@ -39,7 +39,24 @@ bool	is_wall(const t_data *data, double y, double x)
 {
 	if (y < 0 || y >= data->map.height || x < 0 || x >= data->map.width
 		|| data->map.map[(int)y][(int)x] == '1'
-		|| data->map.map[(int)y][(int)x] == ' ')
+		|| data->map.map[(int)y][(int)x] == ' '
+		|| data->map.map[(int)y][(int)x] == 'D')
+		return (true);
+	return (false);
+}
+
+bool	is_closed_door(const t_data *data, double y, double x)
+{
+	if (y > 0 && y < data->map.height && x > 0 && x < data->map.width
+		&& data->map.map[(int)y][(int)x] == 'D') //idk
+		return (true);
+	return (false);
+}
+
+bool	is_open_door(const t_data *data, double y, double x)
+{
+	if (y > 0 && y < data->map.height && x > 0 && x < data->map.width
+		&& data->map.map[(int)y][(int)x] == 'd') //idk
 		return (true);
 	return (false);
 }

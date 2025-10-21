@@ -83,6 +83,14 @@ typedef struct s_parsing
 	char		*line;
 }				t_parsing;
 
+typedef struct s_animation
+{
+	t_image		texture[4][MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
+	int			frame_amount[4]; //store how many frames each animation has
+	int			index[4]; //index of which frame we are at now
+	double		tracker[4]; //to know how much time has passed to correctly cycle through the frames
+}				t_animation;
+
 typedef struct s_data
 {
 	void		*mlx;
@@ -99,13 +107,11 @@ typedef struct s_data
 	double		delta_time;
 	t_map		map;
 	int			surface[2];
-	t_image		textures[4]; //THIS IS NOT NEEDED ANYMORE OR WE CHANGE IT'S NAME!
-	t_image		animation[4][MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
-	int			animation_frames_amount[4]; //store how many frames each animation has
-	int			animation_index[4]; //index of which frame we are at now
-	double		animation_tracker[4];
+	t_animation	animation;
 	t_parsing	pars;
 	t_value		value;
+	t_image		door_texture;
+	t_image		*current_texture;
 }				t_data;
 
 #endif // STRUCTURES_H

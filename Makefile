@@ -63,6 +63,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/example.cub
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/no.cub
 
 .PHONY: all clean fclean re val

@@ -24,14 +24,14 @@ int	get_texture_x(t_data *data, const double perp_wall_dist)
 	if (wall_x < 0)
 		wall_x *= -1;
 	wall_x = wall_x - (int)wall_x;
-	tex_x = (int)(wall_x * data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].width);
+	tex_x = (int)(wall_x * data->current_texture->width);
 	if (data->ray.wall_hit == SOUTH || data->ray.wall_hit == WEST)
-		tex_x = data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].width - 1 - tex_x;
+		tex_x = data->current_texture->width - 1 - tex_x;
 	if (tex_x < 0)
 		tex_x = 0;
-	if (tex_x >= data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].width)
-		tex_x = data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].width - 1;
-	return (tex_x * data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].bytes_per_pixel);
+	if (tex_x >= data->current_texture->width)
+		tex_x = data->current_texture->width - 1;
+	return (tex_x * data->current_texture->bytes_per_pixel);
 }
 
 static int	get_texture_y(t_data *data, const int y, const int wall_height)
@@ -39,12 +39,12 @@ static int	get_texture_y(t_data *data, const int y, const int wall_height)
 	const int	d = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
 	int			tex_y;
 
-	tex_y = ((d * data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].height) / wall_height) / 256; //signed integer overflow
+	tex_y = ((d * data->current_texture->height) / wall_height) / 256; //signed integer overflow
 	if (tex_y < 0)
 		tex_y = 0;
-	if (tex_y >= data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].height)
-		tex_y = data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].height - 1;
-	return (tex_y * data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].size_line);
+	if (tex_y >= data->current_texture->height)
+		tex_y = data->current_texture->height - 1;
+	return (tex_y * data->current_texture->size_line);
 }
 
 int	get_wall_start(const int wall_height)
@@ -70,7 +70,7 @@ int	get_wall_end(const int wall_start, const int wall_height)
 int	get_texture_color(t_data *data,
 	const int y, const int wall_height, const int tex_x)
 {
-	const char	*pixel_index = data->animation[data->ray.wall_hit][data->animation_index[data->ray.wall_hit]].address
+	const char	*pixel_index = data->current_texture->address
 		+ get_texture_y(data, y, wall_height) + tex_x;
 	const int	color = *(int *)pixel_index;
 

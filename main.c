@@ -14,23 +14,23 @@
 
 void	update_animation_frame(t_data *data)
 {
-	static long blabla = 0;
+	/* static long blabla = 0;
 	if (blabla == 0)
 	{
 		blabla = get_current_time();
-	}
+	} */
 	for (int i = 0; i < 4; i++)
 	{
-		data->animation_tracker[i] += data->delta_time * ANIMATION_SPEED;
-		if ((int)data->animation_tracker[i])
+		data->animation.tracker[i] += data->delta_time * ANIMATION_SPEED;
+		if ((int)data->animation.tracker[i])
 		{
-			data->animation_index[i] += (int)data->animation_tracker[i];
-			while (data->animation_index[i] >= data->animation_frames_amount[i]) //animation_count for each texture
-				data->animation_index[i] -= data->animation_frames_amount[i];
-			data->animation_tracker[i] = data->animation_tracker[i] - (int)data->animation_tracker[i];
+			data->animation.index[i] += (int)data->animation.tracker[i];
+			while (data->animation.index[i] >= data->animation.frame_amount[i])
+				data->animation.index[i] -= data->animation.frame_amount[i];
+			data->animation.tracker[i] = data->animation.tracker[i] - (int)data->animation.tracker[i];
 		}
 	}
-	//printf("MS: %ld ,Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation_index[0], data->delta_time);
+	//printf("%ld: Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation.index[0], data->delta_time);
 }
 
 int	game_loop(t_data *data)
@@ -77,7 +77,7 @@ int	game_loop(t_data *data)
 		path[15] = '0';
 		for (int i = 0; i < 10; i++)
 		{
-			if (data->animation_frames_amount[j] >= MAX_ANIMATION_FRAMES) //???
+			if (data->animation.frame_amount[j] >= MAX_ANIMATION_FRAMES) //???
 				exit_cub3d("3AAAAAAAAAAAA");
 			data->animation[j][i].buffer = mlx_xpm_file_to_image(data->mlx, path, &data->animation[j][i].width, &data->animation[j][i].height);
 			if (!data->animation[j][i].buffer)
@@ -86,7 +86,7 @@ int	game_loop(t_data *data)
 			if (!data->animation[j][i].address)
 				exit_cub3d("2AAAAAAAAAAAA");
 			data->animation[j][i].bytes_per_pixel /= 8;
-			data->animation_frames_amount[j]++;
+			data->animation.frame_amount[j]++;
 			path[15]++;
 		}
 	}
@@ -102,6 +102,20 @@ int	main(int argc, char **argv)
 	if (data->mlx == NULL)
 		exit_cub3d("MLX: Failed to init mlx!");
 	parsing(argc, argv, data);
+
+	data->door_texture.buffer = mlx_xpm_file_to_image(data->mlx,
+				"textures/eyeNO/0.xpm", &data->door_texture.width,
+				&data->door_texture.height);
+	if (!data->door_texture.buffer)
+		exit_pars("MLX: Failed to convert xpm to img!", data);
+	data->door_texture.address = mlx_get_data_addr(data->door_texture.buffer,
+			&data->door_texture.bytes_per_pixel,
+			&data->door_texture.size_line,
+			&data->door_texture.endian);
+	data->door_texture.bytes_per_pixel /= 8;
+	if (!data->door_texture.address)
+		exit_pars("MLX: Failed to get data address!", data);
+
 	calculate_fixed_values(data);
 	start_mlx(data);
 	//render_game(data); ???
