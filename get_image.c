@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/17 17:57:09 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:04:13 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*get_path(t_data *data, size_t *i)
 
 // Retrieves the image from the xpm file
 // and returns a mask depending on the dir(ection)
-int	get_image(int dir, int filemask, t_data *data)
+int	get_image(int type, int filemask, t_data *data)
 {
 	char	*path;
 	size_t	i;
@@ -46,7 +46,7 @@ int	get_image(int dir, int filemask, t_data *data)
 
 	i = 2;
 	frame = 0;
-	if ((1 << dir) & filemask)
+	if ((1 << type) & filemask)
 		exit_pars("Multiple occurance of the same element!", data);
 	while (1)
 	{
@@ -55,23 +55,22 @@ int	get_image(int dir, int filemask, t_data *data)
 		path = get_path(data, &i);
 		if (!path)
 			break ;
-		data->animation.texture[dir][frame].buffer = mlx_xpm_file_to_image(data->mlx,
-				path, &data->animation.texture[dir][frame].width,
-				&data->animation.texture[dir][frame].height);
+		data->animation[type].texture[frame].buffer = mlx_xpm_file_to_image(data->mlx,
+				path, &data->animation[type].texture[frame].width,
+				&data->animation[type].texture[frame].height);
 		printf("path: %s\n", path);
 		free(path);
-		if (!data->animation.texture[dir][frame].buffer)
+		if (!data->animation[type].texture[frame].buffer)
 			exit_pars("MLX: Failed to convert xpm to img!", data);
-		data->animation.texture[dir][frame].address = mlx_get_data_addr(data->animation.texture[dir][frame].buffer,
-				&data->animation.texture[dir][frame].bytes_per_pixel,
-				&data->animation.texture[dir][frame].size_line,
-				&data->animation.texture[dir][frame].endian);
-		data->animation.texture[dir][frame].bytes_per_pixel /= 8;
-		if (!data->animation.texture[dir][frame].address)
+		data->animation[type].texture[frame].address = mlx_get_data_addr(data->animation[type].texture[frame].buffer,
+				&data->animation[type].texture[frame].bytes_per_pixel,
+				&data->animation[type].texture[frame].size_line,
+				&data->animation[type].texture[frame].endian);
+		data->animation[type].texture[frame].bytes_per_pixel /= 8;
+		if (!data->animation[type].texture[frame].address)
 			exit_pars("MLX: Failed to get data address!", data);
 		frame++;
-		data->animation.frame_amount[dir] = frame;
+		data->animation[type].frame_amount = frame;
 	}
-	
-	return (1 << dir);
+	return (1 << type);
 }

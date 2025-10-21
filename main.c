@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:08 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/17 17:38:29 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/21 18:59:15 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void	update_animation_frame(t_data *data)
 	} */
 	for (int i = 0; i < 4; i++)
 	{
-		data->animation.tracker[i] += data->delta_time * ANIMATION_SPEED;
-		if ((int)data->animation.tracker[i])
+		data->animation[i].tracker += data->delta_time * ANIMATION_SPEED;
+		if ((int)data->animation[i].tracker)
 		{
-			data->animation.index[i] += (int)data->animation.tracker[i];
-			while (data->animation.index[i] >= data->animation.frame_amount[i])
-				data->animation.index[i] -= data->animation.frame_amount[i];
-			data->animation.tracker[i] = data->animation.tracker[i] - (int)data->animation.tracker[i];
+			data->animation[i].index += (int)data->animation[i].tracker;
+			while (data->animation[i].index >= data->animation[i].frame_amount)
+				data->animation[i].index -= data->animation[i].frame_amount;
+			data->animation[i].tracker = data->animation[i].tracker - (int)data->animation[i].tracker;
 		}
 	}
 	//printf("%ld: Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation.index[0], data->delta_time);

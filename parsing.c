@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:29:14 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/11 14:06:51 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:06:31 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static int	distribute_element(t_data *data, int filemask)
 		flag = get_color(FLOOR, filemask, data);
 	else if (!ft_strncmp(data->pars.line, "C", 1))
 		flag = get_color(CEILING, filemask, data);
+/* 	else if (!ft_strncmp(data->pars.line, "D", 1))
+		flag = get_image(DOOR, filemask, data); */
 	else if (data->pars.line[0])
 		return (-(filemask + 1));
 	return (flag);

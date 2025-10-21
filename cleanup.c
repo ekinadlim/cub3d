@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:27 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/08 13:34:28 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:48:51 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ static void	destroy_animation_and_free_map(t_data *data)
 	while (i < 4)
 	{
 		j = 0;
-		while (j < data->animation.frame_amount[i])
+		while (j < data->animation[i].frame_amount)
 		{
-			if (data->animation.texture[i][j].buffer)
-				mlx_destroy_image(data->mlx, data->animation.texture[i][j].buffer);
+			if (data->animation[i].texture[j].buffer)
+				mlx_destroy_image(data->mlx, data->animation[i].texture[j].buffer);
 			else
 				break ;
 			j++;

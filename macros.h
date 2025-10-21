@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/11 14:10:51 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:09:56 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,12 @@ typedef enum e_cardinal_direction
 typedef enum e_color
 {
 	FLOOR,
-	CEILING
+	CEILING,
 }	t_color;
+
+typedef enum e_extra
+{
+	DOOR = 4,
+}	t_extra;
 
 #endif // MACROS_H

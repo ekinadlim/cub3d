@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/02 14:46:31 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:08:17 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ typedef struct s_parsing
 
 typedef struct s_animation
 {
-	t_image		texture[4][MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
-	int			frame_amount[4]; //store how many frames each animation has
-	int			index[4]; //index of which frame we are at now
-	double		tracker[4]; //to know how much time has passed to correctly cycle through the frames
+	t_image		texture[MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
+	int			frame_amount; //store how many frames each animation has
+	int			index; //index of which frame we are at now
+	double		tracker; //to know how much time has passed to correctly cycle through the frames
 }				t_animation;
 
 typedef struct s_data
@@ -107,7 +107,7 @@ typedef struct s_data
 	double		delta_time;
 	t_map		map;
 	int			surface[2];
-	t_animation	animation;
+	t_animation	animation[4];
 	t_parsing	pars;
 	t_value		value;
 	t_image		door_texture;

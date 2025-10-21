@@ -1,4 +1,4 @@
-NO textures/pt_horror/wall1/1.xpm textures/pt_horror/wall1/2.xpm textures/pt_horror/wall1/3.xpm textures/pt_horror/wall1/4.xpm textures/pt_horror/wall1/5.xpm textures/pt_horror/wall1/6.xpm textures/pt_horror/wall1/7.xpm           textures/pt_horror/wall1/8.xpm textures/pt_horror/wall1/9.xpm 			textures/pt_horror/wall1/10.xpm textures/pt_horror/wall1/11.xpm   
+NO textures/pt_horror/wall1/1.xpm textures/pt_horror/wall1/2.xpm textures/pt_horror/wall1/3.xpm textures/pt_horror/wall1/4.xpm textures/pt_horror/wall1/5.xpm textures/pt_horror/wall1/6.xpm textures/pt_horror/wall1/7.xpm textures/pt_horror/wall1/8.xpm textures/pt_horror/wall1/9.xpm textures/pt_horror/wall1/10.xpm textures/pt_horror/wall1/11.xpm   
 SO textures/portal/crystal_imac.xpm
 WE textures/portal/crystal.xpm
 EA textures/portal/crystal_sign.xpm
@@ -11,7 +11,7 @@ C 32,32,32
         1011000001110000000000001
         100100000000000000W000001
 111111111011000001110000000000001
-100000000011000001110111111111111
+10000000001100000111D111111111111
 11110111111111011100000010001
 11110111111111011101010010001
 11000000110101011100000010001
