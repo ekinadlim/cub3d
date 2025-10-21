@@ -37,7 +37,7 @@ void	check_map(char **map, t_data *data)
 	{
 		while (pos.x < data->map.width)
 		{
-			if (map[pos.y][pos.x] == '0' && !has_surroundable(pos, map, data))
+			if ((map[pos.y][pos.x] == '0' || map[pos.y][pos.x] == 'D') && !has_surroundable(pos, map, data))
 				exit_pars("Map is not surrounded by walls!", data);
 			pos.x++;
 		}
