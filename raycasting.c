@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:33:51 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/08 13:33:52 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:51:20 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	raycasting(t_data *data)
 		if (is_closed_door(data, y, x))
 			data->current_texture = &data->door_texture;
 		else
-			data->current_texture = &data->animation.texture[data->ray.wall_hit][data->animation.index[data->ray.wall_hit]];
+			data->current_texture = &data->animation[data->ray.wall_hit].texture[data->animation[data->ray.wall_hit].index];
 		if (data->minimap_toggle && !data->ray_toggle)
 			draw_minimap_ray(data);
 		draw_vertical_line(data, ray, get_perp_wall_dist(data));
