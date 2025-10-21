@@ -32,48 +32,27 @@ static bool	validate_y_position(t_data *data, double y)
 	return (true);
 }
 
-static void	open_y_doors(t_data *data, double y)
+static void	y_doors(t_data *data, double y,
+	char door, bool (*is_door)(const t_data *, double, double))
 {
-	if (is_closed_door(data, y - 1, data->player.x))
-		data->map.map[(int)y - 1][(int)data->player.x] = 'd';
-	if (is_closed_door(data, y - 1, data->player.x - 1))
-		data->map.map[(int)y - 1][(int)data->player.x - 1] = 'd';
-	if (is_closed_door(data, y - 1, data->player.x + 1))
-		data->map.map[(int)y - 1][(int)data->player.x + 1] = 'd';
-	if (is_closed_door(data, y, data->player.x))
-		data->map.map[(int)y][(int)data->player.x] = 'd';
-	if (is_closed_door(data, y, data->player.x - 1))
-		data->map.map[(int)y][(int)data->player.x - 1] = 'd';
-	if (is_closed_door(data, y, data->player.x + 1))
-		data->map.map[(int)y][(int)data->player.x + 1] = 'd';
-	if (is_closed_door(data, y + 1, data->player.x))
-		data->map.map[(int)y + 1][(int)data->player.x] = 'd';
-	if (is_closed_door(data, y + 1, data->player.x - 1))
-		data->map.map[(int)y + 1][(int)data->player.x - 1] = 'd';
-	if (is_closed_door(data, y + 1, data->player.x + 1))
-		data->map.map[(int)y + 1][(int)data->player.x + 1] = 'd';
-}
-
-static void	close_y_doors(t_data *data, double y)
-{
-	if (is_open_door(data, y - 1, data->player.x))
-		data->map.map[(int)y - 1][(int)data->player.x] = 'D';
-	if (is_open_door(data, y - 1, data->player.x - 1))
-		data->map.map[(int)y - 1][(int)data->player.x - 1] = 'D';
-	if (is_open_door(data, y - 1, data->player.x + 1))
-		data->map.map[(int)y - 1][(int)data->player.x + 1] = 'D';
-	if (is_open_door(data, y, data->player.x))
-		data->map.map[(int)y][(int)data->player.x] = 'D';
-	if (is_open_door(data, y, data->player.x - 1))
-		data->map.map[(int)y][(int)data->player.x - 1] = 'D';
-	if (is_open_door(data, y, data->player.x + 1))
-		data->map.map[(int)y][(int)data->player.x + 1] = 'D';
-	if (is_open_door(data, y + 1, data->player.x))
-		data->map.map[(int)y + 1][(int)data->player.x] = 'D';
-	if (is_open_door(data, y + 1, data->player.x - 1))
-		data->map.map[(int)y + 1][(int)data->player.x - 1] = 'D';
-	if (is_open_door(data, y + 1, data->player.x + 1))
-		data->map.map[(int)y + 1][(int)data->player.x + 1] = 'D';
+	if (is_door(data, y - 1, data->player.x))
+		data->map.map[(int)y - 1][(int)data->player.x] = door;
+	if (is_door(data, y - 1, data->player.x - 1))
+		data->map.map[(int)y - 1][(int)data->player.x - 1] = door;
+	if (is_door(data, y - 1, data->player.x + 1))
+		data->map.map[(int)y - 1][(int)data->player.x + 1] = door;
+	if (is_door(data, y, data->player.x))
+		data->map.map[(int)y][(int)data->player.x] = door;
+	if (is_door(data, y, data->player.x - 1))
+		data->map.map[(int)y][(int)data->player.x - 1] = door;
+	if (is_door(data, y, data->player.x + 1))
+		data->map.map[(int)y][(int)data->player.x + 1] = door;
+	if (is_door(data, y + 1, data->player.x))
+		data->map.map[(int)y + 1][(int)data->player.x] = door;
+	if (is_door(data, y + 1, data->player.x - 1))
+		data->map.map[(int)y + 1][(int)data->player.x - 1] = door;
+	if (is_door(data, y + 1, data->player.x + 1))
+		data->map.map[(int)y + 1][(int)data->player.x + 1] = door;
 }
 
 static void	ccd_positive_y(t_data *data, double *y, double offset)
@@ -116,12 +95,12 @@ void	move_y(t_data *data, double y)
 {
 	if (fabs(y) < EPSILON)
 		return ;
-	close_y_doors(data, data->player.y);
+	y_doors(data, data->player.y, 'D', is_open_door);
 	if (y > 0)
 		ccd_positive_y(data, &y, 0.2);
 	else if (y < 0)
 		ccd_negative_y(data, &y, -0.2);
-	open_y_doors(data, data->player.y + y);
+	y_doors(data, data->player.y + y, 'd', is_closed_door);
 	if (fabs(y) < EPSILON)
 		return ;
 	data->player.y += y;
