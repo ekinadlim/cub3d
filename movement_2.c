@@ -40,14 +40,12 @@ static void	open_y_doors(t_data *data, double y)
 		data->map.map[(int)y - 1][(int)data->player.x - 1] = 'd';
 	if (is_closed_door(data, y - 1, data->player.x + 1))
 		data->map.map[(int)y - 1][(int)data->player.x + 1] = 'd';
-
 	if (is_closed_door(data, y, data->player.x))
 		data->map.map[(int)y][(int)data->player.x] = 'd';
 	if (is_closed_door(data, y, data->player.x - 1))
 		data->map.map[(int)y][(int)data->player.x - 1] = 'd';
 	if (is_closed_door(data, y, data->player.x + 1))
 		data->map.map[(int)y][(int)data->player.x + 1] = 'd';
-
 	if (is_closed_door(data, y + 1, data->player.x))
 		data->map.map[(int)y + 1][(int)data->player.x] = 'd';
 	if (is_closed_door(data, y + 1, data->player.x - 1))
@@ -64,14 +62,12 @@ static void	close_y_doors(t_data *data, double y)
 		data->map.map[(int)y - 1][(int)data->player.x - 1] = 'D';
 	if (is_open_door(data, y - 1, data->player.x + 1))
 		data->map.map[(int)y - 1][(int)data->player.x + 1] = 'D';
-
 	if (is_open_door(data, y, data->player.x))
 		data->map.map[(int)y][(int)data->player.x] = 'D';
 	if (is_open_door(data, y, data->player.x - 1))
 		data->map.map[(int)y][(int)data->player.x - 1] = 'D';
 	if (is_open_door(data, y, data->player.x + 1))
 		data->map.map[(int)y][(int)data->player.x + 1] = 'D';
-
 	if (is_open_door(data, y + 1, data->player.x))
 		data->map.map[(int)y + 1][(int)data->player.x] = 'D';
 	if (is_open_door(data, y + 1, data->player.x - 1))
@@ -87,8 +83,6 @@ static void	ccd_positive_y(t_data *data, double *y, double offset)
 	i = 1;
 	while (i < *y)
 	{
-		/* open_y_doors(data, data->player.y + i);
-		close_y_doors(data, data->player.y - i); */
 		if (!validate_y_position(data, data->player.y + i))
 		{
 			*y = (int)data->player.y + i - data->player.y - offset;
@@ -96,12 +90,6 @@ static void	ccd_positive_y(t_data *data, double *y, double offset)
 		}
 		i++;
 	}
-	/* if ((int)data->player.y != (int)(data->player.y + *y) && validate_y_position(data, data->player.y + *y + offset))
-	{
-		printf("positive_y: player.y = %f, player.x = %f, y = %f\n", data->player.y, data->player.x, *y);
-		open_y_doors(data, data->player.y + *y + 1);
-		close_y_doors(data, data->player.y - 1);
-	} */
 	if (!validate_y_position(data, data->player.y + *y + offset))
 		*y = (int)data->player.y + i - data->player.y - offset;
 }
@@ -113,8 +101,6 @@ static void	ccd_negative_y(t_data *data, double *y, double offset)
 	i = -1;
 	while (i > *y)
 	{
-		/* open_y_doors(data, data->player.y + i);
-		close_y_doors(data, data->player.y - i); */
 		if (!validate_y_position(data, data->player.y + i))
 		{
 			*y = (int)data->player.y + i + 1 - data->player.y - offset;
@@ -122,12 +108,6 @@ static void	ccd_negative_y(t_data *data, double *y, double offset)
 		}
 		i--;
 	}
-	/* if ((int)data->player.y != (int)(data->player.y + *y) && validate_y_position(data, data->player.y + *y + offset))
-	{
-		printf("negative_y: player.y = %f, player.x = %f, y = %f\n", data->player.y, data->player.x, *y);
-		open_y_doors(data, data->player.y + *y - 1);
-		close_y_doors(data, data->player.y + 1);
-	} */
 	if (!validate_y_position(data, data->player.y + *y + offset))
 		*y = (int)data->player.y + i + 1 - data->player.y - offset;
 }

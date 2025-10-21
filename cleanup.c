@@ -68,7 +68,7 @@ static void	destroy_animation_and_free_map(t_data *data)
 	int	j;
 
 	i = 0;
-	while (i < 4)
+	while (i < 4) //change 4 if door gets stored in animation[5???]
 	{
 		j = 0;
 		while (j < data->animation.frame_amount[i])
