@@ -97,7 +97,10 @@ void	render_game(t_data *data)
 {
 	if (data->minimap_toggle)
 		draw_minimap_grid(data);
+	if (data->flashlight_toggle)
+		data->apply_darkness = true;
 	raycasting(data);
+	data->apply_darkness = false;
 	if (data->minimap_toggle)
 		copy_minimap_to_image(data);
 	draw_crosshair(data);

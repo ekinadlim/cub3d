@@ -46,14 +46,23 @@ bool	is_wall(const t_data *data, const double y, const double x)
 }
 
 void	fill_image_buffer(t_image image,
-	const int y, const int x, const int color)
+	const int y, const int x, int color)
 {
+	t_data	*data;
 	char	*pixel_index;
 
 	if (x >= 0 && y >= 0 && x < image.width && y < image.height)
 	{
 		pixel_index = image.address
 			+ (y * image.size_line) + (x * image.bytes_per_pixel);
+		data = get_data();
+		if (image.width == WINDOW_WIDTH && image.height == WINDOW_HEIGHT && data->apply_darkness)
+		{
+			int r = ((color >> 16) & 0xFF) / data->flashlight[y][x];
+			int g = ((color >> 8) & 0xFF) / data->flashlight[y][x];
+			int b = (color & 0xFF) / data->flashlight[y][x];
+			color = (r << 16) | (g << 8) | b;
+		}
 		*(int *)pixel_index = color;
 	}
 }

@@ -112,6 +112,9 @@ typedef struct s_data
 	t_value		value;
 	t_image		door_texture;
 	t_image		*current_texture;
+	int			flashlight[WINDOW_HEIGHT][WINDOW_WIDTH];
+	bool		flashlight_toggle;
+	bool		apply_darkness;
 }				t_data;
 
 #endif // STRUCTURES_H

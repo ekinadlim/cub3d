@@ -26,16 +26,12 @@ int	key_press(int key, t_data *data)
 		data->keys['j'] = true;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
-	else if (key == 'm' && !data->keys['m'])
-	{
-		data->keys['m'] = true;
+	else if (key == 'm')
 		data->minimap_toggle = !data->minimap_toggle;
-	}
 	else if (key == 'r')
-	{
-		data->keys['r'] = true;
 		data->ray_toggle = !data->ray_toggle;
-	}
+	else if (key == 'f')
+		data->flashlight_toggle = !data->flashlight_toggle;
 	else if (key == 'q' || key == KEY_ESC)
 		exit_cub3d(NULL);
 	return (0);
@@ -55,8 +51,6 @@ int	key_release(int key, t_data *data)
 		data->keys['j'] = false;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = false;
-	else if (key == 'm')
-		data->keys['m'] = false;
 	return (0);
 }
 

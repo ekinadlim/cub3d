@@ -94,7 +94,7 @@ bool	is_wall(const t_data *data, const double y, const double x);
 bool	is_closed_door(const t_data *data, const double y, const double x);
 bool	is_open_door(const t_data *data, const double y, const double x);
 void	fill_image_buffer(t_image image,
-	const int y, const int x, const int color);
+	const int y, const int x, int color);
 
 /* Cleanup */
 
