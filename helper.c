@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 12:48:15 by eadlim            #+#    #+#             */
-/*   Updated: 2025/09/30 14:45:29 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 14:25:20 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ void	fill_image_buffer(t_image image,
 		pixel_index = image.address
 			+ (y * image.size_line) + (x * image.bytes_per_pixel);
 		data = get_data();
-		if (image.width == WINDOW_WIDTH && image.height == WINDOW_HEIGHT && data->apply_darkness)
+		if (data->apply_darkness
+			&& image.width == WINDOW_WIDTH && image.height == WINDOW_HEIGHT)
 		{
-			int r = ((color >> 16) & 0xFF) / data->flashlight[y][x];
-			int g = ((color >> 8) & 0xFF) / data->flashlight[y][x];
-			int b = (color & 0xFF) / data->flashlight[y][x];
-			color = (r << 16) | (g << 8) | b;
+			color = ((((color >> 16) & 0xFF) / data->flashlight[y][x]) << 16)
+				| ((((color >> 8) & 0xFF) / data->flashlight[y][x]) << 8)
+				| ((color & 0xFF) / data->flashlight[y][x]);
 		}
 		*(int *)pixel_index = color;
 	}

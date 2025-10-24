@@ -33,6 +33,7 @@ SRC = 	main.c\
 		helper.c\
 		cleanup.c\
 		doors.c\
+		flashlight.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

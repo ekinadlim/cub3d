@@ -69,6 +69,7 @@ void	x_doors(t_data *data, const double x,
 void	init_data(void);
 void	calculate_fixed_values(t_data *data);
 void	start_mlx(t_data *data);
+void	init_flashlight(t_data *data);
 
 /* Game Loop */
 

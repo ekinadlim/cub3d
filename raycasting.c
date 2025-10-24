@@ -44,6 +44,21 @@ static double	get_perp_wall_dist(t_data *data)
 		+ delta_y * data->player.direction_sin);
 }
 
+static void	dda(t_data *data, int *y, int *x)
+{
+	while (!is_wall(data, *y, *x))
+	{
+		calculate_next_grid_distance(data, y, x);
+		if (data->minimap_toggle && data->ray_toggle)
+			fill_image_buffer(data->minimap, data->minimap.half_height
+				+ (int)((data->ray.y - data->player.y)
+					* data->value.scaled_grid_size),
+				data->minimap.half_width
+				+ (int)((data->ray.x - data->player.x)
+					* data->value.scaled_grid_size), COLOR_RAY);
+	}
+}
+
 void	raycasting(t_data *data)
 {
 	int		ray;
@@ -55,21 +70,12 @@ void	raycasting(t_data *data)
 	while (ray < WINDOW_WIDTH)
 	{
 		calculate_and_assign_ray_values(data, ray, &y, &x);
-		while (!is_wall(data, y, x))
-		{
-			calculate_next_grid_distance(data, &y, &x);
-			if (data->minimap_toggle && data->ray_toggle)
-				fill_image_buffer(data->minimap, data->minimap.half_height
-					+ (int)((data->ray.y - data->player.y)
-						* data->value.scaled_grid_size),
-					data->minimap.half_width
-					+ (int)((data->ray.x - data->player.x)
-						* data->value.scaled_grid_size), COLOR_RAY);
-		}
+		dda(data, &y, &x);
 		if (is_closed_door(data, y, x))
 			data->current_texture = &data->door_texture;
 		else
-			data->current_texture = &data->animation[data->ray.wall_hit].texture[data->animation[data->ray.wall_hit].index];
+			data->current_texture = &data->animation[data->ray.wall_hit]
+				.texture[data->animation[data->ray.wall_hit].index];
 		if (data->minimap_toggle && !data->ray_toggle)
 			draw_minimap_ray(data);
 		draw_vertical_line(data, ray, get_perp_wall_dist(data));

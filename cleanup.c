@@ -48,20 +48,6 @@ static void	free_2d_array(char ***array)
 	*array = NULL;
 }
 
-/* static void	destroy_textures_and_free_map(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < 4)
-	{
-		if (data->textures[i].buffer)
-			mlx_destroy_image(data->mlx, data->textures[i].buffer);
-		i++;
-	}
-	//free_2d_array(&data->map.map);
-} */
-
 static void	destroy_animation_and_free_map(t_data *data)
 {
 	int	i;
@@ -74,7 +60,8 @@ static void	destroy_animation_and_free_map(t_data *data)
 		while (j < data->animation[i].frame_amount)
 		{
 			if (data->animation[i].texture[j].buffer)
-				mlx_destroy_image(data->mlx, data->animation[i].texture[j].buffer);
+				mlx_destroy_image(data->mlx,
+					data->animation[i].texture[j].buffer);
 			else
 				break ;
 			j++;
@@ -102,7 +89,6 @@ int	exit_cub3d(char *error_msg)
 		mlx_destroy_image(data->mlx, data->image.buffer);
 	if (data->minimap.buffer)
 		mlx_destroy_image(data->mlx, data->minimap.buffer);
-	//destroy_textures_and_free_map(data); //not needed
 	destroy_animation_and_free_map(data);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);

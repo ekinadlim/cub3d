@@ -85,7 +85,7 @@ typedef struct s_parsing
 
 typedef struct s_animation
 {
-	t_image		texture[MAX_ANIMATION_FRAMES]; //let's maybe add a macro instead of using magic number 4 everywhere
+	t_image		texture[MAX_ANIMATION_FRAMES];
 	int			frame_amount; //store how many frames each animation has
 	int			index; //index of which frame we are at now
 	double		tracker; //to know how much time has passed to correctly cycle through the frames
@@ -106,8 +106,8 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	t_map		map;
-	int			surface[2];
-	t_animation	animation[4];
+	int			surface[2]; //magic number
+	t_animation	animation[4]; //magic number
 	t_parsing	pars;
 	t_value		value;
 	t_image		door_texture;
