@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:27 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/21 18:48:51 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 15:30:05 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	destroy_animation_and_free_map(t_data *data)
 	int	j;
 
 	i = 0;
-	while (i < 4)
+	while (i < 5)
 	{
 		j = 0;
 		while (j < data->animation[i].frame_amount)
@@ -81,8 +81,6 @@ static void	destroy_animation_and_free_map(t_data *data)
 		}
 		i++;
 	}
-	if (data->door_texture.buffer)
-		mlx_destroy_image(data->mlx, data->door_texture.buffer);
 	free_2d_array(&data->map.map);
 }
 

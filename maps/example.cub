@@ -1,7 +1,8 @@
-NO textures/pt_horror/wall1/1.xpm textures/pt_horror/wall1/2.xpm textures/pt_horror/wall1/3.xpm textures/pt_horror/wall1/4.xpm textures/pt_horror/wall1/5.xpm textures/pt_horror/wall1/6.xpm textures/pt_horror/wall1/7.xpm textures/pt_horror/wall1/8.xpm textures/pt_horror/wall1/9.xpm textures/pt_horror/wall1/10.xpm textures/pt_horror/wall1/11.xpm   
+NO textures/eyeNO/0.xpm textures/eyeNO/1.xpm
 SO textures/portal/crystal_imac.xpm
 WE textures/portal/crystal.xpm
 EA textures/portal/crystal_sign.xpm
+DO textures/prototype/one.xpm
 
 F 112,112,112
 C 32,32,32

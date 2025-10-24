@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:13:08 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/09 18:15:43 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 19:31:50 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,43 +41,15 @@ static void	is_valid_line(t_data *data)
 		data->map.width = i;
 }
 
-// Returns the starting line
-static size_t	skip_first_newlines(t_data *data)
+// gets map size
+void	get_map_size(t_data *data)
 {
-	size_t	start;
-
-	start = 0;
-	while (1)
-	{
-		data->pars.line = get_next_line(data->pars.fd, false);
-		if (ft_errno(false))
-			exit_pars("GNL: Malloc Error!", data);
-		if (!data->pars.line)
-			exit_pars("Map missing!", data);
-		if (ft_strncmp(data->pars.line, "\n", 2))
-		{
-			is_valid_line(data);
-			if (data->map.height > MAX_HEIGHT || data->map.width > MAX_WIDTH)
-				exit_pars("Map too big!", data);
-			free(data->pars.line);
-			data->pars.line = NULL;
-			return (start);
-		}
-		start++;
-		free(data->pars.line);
-		data->pars.line = NULL;
-	}
-	return (start);
-}
-
-// Returns the starting line of the map
-size_t	get_map_size(t_data *data)
-{
-	size_t	start;
 	bool	has_nl;
 
 	has_nl = false;
-	start = skip_first_newlines(data);
+	is_valid_line(data);
+	free(data->pars.line);
+	data->pars.line = NULL;
 	while (1)
 	{
 		data->pars.line = get_next_line(data->pars.fd, false);
@@ -96,5 +68,4 @@ size_t	get_map_size(t_data *data)
 		free(data->pars.line);
 		data->pars.line = NULL;
 	}
-	return (start);
 }
