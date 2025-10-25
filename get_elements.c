@@ -33,18 +33,18 @@ static char	*remove_first_spaces(char *str, t_data *data)
 	return (new_str);
 }
 
-static int	check_if_map_start(t_data *data)
+static bool	check_if_map_start(t_data *data)
 {
 	size_t	i;
 
 	i = 0;
 	while (data->pars.line[i])
 	{
-		if (data->pars.line[i] != ' ' && data->pars.line[i] != '1')
-			return (-1);
+		if (data->pars.line[i] != ' ' && data->pars.line[i] != '1' && data->pars.line[i] != '\n')
+			return (false);
 		i++;
 	}
-	return (-2);
+	return (true);
 }
 
 // Converts and distributes element depending on what it is;
@@ -53,6 +53,11 @@ static int	distribute_element(t_data *data)
 	int	flag;
 
 	flag = 0;
+	if (data->pars.line[0] && (data->pars.line[0] == ' ' || data->pars.line[0] == '1'))
+	{
+		if (check_if_map_start(data))
+			return (-1);
+	}
 	data->pars.line = remove_first_spaces(data->pars.line, data);
 	if (!ft_strncmp(data->pars.line, "DO", 2))
 		return (get_images(DOOR, data) << COLOR_MASK_SKIP);
@@ -69,7 +74,7 @@ static int	distribute_element(t_data *data)
 	else if (!ft_strncmp(data->pars.line, "C", 1))
 		flag = get_color(CEILING, data);
 	else if (data->pars.line[0])
-		flag = check_if_map_start(data);
+		exit_pars("Missing elements or Garbage in file!", data);
 	return (flag);
 }
 
@@ -99,13 +104,11 @@ size_t	get_elements(t_data *data)
 		if (!data->pars.line)
 			exit_pars("No map and maybe missing elements!", data);
 		current_flag = distribute_element(data);
-		if (current_flag == -2)
+		if (current_flag == -1)
 			break ;
 		if (data->pars.line)
 			free(data->pars.line);
 		data->pars.line = NULL;
-		if (current_flag == -1)
-			exit_pars("Missing elements or Garbage in file!", data);
 		data->filemask += current_flag;
 		line_count++;
 	}
