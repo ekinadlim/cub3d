@@ -68,6 +68,8 @@ int	get_images(int type, t_data *data)
 		if (frame >= MAX_ANIMATION_FRAMES)
 			exit_pars("Too many frames foo", data);
 		path = get_path(data, &i);
+		if (!path && !data->animation[type].texture[0].buffer)
+			exit_pars("Missing path", data);
 		if (!path)
 			break ;
 		xpm_to_img(path, &data->animation[type].texture[frame], data);
