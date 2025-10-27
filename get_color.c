@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:03:43 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/21 18:38:02 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 16:15:01 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ static int	get_color_number(size_t *i, int color_shift, t_data *data)
 	return (ft_atoi(str_num));
 }
 
-size_t	get_color(int surface, int filemask, t_data *data)
+size_t	get_color(int surface, t_data *data)
 {
 	int		one_color;
 	int		color_shift;
 	size_t	i;
 
-	if ((1 << (surface + 4)) & filemask)
+	if ((1 << (surface + 4)) & data->filemask)
 		exit_pars("Multiple occurance of the same element!", data);
 	color_shift = 2;
 	i = 1;

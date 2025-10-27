@@ -1,14 +1,15 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	int		frame_count;
-	char	slash[2];
+	int frame_count;
+	char slash[2];
 
 	if (argc < 4 || argc > 4)
-		return (printf("Error\narg 1: starting number\narg 2: ending number\narg 3: directory\n"), 1);
+		return (printf("Error\narg 1: starting number\narg 2: ending number\narg 3: directory\n"),
+			1);
 
 	frame_count = atoi(argv[2]);
 	memset(slash, 0, 2);

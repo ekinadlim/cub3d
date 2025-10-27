@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/21 18:05:21 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 18:34:03 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,11 @@ int		game_loop(t_data *data);
 
 void	parsing(int argc, char **argv, t_data *data);
 void	arg_validation(int argc, char *argv);
+size_t	get_elements(t_data *data);
 void	get_map(size_t start, t_data *data);
-size_t	get_map_size(t_data *data);
-size_t	get_color(int surface, int filemask, t_data *data);
-int		get_image(int type, int filemask, t_data *data);
+void	get_map_size(t_data *data);
+size_t	get_color(int surface, t_data *data);
+int		get_images(int type, t_data *data);
 void	get_player(int pos_x, int pos_y, char c, t_data *data);
 void	check_map(char **map, t_data *data);
 

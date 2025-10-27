@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/21 19:08:17 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 16:11:40 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,11 @@ typedef struct s_data
 	long		time_reference;
 	double		delta_time;
 	t_map		map;
-	int			surface[2]; //magic number
-	t_animation	animation[4]; //magic number
+	int			surface[2];
+	t_animation	animation[5];
 	t_parsing	pars;
 	t_value		value;
-	t_image		door_texture;
+	int			filemask;
 	t_image		*current_texture;
 	int			flashlight[WINDOW_HEIGHT][WINDOW_WIDTH];
 	bool		flashlight_toggle;

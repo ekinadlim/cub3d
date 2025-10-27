@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/21 19:09:56 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 18:20:44 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define KEY_RIGHT	65363
 # define KEY_DOWN	65364
 # define KEY_LEFT	65361
+
+# define COLOR_MASK_SKIP 2
 
 /* -------------- PARSING --------------- */
 

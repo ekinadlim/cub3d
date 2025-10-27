@@ -6,7 +6,7 @@
 /*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:08 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/21 18:59:15 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/10/24 16:33:54 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	update_animation_frame(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < 4)
+	while (i < 5 && data->animation[i].texture->buffer)
 	{
 		data->animation[i].tracker += data->delta_time * ANIMATION_SPEED;
 		if ((int)data->animation[i].tracker)
@@ -72,20 +72,6 @@ int	main(int argc, char **argv)
 		exit_cub3d("MLX: Failed to init mlx!");
 	parsing(argc, argv, data);
 	y_doors(data, data->player.y, 'd', is_closed_door);
-
-	data->door_texture.buffer = mlx_xpm_file_to_image(data->mlx,
-				"textures/eyeNO/0.xpm", &data->door_texture.width,
-				&data->door_texture.height);
-	if (!data->door_texture.buffer)
-		exit_pars("MLX: Failed to convert xpm to img!", data);
-	data->door_texture.address = mlx_get_data_addr(data->door_texture.buffer,
-			&data->door_texture.bytes_per_pixel,
-			&data->door_texture.size_line,
-			&data->door_texture.endian);
-	data->door_texture.bytes_per_pixel /= 8;
-	if (!data->door_texture.address)
-		exit_pars("MLX: Failed to get data address!", data);
-
 	calculate_fixed_values(data);
 	init_flashlight(data);
 	start_mlx(data);
