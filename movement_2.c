@@ -81,5 +81,4 @@ void	move_y(t_data *data, double y)
 	if (fabs(y) < EPSILON)
 		return ;
 	data->player.y += y;
-	data->render_required = true;
 }

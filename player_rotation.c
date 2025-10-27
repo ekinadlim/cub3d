@@ -15,7 +15,6 @@
 void	turn_left(t_data *data, double speed)
 {
 	data->player.direction -= speed;
-	data->render_required = true;
 	if (data->player.direction < 0)
 		data->player.direction += 360;
 	data->player.direction_in_radians
@@ -25,7 +24,6 @@ void	turn_left(t_data *data, double speed)
 void	turn_right(t_data *data, double speed)
 {
 	data->player.direction += speed;
-	data->render_required = true;
 	if (data->player.direction > 360)
 		data->player.direction -= 360;
 	data->player.direction_in_radians

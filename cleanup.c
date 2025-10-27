@@ -54,7 +54,7 @@ static void	destroy_animation_and_free_map(t_data *data)
 	int	j;
 
 	i = 0;
-	while (i < 5) //change 4 if door gets stored in animation[5???]
+	while (i < MAX_TEXTURES)
 	{
 		j = 0;
 		while (j < data->animation[i].frame_amount)

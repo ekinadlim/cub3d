@@ -101,7 +101,6 @@ typedef struct s_data
 	t_player	player;
 	t_image		image;
 	t_image		minimap;
-	bool		render_required; //to know if we need to render (better name)
 	bool		minimap_toggle;
 	bool		ray_toggle; //which ray view in minimap (wave or grid)
 	t_ray		ray;
@@ -110,7 +109,7 @@ typedef struct s_data
 	double		delta_time;
 	t_map		map;
 	int			surface[2];
-	t_animation	animation[5];
+	t_animation	animation[MAX_TEXTURES];
 	t_parsing	pars;
 	t_value		value;
 	int			filemask;

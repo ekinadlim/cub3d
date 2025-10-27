@@ -34,6 +34,7 @@
 
 # define MAP_CHAR_SET	"01 DNESW"
 # define ELEMENT_COUNT	6
+# define MAX_TEXTURES	5
 # define MAX_HEIGHT		5000
 # define MAX_WIDTH		5000
 
@@ -67,8 +68,8 @@
 # define COLOR_VOID		0x000000 //Black
 # define COLOR_WALL		0x666666 //Medium gray
 # define COLOR_FLOOR	0x333333 //Dark gray
-# define COLOR_OPEN_DOOR	0x3ea832 //Green TEST
-# define COLOR_CLOSED_DOOR	0x323ca8 //Blue TEST
+# define COLOR_OPEN_DOOR	0xFFC341 //Green TEST
+# define COLOR_CLOSED_DOOR	0xFB702D //Blue TEST
 
 /* -------------- KEY BINDS ------------- */
 

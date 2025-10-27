@@ -17,7 +17,7 @@ void	update_animation_frame(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < 5 && data->animation[i].texture->buffer)
+	while (i < MAX_TEXTURES && data->animation[i].texture->buffer)
 	{
 		data->animation[i].tracker += data->delta_time * ANIMATION_SPEED;
 		if ((int)data->animation[i].tracker)
@@ -55,7 +55,6 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_back(data);
-		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed???
 		render_game(data);
 	}
 	return (0);
