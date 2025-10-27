@@ -34,7 +34,6 @@ int	game_loop(t_data *data)
 			move_forward(data);
 		if (data->keys['s'] && !data->keys['w'])
 			move_back(data);
-		//if (data->render_required || data->keys['m']|| data->keys['r']) //if performance is fine without it, then not needed???
 		render_game(data);
 	}
 	return (0);
@@ -52,7 +51,6 @@ int	main(int argc, char **argv)
 	parsing(argc, argv, data);
 	calculate_fixed_values(data);
 	start_mlx(data);
-	//render_game(data); ???
 	mlx_loop(data->mlx);
 	return (0);
 }

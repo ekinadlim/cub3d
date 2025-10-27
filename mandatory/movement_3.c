@@ -67,9 +67,6 @@ static void	ccd_negative_x(t_data *data, double *x, double offset)
 
 void	move_x(t_data *data, double x)
 {
-	bool	can_move;
-
-	can_move = false;
 	if (fabs(x) < EPSILON)
 		return ;
 	if (x > 0)
@@ -79,5 +76,4 @@ void	move_x(t_data *data, double x)
 	if (fabs(x) < EPSILON)
 		return ;
 	data->player.x += x;
-	data->render_required = true;
 }

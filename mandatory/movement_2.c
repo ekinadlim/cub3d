@@ -67,9 +67,6 @@ static void	ccd_negative_y(t_data *data, double *y, double offset)
 
 void	move_y(t_data *data, double y)
 {
-	bool	can_move;
-
-	can_move = false;
 	if (fabs(y) < EPSILON)
 		return ;
 	if (y > 0)
@@ -79,5 +76,4 @@ void	move_y(t_data *data, double y)
 	if (fabs(y) < EPSILON)
 		return ;
 	data->player.y += y;
-	data->render_required = true;
 }

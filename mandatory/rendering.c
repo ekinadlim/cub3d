@@ -102,5 +102,4 @@ void	render_game(t_data *data)
 		copy_minimap_to_image(data);
 	draw_crosshair(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->image.buffer, 0, 0);
-	data->render_required = false;
 }
