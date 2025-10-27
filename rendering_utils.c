@@ -34,13 +34,15 @@ int	get_texture_x(t_data *data, const double perp_wall_dist)
 	return (tex_x * data->current_texture->bytes_per_pixel);
 }
 
-//printf("y: %d, wall_height: %d, d: %d, tex_y: %d\n", y, wall_height, d, tex_y);
+//prin("y: %d, wall_height: %d, d: %d, tex_y: %d\n", y, wall_height, d, tex_y);
 static int	get_texture_y(t_data *data, const int y, const int wall_height)
 {
-	const int	scaled_wall_y = y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
+	const int	scaled_wall_y
+		= y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
 	int			tex_y;
 
-	tex_y = ((scaled_wall_y * data->current_texture->height) / wall_height) / 256; //signed integer overflow
+	tex_y = ((scaled_wall_y * data->current_texture->height)
+			/ wall_height) / 256;
 	if (tex_y < 0)
 		tex_y = 0;
 	if (tex_y >= data->current_texture->height)

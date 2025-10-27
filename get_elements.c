@@ -38,12 +38,19 @@ static bool	check_if_map_start(t_data *data)
 	size_t	i;
 
 	i = 0;
-	while (data->pars.line[i])
+	if (data->pars.line[0]
+		&& (data->pars.line[0] == ' ' || data->pars.line[0] == '1'))
 	{
-		if (data->pars.line[i] != ' ' && data->pars.line[i] != '1' && data->pars.line[i] != '\n')
-			return (false);
-		i++;
+		while (data->pars.line[i])
+		{
+			if (data->pars.line[i] != ' ' && data->pars.line[i] != '1'
+				&& data->pars.line[i] != '\n')
+				return (false);
+			i++;
+		}
 	}
+	else
+		return (false);
 	return (true);
 }
 
@@ -53,11 +60,8 @@ static int	distribute_element(t_data *data)
 	int	flag;
 
 	flag = 0;
-	if (data->pars.line[0] && (data->pars.line[0] == ' ' || data->pars.line[0] == '1'))
-	{
-		if (check_if_map_start(data))
-			return (-1);
-	}
+	if (check_if_map_start(data))
+		return (-1);
 	data->pars.line = remove_first_spaces(data->pars.line, data);
 	if (!ft_strncmp(data->pars.line, "DO", 2))
 		return (get_images(DOOR, data) << COLOR_MASK_SKIP);

@@ -72,7 +72,8 @@ void	raycasting(t_data *data)
 		calculate_and_assign_ray_values(data, ray, &y, &x);
 		dda(data, &y, &x);
 		if (is_closed_door(data, y, x))
-			data->current_texture = &data->animation[DOOR].texture[data->animation[DOOR].index];
+			data->current_texture
+				= &data->animation[DOOR].texture[data->animation[DOOR].index];
 		else
 			data->current_texture = &data->animation[data->ray.wall_hit]
 				.texture[data->animation[data->ray.wall_hit].index];

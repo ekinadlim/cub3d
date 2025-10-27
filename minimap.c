@@ -64,9 +64,9 @@ static int	get_minimap_grid_color(const t_data *data,
 	else if (data->map.map[(int)real_y][(int)real_x] == '0')
 		color = COLOR_FLOOR;
 	else if (data->map.map[(int)real_y][(int)real_x] == 'D')
-		color = COLOR_CLOSED_DOOR; //shitty
+		color = COLOR_CLOSED_DOOR;
 	else if (data->map.map[(int)real_y][(int)real_x] == 'd')
-		color = COLOR_OPEN_DOOR; //shitty
+		color = COLOR_OPEN_DOOR;
 	else
 		color = COLOR_VOID;
 	return (color);
