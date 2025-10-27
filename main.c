@@ -15,11 +15,7 @@
 void	update_animation_frame(t_data *data)
 {
 	int	i;
-	/* static long blabla = 0;
-	if (blabla == 0)
-	{
-		blabla = get_current_time();
-	} */
+
 	i = 0;
 	while (i < 4)
 	{
@@ -34,7 +30,6 @@ void	update_animation_frame(t_data *data)
 		}
 		i++;
 	}
-	//printf("%ld: Animation: frame %d, delta_time: %.4f\n", get_current_time() - blabla, data->animation.index[0], data->delta_time);
 }
 
 int	game_loop(t_data *data)

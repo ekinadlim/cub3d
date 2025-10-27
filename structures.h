@@ -86,9 +86,12 @@ typedef struct s_parsing
 typedef struct s_animation
 {
 	t_image		texture[MAX_ANIMATION_FRAMES];
-	int			frame_amount; //store how many frames each animation has
-	int			index; //index of which frame we are at now
-	double		tracker; //to know how much time has passed to correctly cycle through the frames
+	//store how many frames each animation has
+	int			frame_amount;
+	//index of which frame we are at now
+	int			index;
+	//to know how much time has passed to correctly cycle through the frames
+	double		tracker;
 }				t_animation;
 
 typedef struct s_data

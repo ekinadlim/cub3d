@@ -59,10 +59,10 @@ int		get_texture_color(t_data *data,
 
 /* Doors */
 
-void	y_doors(t_data *data, const double y,
-	char door, bool (*is_door)(const t_data *, const double, const double));
-void	x_doors(t_data *data, const double x,
-	char door, bool (*is_door)(const t_data *, const double, const double));
+void	y_doors(t_data *data, const double y, char door,
+			bool (*is_door)(const t_data *, const double, const double));
+void	x_doors(t_data *data, const double x, char door,
+			bool (*is_door)(const t_data *, const double, const double));
 
 /* Init Stuff */
 
@@ -95,7 +95,7 @@ bool	is_wall(const t_data *data, const double y, const double x);
 bool	is_closed_door(const t_data *data, const double y, const double x);
 bool	is_open_door(const t_data *data, const double y, const double x);
 void	fill_image_buffer(t_image image,
-	const int y, const int x, int color);
+			const int y, const int x, int color);
 
 /* Cleanup */
 
