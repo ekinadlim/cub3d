@@ -39,11 +39,11 @@ typedef struct s_player
 	double		direction_right_cos;
 }				t_player;
 
-typedef struct s_value //better name
+typedef struct s_value
 {
-	double		proj_plane; //(WINDOW_WIDTH / 2.0) / tan((FOV * PI_180) / 2.0)
+	double		proj_plane;
 	double		ray_direction_x[WINDOW_WIDTH];
-	double		scaled_grid_size; //GRID_SIZE * SCALING
+	double		scaled_grid_size;
 }				t_value;
 
 typedef struct s_image
@@ -102,7 +102,8 @@ typedef struct s_data
 	t_image		image;
 	t_image		minimap;
 	bool		minimap_toggle;
-	bool		ray_toggle; //which ray view in minimap (wave or grid)
+	//which ray view in minimap (wave or grid)
+	bool		ray_toggle;
 	t_ray		ray;
 	bool		keys[256];
 	long		time_reference;
