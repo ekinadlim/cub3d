@@ -14,20 +14,21 @@
 
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str
-static char	*remove_first_spaces(char *str, t_data *data)
+static char	*remove_first_spaces(t_data *data)
 {
 	size_t	i;
 	size_t	len;
 	char	*new_str;
 
 	i = 0;
-	len = ft_strlen(str);
-	while (str[i] && is_whitespace(str[i]))
+	len = ft_strlen(data->pars.line);
+	while (data->pars.line[i] && is_whitespace(data->pars.line[i]))
 		i++;
-	if (str[len - 1] == '\n')
+	if (data->pars.line[len - 1] == '\n')
 		len -= 1;
-	new_str = ft_substr(str, i, len - i);
-	free(str);
+	new_str = ft_substr(data->pars.line, i, len - i);
+	free(data->pars.line);
+	data->pars.line = NULL;
 	if (!new_str)
 		exit_pars("Malloc Error!", data);
 	return (new_str);
@@ -62,7 +63,7 @@ static int	distribute_element(t_data *data)
 	flag = 0;
 	if (check_if_map_start(data))
 		return (-1);
-	data->pars.line = remove_first_spaces(data->pars.line, data);
+	data->pars.line = remove_first_spaces(data);
 	if (!ft_strncmp(data->pars.line, "DO", 2))
 		return (get_images(DOOR, data) << COLOR_MASK_SKIP);
 	if (!ft_strncmp(data->pars.line, "NO", 2))
@@ -82,7 +83,7 @@ static int	distribute_element(t_data *data)
 	return (flag);
 }
 
-void	check_for_missing_elements(t_data *data)
+static void	check_for_missing_elements(t_data *data)
 {
 	int	door_mask;
 

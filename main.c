@@ -12,12 +12,12 @@
 
 #include "header.h"
 
-void	update_animation_frame(t_data *data)
+static void	update_animation_frame(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < MAX_TEXTURES && data->animation[i].texture->buffer)
+	while (i < MAX_TEXTURES && data->animation[i].texture[0].buffer)
 	{
 		data->animation[i].tracker += data->delta_time * ANIMATION_SPEED;
 		if ((int)data->animation[i].tracker)
