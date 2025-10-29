@@ -14,20 +14,21 @@
 
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str
-static char	*remove_first_spaces(char *str, t_data *data)
+static char	*remove_first_spaces(t_data *data)
 {
 	size_t	i;
 	size_t	len;
 	char	*new_str;
 
 	i = 0;
-	len = ft_strlen(str);
-	while (str[i] && is_whitespace(str[i]))
+	len = ft_strlen(data->pars.line);
+	while (data->pars.line[i] && is_whitespace(data->pars.line[i]))
 		i++;
-	if (str[len - 1] == '\n')
+	if (data->pars.line[len - 1] == '\n')
 		len -= 1;
-	new_str = ft_substr(str, i, len - i);
-	free(str);
+	new_str = ft_substr(data->pars.line, i, len - i);
+	free(data->pars.line);
+	data->pars.line = NULL;
 	if (!new_str)
 		exit_pars("Malloc Error!", data);
 	return (new_str);
@@ -39,7 +40,7 @@ static int	distribute_element(t_data *data, int filemask)
 	int	flag;
 
 	flag = 0;
-	data->pars.line = remove_first_spaces(data->pars.line, data);
+	data->pars.line = remove_first_spaces(data);
 	if (!ft_strncmp(data->pars.line, "NO", 2))
 		flag = get_image(NORTH, filemask, data);
 	else if (!ft_strncmp(data->pars.line, "EA", 2))
