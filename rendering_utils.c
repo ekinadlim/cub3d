@@ -34,7 +34,10 @@ int	get_texture_x(t_data *data, const double perp_wall_dist)
 	return (tex_x * data->current_texture->bytes_per_pixel);
 }
 
-//prin("y: %d, wall_height: %d, d: %d, tex_y: %d\n", y, wall_height, d, tex_y);
+/* Fixed Point Arithmetic is way faster than Floating Point
+const double wall_y = y - data->image.half_height + wall_height / 2.0;
+int new_tex_y = (wall_y * data->current_texture->height) / wall_height;
+prin("y: %d, wall_height: %d, d: %d, tex_y: %d\n", y, wall_height, d, tex_y);*/
 static int	get_texture_y(t_data *data, const int y, const int wall_height)
 {
 	const int	scaled_wall_y
