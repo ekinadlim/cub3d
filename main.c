@@ -47,6 +47,10 @@ int	game_loop(t_data *data)
 			turn_left(data, TURN_SPEED * data->delta_time);
 		if (data->keys['l'] && !data->keys['j'])
 			turn_right(data, TURN_SPEED * data->delta_time);
+		if (data->keys['i'] && !data->keys['k'])
+			look_down(data, TURN_SPEED * data->delta_time);
+		if (data->keys['k'] && !data->keys['i'])
+			look_up(data, TURN_SPEED * data->delta_time);
 		if (data->keys['a'] && !data->keys['d'])
 			move_left(data);
 		if (data->keys['d'] && !data->keys['a'])

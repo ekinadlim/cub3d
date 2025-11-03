@@ -41,7 +41,7 @@ prin("y: %d, wall_height: %d, d: %d, tex_y: %d\n", y, wall_height, d, tex_y);*/
 static int	get_texture_y(t_data *data, const int y, const int wall_height)
 {
 	const int	scaled_wall_y
-		= y * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
+		= (y - data->player.pitch_offset) * 256 - WINDOW_HEIGHT * 128 + wall_height * 128;
 	int			tex_y;
 
 	tex_y = ((scaled_wall_y * data->current_texture->height)
@@ -53,23 +53,38 @@ static int	get_texture_y(t_data *data, const int y, const int wall_height)
 	return (tex_y * data->current_texture->size_line);
 }
 
-int	get_wall_start(const int wall_height)
+int	get_wall_start(const int wall_height, const double pitch_offset)
 {
 	int	wall_start;
 
-	wall_start = (WINDOW_HEIGHT - wall_height) / 2;
+	wall_start = ((WINDOW_HEIGHT - wall_height) / 2) + pitch_offset;
 	if (wall_start < 0)
 		wall_start = 0;
 	return (wall_start);
 }
 
-int	get_wall_end(const int wall_start, const int wall_height)
+int	get_wall_end(const int wall_start, const int wall_height, const double pitch_offset)
 {
 	int	wall_end;
+	const int	original_wall_start = ((WINDOW_HEIGHT - wall_height) / 2) + pitch_offset;
 
 	wall_end = wall_start + wall_height;
-	if (wall_end >= WINDOW_HEIGHT || wall_end < 0)
+
+	// If the original start was negative, we lose pixels at the top
+	if (original_wall_start < 0)
+	{
+		// Reduce wall_height by the amount cut off at top
+		wall_end = wall_start + wall_height + original_wall_start;
+	}
+	else
+	{
+		wall_end = wall_start + wall_height;
+	}
+
+	if (wall_end >= WINDOW_HEIGHT)
 		wall_end = WINDOW_HEIGHT;
+	if (wall_end < wall_start)
+		wall_end = wall_start;
 	return (wall_end);
 }
 

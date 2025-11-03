@@ -29,3 +29,19 @@ void	turn_right(t_data *data, double speed)
 	data->player.direction_in_radians
 		= data->player.direction * PI_180;
 }
+
+void	look_up(t_data *data, double speed)
+{
+	data->player.pitch -= speed;
+	if (data->player.pitch < -90)
+		data->player.pitch = -90;
+	data->player.pitch_offset = data->player.pitch * 10;
+}
+
+void	look_down(t_data *data, double speed)
+{
+	data->player.pitch += speed;
+	if (data->player.pitch > 90)
+		data->player.pitch = 90;
+	data->player.pitch_offset = data->player.pitch * 10;
+}

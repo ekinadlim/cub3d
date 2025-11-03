@@ -15,8 +15,8 @@
 void	draw_vertical_line(t_data *data, int ray, const double perp_wall_dist)
 {
 	const double	wall_height = data->value.proj_plane / perp_wall_dist;
-	const int		wall_start = get_wall_start(wall_height);
-	const int		wall_end = get_wall_end(wall_start, wall_height);
+	const int		wall_start = get_wall_start(wall_height, data->player.pitch_offset);
+	const int		wall_end = get_wall_end(wall_start, wall_height, data->player.pitch_offset);
 	const int		tex_x = get_texture_x(data, perp_wall_dist);
 	int				y;
 

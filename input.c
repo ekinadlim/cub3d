@@ -26,6 +26,10 @@ int	key_press(int key, t_data *data)
 		data->keys['j'] = true;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = true;
+	else if (key == KEY_UP)
+		data->keys['i'] = true;
+	else if (key == KEY_DOWN)
+		data->keys['k'] = true;
 	else if (key == 'm')
 		data->minimap_toggle = !data->minimap_toggle;
 	else if (key == 'r')
@@ -51,17 +55,26 @@ int	key_release(int key, t_data *data)
 		data->keys['j'] = false;
 	else if (key == KEY_RIGHT)
 		data->keys['l'] = false;
+	else if (key == KEY_UP)
+		data->keys['i'] = false;
+	else if (key == KEY_DOWN)
+		data->keys['k'] = false;
 	return (0);
 }
 
 int	mouse_move(int x, int y, t_data *data)
 {
 	const int	delta_x = x - data->image.half_width;
+	const int	delta_y = y - data->image.half_height;
 
 	if (delta_x < 0)
 		turn_left(data, -(delta_x * MOUSE_SENSITIVITY));
 	else if (delta_x > 0)
 		turn_right(data, delta_x * MOUSE_SENSITIVITY);
+	if (delta_y < 0)
+		look_down(data, -(delta_y * MOUSE_SENSITIVITY));
+	else if (delta_y > 0)
+		look_up(data, delta_y * MOUSE_SENSITIVITY);
 	if (x != data->image.half_width || y != data->image.half_height)
 		mlx_mouse_move(data->mlx, data->win,
 			data->image.half_width, data->image.half_height);

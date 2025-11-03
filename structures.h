@@ -31,6 +31,8 @@ typedef struct s_player
 {
 	double		y;
 	double		x;
+	double		pitch;
+	double		pitch_offset;
 	double		direction;
 	double		direction_in_radians;
 	double		direction_sin;
