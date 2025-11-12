@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_elements.c                                     :+:      :+:    :+:   */
+/*   get_elements_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:28:38 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/24 18:33:52 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/11/12 16:07:04 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "header_bonus.h"
 
 // Removes all spaces in the beginning of str
 // but exits if there are other whitespaces through out the rest of str

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_images.c                                       :+:      :+:    :+:   */
+/*   get_images_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/24 19:41:15 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/11/12 16:07:04 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "header_bonus.h"
 
 static char	*get_path(t_data *data, size_t *i)
 {

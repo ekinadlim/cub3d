@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flashlight.c                                       :+:      :+:    :+:   */
+/*   flashlight_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 14:40:42 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/24 14:40:43 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:07:04 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "header_bonus.h"
 
 static void	choose_darkness_level(t_data *data,
 	const int y, const int x, const int radius)

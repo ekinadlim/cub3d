@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   macros.h                                           :+:      :+:    :+:   */
+/*   macros_bonus.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:13:57 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/24 18:20:44 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/11/12 16:08:31 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MACROS_H
-# define MACROS_H
+#ifndef MACROS_BONUS_H
+# define MACROS_BONUS_H
 
 # define _GNU_SOURCE //for M_PI
 
@@ -107,4 +107,4 @@ typedef enum e_extra
 	DOOR = 4,
 }	t_extra;
 
-#endif // MACROS_H
+#endif // MACROS_BONUS_H

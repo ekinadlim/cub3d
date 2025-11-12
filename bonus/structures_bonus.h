@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   structures.h                                       :+:      :+:    :+:   */
+/*   structures_bonus.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:16:19 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/24 16:11:40 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/11/12 16:08:19 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCTURES_H
-# define STRUCTURES_H
+#ifndef STRUCTURES_BONUS_H
+# define STRUCTURES_BONUS_H
 
 // x and y axis for int
 typedef struct s_vec_2d_int
@@ -120,4 +120,4 @@ typedef struct s_data
 	bool		apply_darkness;
 }				t_data;
 
-#endif // STRUCTURES_H
+#endif // STRUCTURES_BONUS_H

@@ -10,31 +10,31 @@ OBJ_DIR = obj
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = 	main.c\
-		init.c\
-		raycasting.c\
-		raycasting_utils.c\
-		rendering.c\
-		rendering_utils.c\
-		input.c\
-		movement_1.c\
-		movement_2.c\
-		movement_3.c\
-		player_rotation.c\
-		minimap.c\
-		parsing.c\
-		arg_validation.c\
-		get_elements.c\
-		get_map.c\
-		get_map_size.c\
-		get_color.c\
-		get_images.c\
-		get_player.c\
-		check_map.c\
-		helper.c\
-		cleanup.c\
-		doors.c\
-		flashlight.c\
+SRC = 	main_bonus.c\
+		init_bonus.c\
+		raycasting_bonus.c\
+		raycasting_utils_bonus.c\
+		rendering_bonus.c\
+		rendering_utils_bonus.c\
+		input_bonus.c\
+		movement_1_bonus.c\
+		movement_2_bonus.c\
+		movement_3_bonus.c\
+		player_rotation_bonus.c\
+		minimap_bonus.c\
+		parsing_bonus.c\
+		arg_validation_bonus.c\
+		get_elements_bonus.c\
+		get_map_bonus.c\
+		get_map_size_bonus.c\
+		get_color_bonus.c\
+		get_images_bonus.c\
+		get_player_bonus.c\
+		check_map_bonus.c\
+		helper_bonus.c\
+		cleanup_bonus.c\
+		doors_bonus.c\
+		flashlight_bonus.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

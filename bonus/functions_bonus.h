@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   functions.h                                        :+:      :+:    :+:   */
+/*   functions_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 15:15:06 by eadlim            #+#    #+#             */
-/*   Updated: 2025/10/24 18:34:03 by eadlim           ###   ########.fr       */
+/*   Updated: 2025/11/12 16:08:42 by apartowi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FUNCTIONS_H
-# define FUNCTIONS_H
+#ifndef FUNCTIONS_BONUS_H
+# define FUNCTIONS_BONUS_H
 
 /* ----------- Execution ----------- */
 
@@ -103,4 +103,4 @@ void	fill_image_buffer(t_image image,
 void	exit_pars(char *err_msg, t_data *data);
 int		exit_cub3d(char *error_msg);
 
-#endif // FUNCTIONS_H
+#endif // FUNCTIONS_BONUS_H
