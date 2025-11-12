@@ -19,7 +19,6 @@
 # include "mlx.h"
 # include <sys/time.h>
 # include <math.h>
-# include <stdbool.h>
 # include "macros.h"
 # include "structures.h"
 # include "functions.h"

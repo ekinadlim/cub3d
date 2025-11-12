@@ -24,14 +24,17 @@ SRC = 	main.c\
 		minimap.c\
 		parsing.c\
 		arg_validation.c\
+		get_elements.c\
 		get_map.c\
 		get_map_size.c\
 		get_color.c\
-		get_image.c\
+		get_images.c\
 		get_player.c\
 		check_map.c\
 		helper.c\
 		cleanup.c\
+		doors.c\
+		flashlight.c\
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
@@ -39,6 +42,8 @@ DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
 #./$(NAME) maps/example.cub
+
+bonus: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
@@ -63,6 +68,6 @@ fclean:
 re: fclean all
 
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/small.cub
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/example.cub
 
-.PHONY: all clean fclean re val
+.PHONY: all clean fclean re bonus val
