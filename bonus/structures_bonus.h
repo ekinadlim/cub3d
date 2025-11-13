@@ -115,7 +115,7 @@ typedef struct s_data
 	t_value		value;
 	int			filemask;
 	t_image		*current_texture;
-	int			flashlight[WINDOW_HEIGHT][WINDOW_WIDTH];
+	double		flashlight[WINDOW_HEIGHT][WINDOW_WIDTH];
 	bool		light_toggle;
 	bool		flashlight_toggle;
 	int			apply_darkness;

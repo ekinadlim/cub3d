@@ -10,7 +10,8 @@
 		"string_view": "c",
 		"ranges": "c",
 		"sstream": "c",
-		"header.h": "c"
+		"header.h": "c",
+		"random": "c"
 	},
 	"editor.tokenColorCustomizations": {
 		"comments": "",
