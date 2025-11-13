@@ -50,6 +50,7 @@ void	fill_image_buffer(t_image image,
 {
 	t_data	*data;
 	char	*pixel_index;
+	int		darkness_level;
 
 	if (x >= 0 && y >= 0 && x < image.width && y < image.height)
 	{
@@ -59,9 +60,14 @@ void	fill_image_buffer(t_image image,
 		if (data->apply_darkness
 			&& image.width == WINDOW_WIDTH && image.height == WINDOW_HEIGHT)
 		{
-			color = ((((color >> 16) & 0xFF) / data->flashlight[y][x]) << 16)
-				| ((((color >> 8) & 0xFF) / data->flashlight[y][x]) << 8)
-				| ((color & 0xFF) / data->flashlight[y][x]);
+			darkness_level = 1;
+			if (data->apply_darkness == 1)
+				darkness_level = 35;
+			else if (data->apply_darkness == 2)
+				darkness_level = data->flashlight[y][x];
+			color = ((((color >> 16) & 0xFF) / darkness_level) << 16)
+				| ((((color >> 8) & 0xFF) / darkness_level) << 8)
+				| ((color & 0xFF) / darkness_level);
 		}
 		*(int *)pixel_index = color;
 	}

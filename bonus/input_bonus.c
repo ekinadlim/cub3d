@@ -32,6 +32,8 @@ int	key_press(int key, t_data *data)
 		data->ray_toggle = !data->ray_toggle;
 	else if (key == 'f')
 		data->flashlight_toggle = !data->flashlight_toggle;
+	else if (key == 't')
+		data->light_toggle = !data->light_toggle;
 	else if (key == 'q' || key == KEY_ESC)
 		exit_cub3d(NULL);
 	return (0);
