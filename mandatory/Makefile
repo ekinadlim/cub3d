@@ -38,13 +38,14 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
-#./$(NAME) maps/example.cub
+
+FORCE:
 
 $(NAME): $(LIBFT) $(OBJ)
 	cc $(CFLAGS) $(MLXFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME)
 
-$(LIBFT):
-	make -C $(LIBFT_DIR)
+$(LIBFT): FORCE
+	@make -C $(LIBFT_DIR) --no-print-directory
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -54,15 +55,15 @@ $(OBJ_DIR)/%.o: %.c
 
 clean:
 	make clean -C $(LIBFT_DIR)
-	rm -rf $(OBJ) $(DEPS) $(OBJ_DIR)
+	rm -rf $(OBJ_DIR)
 
 fclean:
 	make fclean -C $(LIBFT_DIR)
-	rm -rf $(OBJ) $(DEPS) $(OBJ_DIR) $(NAME)
+	rm -rf $(OBJ_DIR) $(NAME)
 
 re: fclean all
 
 val: all
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME) maps/small.cub
 
-.PHONY: all clean fclean re val
+.PHONY: all clean fclean re FORCE val
