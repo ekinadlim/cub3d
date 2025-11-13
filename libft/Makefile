@@ -1,6 +1,8 @@
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -MMD -MP
+
+OBJ_DIR = obj
 
 SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c\
 	  ft_isascii.c ft_isprint.c ft_strlen.c\
@@ -16,35 +18,43 @@ SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c\
 	  ft_putnbr_fd.c\
 
 SRC_BONUS = ft_lstnew_bonus.c ft_lstadd_front_bonus.c\
-		ft_lstsize_bonus.c ft_lstlast_bonus.c\
-		ft_lstadd_back_bonus.c ft_lstdelone_bonus.c\
-		ft_lstclear_bonus.c ft_lstiter_bonus.c\
-		ft_lstmap_bonus.c\
+			ft_lstsize_bonus.c ft_lstlast_bonus.c\
+			ft_lstadd_back_bonus.c ft_lstdelone_bonus.c\
+			ft_lstclear_bonus.c ft_lstiter_bonus.c\
+			ft_lstmap_bonus.c\
 
 SRC_PRINTF = ft_printf.c ft_printchar.c ft_printstr.c\
-		ft_printnbr.c ft_printunbr.c ft_printhexa.c\
+			 ft_printnbr.c ft_printunbr.c ft_printhexa.c\
 
 SRC_GNL = get_next_line_bonus.c get_next_line_utils_bonus.c\
 
 SRC_CUSTOM = ft_errno.c\
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
-OBJ_BONUS = $(SRC_BONUS:.c=.o)
+OBJ_BONUS = $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)
 
-OBJ_PRINTF = $(SRC_PRINTF:.c=.o)
+OBJ_PRINTF = $(SRC_PRINTF:%.c=$(OBJ_DIR)/%.o)
 
-OBJ_GNL = $(SRC_GNL:.c=.o)
+OBJ_GNL = $(SRC_GNL:%.c=$(OBJ_DIR)/%.o)
 
-OBJ_CUSTOM = $(SRC_CUSTOM:.c=.o)
+OBJ_CUSTOM = $(SRC_CUSTOM:%.c=$(OBJ_DIR)/%.o)
+
+DEPS = $(OBJ:.o=.d) $(OBJ_BONUS:.o=.d) $(OBJ_PRINTF:.o=.d) $(OBJ_GNL:.o=.d) $(OBJ_CUSTOM:.o=.d)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
 	ar rcs $(NAME) $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
 
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+-include $(DEPS)
+
 clean:
-	rm -f $(OBJ) $(OBJ_BONUS) $(OBJ_PRINTF) $(OBJ_GNL) $(OBJ_CUSTOM)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
