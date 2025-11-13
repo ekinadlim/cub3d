@@ -2,11 +2,11 @@ NO textures/pt_horror/700_res/wall1/0.xpm textures/pt_horror/700_res/wall1/1.xpm
 
 WE textures/pt_horror/700_res/wall4/wall4.xpm
 
-S textures/pt_horror/700_res/wall2/0.xpm textures/pt_horror/700_res/wall2/1.xpm textures/pt_horror/700_res/wall2/2.xpm textures/pt_horror/700_res/wall2/3.xpm textures/pt_horror/700_res/wall2/4.xpm textures/pt_horror/700_res/wall2/5.xpm textures/pt_horror/700_res/wall2/6.xpm textures/pt_horror/700_res/wall2/7.xpm textures/pt_horror/700_res/wall2/8.xpm textures/pt_horror/700_res/wall2/9.xpm textures/pt_horror/700_res/wall2/10.xpm textures/pt_horror/700_res/wall2/11.xpm textures/pt_horror/700_res/wall2/12.xpm textures/pt_horror/700_res/wall2/13.xpm
+SO textures/pt_horror/700_res/wall2/0.xpm textures/pt_horror/700_res/wall2/1.xpm textures/pt_horror/700_res/wall2/2.xpm textures/pt_horror/700_res/wall2/3.xpm textures/pt_horror/700_res/wall2/4.xpm textures/pt_horror/700_res/wall2/5.xpm textures/pt_horror/700_res/wall2/6.xpm textures/pt_horror/700_res/wall2/7.xpm textures/pt_horror/700_res/wall2/8.xpm textures/pt_horror/700_res/wall2/9.xpm textures/pt_horror/700_res/wall2/10.xpm textures/pt_horror/700_res/wall2/11.xpm textures/pt_horror/700_res/wall2/12.xpm textures/pt_horror/700_res/wall2/13.xpm
 
 EA textures/pt_horror/700_res/wall3/wall3.xpm
 
-DO textures/mono/black.xpm
+DO textures/pt_horror/700_res/door/door.xpm
 
 F 112,112,112
 C 32,32,32
