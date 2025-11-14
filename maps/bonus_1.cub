@@ -1,0 +1,23 @@
+NO ../textures/wall1/0.xpm ../textures/wall1/1.xpm ../textures/wall1/2.xpm ../textures/wall1/3.xpm ../textures/wall1/4.xpm ../textures/wall1/5.xpm ../textures/wall1/6.xpm ../textures/wall1/7.xpm ../textures/wall1/8.xpm ../textures/wall1/9.xpm ../textures/wall1/10.xpm ../textures/wall1/11.xpm ../textures/wall1/12.xpm ../textures/wall1/13.xpm ../textures/wall1/14.xpm ../textures/wall1/15.xpm ../textures/wall1/16.xpm ../textures/wall1/17.xpm ../textures/wall1/18.xpm ../textures/wall1/19.xpm ../textures/wall1/20.xpm ../textures/wall1/21.xpm ../textures/wall1/22.xpm ../textures/wall1/23.xpm ../textures/wall1/24.xpm ../textures/wall1/25.xpm ../textures/wall1/26.xpm ../textures/wall1/27.xpm ../textures/wall1/28.xpm ../textures/wall1/29.xpm ../textures/wall1/30.xpm ../textures/wall1/31.xpm ../textures/wall1/32.xpm ../textures/wall1/33.xpm ../textures/wall1/34.xpm ../textures/wall1/35.xpm ../textures/wall1/36.xpm ../textures/wall1/37.xpm ../textures/wall1/38.xpm ../textures/wall1/39.xpm ../textures/wall1/40.xpm ../textures/wall1/41.xpm ../textures/wall1/42.xpm ../textures/wall1/43.xpm ../textures/wall1/44.xpm ../textures/wall1/45.xpm ../textures/wall1/46.xpm ../textures/wall1/47.xpm ../textures/wall1/48.xpm ../textures/wall1/49.xpm ../textures/wall1/50.xpm ../textures/wall1/51.xpm ../textures/wall1/52.xpm ../textures/wall1/53.xpm ../textures/wall1/54.xpm ../textures/wall1/55.xpm ../textures/wall1/56.xpm ../textures/wall1/57.xpm ../textures/wall1/58.xpm ../textures/wall1/59.xpm ../textures/wall1/60.xpm ../textures/wall1/61.xpm ../textures/wall1/62.xpm ../textures/wall1/63.xpm
+SO ../textures/wall2/0.xpm ../textures/wall2/1.xpm ../textures/wall2/2.xpm ../textures/wall2/3.xpm ../textures/wall2/4.xpm ../textures/wall2/5.xpm ../textures/wall2/6.xpm ../textures/wall2/7.xpm ../textures/wall2/8.xpm ../textures/wall2/9.xpm ../textures/wall2/10.xpm ../textures/wall2/11.xpm ../textures/wall2/12.xpm ../textures/wall2/13.xpm
+WE ../textures/wall3/wall3.xpm
+EA ../textures/wall4/wall4.xpm
+DO ../textures/door/door.xpm
+
+F 112,112,112
+C 32,32,32
+
+        1111111111111111111111111
+        1000000000110000000000001
+        1011000001110000000000001
+        1001000000D00000000000001
+111111111011000001110000000000001
+1000D000001100000111D111111111111
+11110111111111011100000010001
+11110111111111011101010010001
+11000000110101011100000010001
+100000000000000011000000D0001
+10000000000000001101010010001
+11000001110101011111011110N0111
+11110111 1110101 101111010001
+11111111 1111111 111111111111

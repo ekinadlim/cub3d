@@ -19,7 +19,7 @@ static void	choose_darkness_level(t_data *data,
 		= sqrt((x - data->image.half_width) * (x - data->image.half_width)
 			+ (y - data->image.half_height) * (y - data->image.half_height));
 
-	if (distance > 3 * radius)
+	if (distance > 3.5 * radius)
 		data->flashlight[y][x] = 35;
 	else if (distance > 2.3 * radius)
 		data->flashlight[y][x] = 3 + (distance - 2.3 * radius) / 4;
