@@ -35,8 +35,8 @@
 # define MAP_CHAR_SET	"01 DNESW"
 # define ELEMENT_COUNT	6
 # define MAX_TEXTURES	5
-# define MAX_HEIGHT		5000
-# define MAX_WIDTH		5000
+# define MAX_HEIGHT		1000
+# define MAX_WIDTH		1000
 
 /* -------------- DISPLAY --------------- */
 

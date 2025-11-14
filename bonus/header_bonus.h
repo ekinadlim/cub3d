@@ -24,6 +24,4 @@
 # include "functions_bonus.h"
 # include <fcntl.h>
 
-# include <stdio.h> //remove
-
 #endif

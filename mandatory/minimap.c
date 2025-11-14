@@ -38,10 +38,7 @@ void	draw_minimap_ray(t_data *data)
 	int				i;
 
 	if (steps <= 0)
-	{
-		printf("AAAAAAA: steps = %d\n", steps); //keep for now, just in case
 		return ;
-	}
 	i = 0;
 	while (i <= steps)
 	{
