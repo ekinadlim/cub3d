@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:34:01 by apartowi          #+#    #+#             */
-/*   Updated: 2025/10/08 13:34:02 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:16:58 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	calculate_fixed_values(t_data *data)
 	}
 }
 
+//mlx_mouse_hide(data->mlx, data->win); //this mlx function leaks
 static void	call_mlx_hooks(t_data *data)
 {
-	//mlx_mouse_hide(data->mlx, data->win); //this mlx function leaks
 	mlx_do_key_autorepeatoff(data->mlx);
 	mlx_mouse_move(data->mlx, data->win,
 		data->image.half_width, data->image.half_height);
