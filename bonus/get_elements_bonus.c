@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_elements_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:28:38 by eadlim            #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:04 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:25:48 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ static void	check_for_missing_elements(t_data *data)
 	int	door_mask;
 
 	door_mask = 0;
-	if (data->filemask >= 1 << (DOOR + 2))
-		door_mask = 1 << (DOOR + 2);
+	if (data->filemask >= 1 << (DOOR + COLOR_MASK_SKIP))
+		door_mask = 1 << (DOOR + COLOR_MASK_SKIP);
 	if (!(data->filemask - door_mask == ((1 << ELEMENT_COUNT) - 1)))
 		exit_pars("Missing elements!", data);
 }

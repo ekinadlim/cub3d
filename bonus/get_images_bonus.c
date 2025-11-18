@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_images_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apartowi < apartowi@student.42vienna.com>  +#+  +:+       +#+        */
+/*   By: eadlim <eadlim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:02:58 by eadlim            #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:04 by apartowi         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:25:15 by eadlim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,9 @@ int	get_images(int type, t_data *data)
 
 	i = 2;
 	frame = 0;
-	if ((1 << type) & data->filemask)
+	if (type == DOOR && (1 << (type + COLOR_MASK_SKIP)) & data->filemask)
+		exit_pars("Multiple occurance of the same element!", data);
+	else if (type != DOOR && (1 << type) & data->filemask)
 		exit_pars("Multiple occurance of the same element!", data);
 	while (1)
 	{
