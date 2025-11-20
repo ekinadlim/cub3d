@@ -1,7 +1,7 @@
 NO ../textures/wall1/0.xpm
 SO ../textures/wall2/5.xpm
-WE ../textures/wall3/wall3.xpm
-EA ../textures/wall4/wall4.xpm
+WE ../textures/wall3/0.xpm
+EA ../textures/wall4/0.xpm
 
 F 112,112,112
 C 32,32,32
